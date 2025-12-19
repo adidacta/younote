@@ -1,0 +1,122 @@
+import { createClient } from "@/lib/supabase/server";
+import type { Page, PageInsert, PageUpdate } from "@/types/database";
+
+/**
+ * Get all pages for a notebook, sorted by creation date (newest first)
+ */
+export async function getPagesByNotebookId(notebookId: string): Promise<Page[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('notebook_id', notebookId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching pages:', error);
+    throw new Error('Failed to fetch pages');
+  }
+
+  return data || [];
+}
+
+/**
+ * Get a single page by ID
+ */
+export async function getPageById(id: string): Promise<Page | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null; // Not found
+    }
+    console.error('Error fetching page:', error);
+    throw new Error('Failed to fetch page');
+  }
+
+  return data;
+}
+
+/**
+ * Get all pages for the current user (for search/command palette)
+ */
+export async function getAllPages(): Promise<Page[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching all pages:', error);
+    throw new Error('Failed to fetch pages');
+  }
+
+  return data || [];
+}
+
+/**
+ * Create a new page
+ */
+export async function createPage(page: PageInsert): Promise<Page> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .insert(page)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating page:', error);
+    throw new Error('Failed to create page');
+  }
+
+  return data;
+}
+
+/**
+ * Update a page
+ */
+export async function updatePage(id: string, updates: PageUpdate): Promise<Page> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating page:', error);
+    throw new Error('Failed to update page');
+  }
+
+  return data;
+}
+
+/**
+ * Delete a page (cascades to delete all notes)
+ */
+export async function deletePage(id: string): Promise<void> {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from('pages')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting page:', error);
+    throw new Error('Failed to delete page');
+  }
+}
