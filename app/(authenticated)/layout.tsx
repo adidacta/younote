@@ -2,54 +2,84 @@ import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { CommandPalette } from "@/components/command-palette/command-palette";
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default async function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Fetch notebooks and pages for command palette
+  // Check authentication
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let notebooks: any[] = [];
-  let pages: any[] = [];
-
-  if (user) {
-    const { data: notebooksData } = await supabase
-      .from("notebooks")
-      .select("id, title")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-
-    const { data: pagesData } = await supabase
-      .from("pages")
-      .select("id, notebook_id, title, video_title")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-
-    notebooks = notebooksData || [];
-    pages = pagesData || [];
+  // Redirect to home if not authenticated
+  if (!user) {
+    redirect("/");
   }
+
+  // Fetch notebooks and pages for command palette
+  const { data: notebooksData } = await supabase
+    .from("notebooks")
+    .select("id, title")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const { data: pagesData } = await supabase
+    .from("pages")
+    .select("id, notebook_id, title, video_title")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  const notebooks = notebooksData || [];
+  const pages = pagesData || [];
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar */}
-      <header className="border-b border-b-foreground/10 h-14 flex items-center">
-        <div className="container max-w-7xl mx-auto px-4 w-full flex items-center">
-          <div className="flex-1 flex items-center gap-4">
-            <h1 className="font-semibold">YouNote</h1>
-            <CommandPalette notebooks={notebooks} pages={pages} />
+      <header className="border-b border-b-foreground/10 relative">
+        {/* Logo - absolute positioned on left with 32px padding */}
+        <div className="absolute left-4 md:left-8 top-0 h-14 flex items-center z-10">
+          <Link href="/notebooks" className="hover:opacity-80 transition-opacity">
+            <Image
+              src="/images/younote-logo-light.png"
+              alt="YouNote"
+              width={120}
+              height={24}
+              className="dark:hidden"
+              priority
+            />
+            <Image
+              src="/images/younote-logo-dark.png"
+              alt="YouNote"
+              width={120}
+              height={24}
+              className="hidden dark:block"
+              priority
+            />
+          </Link>
+        </div>
+
+        {/* Search - in same container as page content to align with breadcrumbs */}
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="h-14 flex items-center">
+            <div className="w-full max-w-2xl ml-32 sm:ml-36 md:ml-0">
+              <CommandPalette notebooks={notebooks} pages={pages} />
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <ThemeSwitcher />
-            <Suspense>
-              <AuthButton />
-            </Suspense>
-          </div>
+        </div>
+
+        {/* User info - absolute positioned on right with 32px padding */}
+        <div className="absolute right-4 md:right-8 top-0 h-14 flex items-center gap-2 md:gap-4 z-10">
+          <ThemeSwitcher />
+          <Suspense>
+            <AuthButton />
+          </Suspense>
         </div>
       </header>
 

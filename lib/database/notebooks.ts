@@ -21,6 +21,50 @@ export async function getNotebooks(): Promise<Notebook[]> {
 }
 
 /**
+ * Get all notebooks with stats (page count and note count)
+ */
+export async function getNotebooksWithStats(): Promise<(Notebook & { pages_count: number; notes_count: number })[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('notebooks')
+    .select(`
+      *,
+      pages:pages(count),
+      notes:pages(notes(count))
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching notebooks with stats:', error);
+    throw new Error('Failed to fetch notebooks with stats');
+  }
+
+  // Transform the data to include counts
+  const notebooksWithStats = (data || []).map((notebook: any) => {
+    const pages_count = notebook.pages?.[0]?.count || 0;
+
+    // Count total notes across all pages
+    let notes_count = 0;
+    if (notebook.notes && Array.isArray(notebook.notes)) {
+      notes_count = notebook.notes.reduce((sum: number, page: any) => {
+        return sum + (page.notes?.[0]?.count || 0);
+      }, 0);
+    }
+
+    // Remove the nested data and add the counts
+    const { pages, notes, ...notebookData } = notebook;
+    return {
+      ...notebookData,
+      pages_count,
+      notes_count,
+    };
+  });
+
+  return notebooksWithStats;
+}
+
+/**
  * Get a single notebook by ID
  */
 export async function getNotebookById(id: string): Promise<Notebook | null> {

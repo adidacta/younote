@@ -1,8 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { updatePage, deletePage } from '@/lib/database/pages';
+import { deleteNotebook, updateNotebook } from '@/lib/database/notebooks';
 
-export const dynamic = 'force-dynamic';
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = await params;
+
+    await deleteNotebook(id);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting notebook:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to delete notebook' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function PATCH(
   request: NextRequest,
@@ -22,48 +48,20 @@ export async function PATCH(
     const body = await request.json();
     const { title } = body;
 
-    if (title === undefined) {
+    if (!title || typeof title !== 'string' || !title.trim()) {
       return NextResponse.json(
-        { error: 'title is required' },
+        { error: 'Title is required' },
         { status: 400 }
       );
     }
 
-    const page = await updatePage(id, { title: title.trim() });
+    const notebook = await updateNotebook(id, { title: title.trim() });
 
-    return NextResponse.json(page);
+    return NextResponse.json(notebook);
   } catch (error) {
-    console.error('Error updating page:', error);
+    console.error('Error updating notebook:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update page' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { id } = await params;
-
-    await deletePage(id);
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting page:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to delete page' },
+      { error: error instanceof Error ? error.message : 'Failed to update notebook' },
       { status: 500 }
     );
   }

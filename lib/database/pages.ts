@@ -22,6 +22,39 @@ export async function getPagesByNotebookId(notebookId: string): Promise<Page[]> 
 }
 
 /**
+ * Get all pages for a notebook with note count
+ */
+export async function getPagesByNotebookIdWithStats(notebookId: string): Promise<(Page & { notes_count: number })[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .select(`
+      *,
+      notes:notes(count)
+    `)
+    .eq('notebook_id', notebookId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching pages with stats:', error);
+    throw new Error('Failed to fetch pages with stats');
+  }
+
+  // Transform the data to include note count
+  const pagesWithStats = (data || []).map((page: any) => {
+    const notes_count = page.notes?.[0]?.count || 0;
+    const { notes, ...pageData } = page;
+    return {
+      ...pageData,
+      notes_count,
+    };
+  });
+
+  return pagesWithStats;
+}
+
+/**
  * Get a single page by ID
  */
 export async function getPageById(id: string): Promise<Page | null> {

@@ -93,10 +93,10 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
       onClick={() => setIsEditing(true)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="text-foreground hover:text-primary transition-colors truncate cursor-pointer inline-flex items-center gap-1"
+      className="font-bold hover:text-primary transition-colors truncate cursor-pointer inline-flex items-center gap-1"
     >
       <span>{title}</span>
-      {isHovered && <Pencil className="h-3 w-3 flex-shrink-0" />}
+      {isHovered && <Pencil className="h-5 w-5 flex-shrink-0" />}
     </button>
   );
 }

@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "YouNote - Take Notes on YouTube Videos",
   description: "A mobile-friendly app for taking timestamped notes while watching YouTube videos. Share notes publicly or export as markdown.",
+  icons: {
+    icon: "/images/favicon.png",
+  },
 };
 
 const geistSans = Geist({
