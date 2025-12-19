@@ -63,7 +63,7 @@ export function MarkdownRenderer({
           ul: ({ node, ...props }) => {
             return <ul className="pl-0" {...props} />;
           },
-          li: ({ node, children, index, ...props }) => {
+          li: ({ node, children, ...props }) => {
             // Check if this li contains a checkbox
             const hasCheckbox = node?.children?.some(
               (child: any) => child.type === 'element' && child.tagName === 'input'
