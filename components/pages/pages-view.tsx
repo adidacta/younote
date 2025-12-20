@@ -176,7 +176,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                       {formatDuration(page.duration_seconds)}
                     </div>
                   </div>
-                  <CardHeader>
+                  <CardHeader className="pr-12">
                     <CardTitle className="line-clamp-2" dir="auto">{page.title}</CardTitle>
                     <CardDescription className="space-y-2">
                       <div className="line-clamp-1">{page.channel_name}</div>

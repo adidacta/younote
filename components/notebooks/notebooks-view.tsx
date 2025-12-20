@@ -150,7 +150,7 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
             <div key={notebook.id} className="group relative">
               <Link href={`/notebooks/${notebook.id}`}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-                  <CardHeader>
+                  <CardHeader className="pr-12">
                     <CardTitle className="line-clamp-2" dir="auto">{notebook.title}</CardTitle>
                     <CardDescription className="space-y-2">
                       <div className="text-xs">
