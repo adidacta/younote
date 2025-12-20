@@ -114,12 +114,13 @@ export function NoteItem({ note, videoId }: NoteItemProps) {
 
   const handleShare = async () => {
     const shareUrl = generateTimestampUrl(videoId, note.timestamp_seconds || 0);
+    const shareText = `Check out this YouNote I made: ${note.content}. Watch the clip here: ${shareUrl}`;
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success('Link copied to clipboard');
+      await navigator.clipboard.writeText(shareText);
+      toast.success('Note copied to clipboard');
     } catch (error) {
       console.error('Error copying to clipboard:', error);
-      toast.error('Failed to copy link');
+      toast.error('Failed to copy note');
     }
   };
 
