@@ -26,6 +26,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length > 120) {
+      return NextResponse.json(
+        { error: 'Title must be 120 characters or less' },
+        { status: 400 }
+      );
+    }
+
     // Extract video ID
     const videoId = extractYouTubeVideoId(youtube_url);
     if (!videoId) {
@@ -54,10 +62,10 @@ export async function POST(request: NextRequest) {
     const page = await createPage({
       notebook_id,
       user_id: user.id,
-      title: title.trim(),
+      title: trimmedTitle,
       youtube_url,
       youtube_video_id: videoId,
-      video_title: metadata.video_title,
+      video_title: metadata.video_title.slice(0, 120), // Also truncate metadata title
       thumbnail_url: metadata.thumbnail_url,
       channel_name: metadata.channel_name,
       duration_seconds: metadata.duration_seconds,

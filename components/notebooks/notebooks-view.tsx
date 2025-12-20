@@ -289,6 +289,7 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
               onChange={(e) => setNewName(e.target.value)}
               className="w-full px-3 py-2 border border-input rounded-md bg-background"
               placeholder="Notebook name"
+              maxLength={80}
               disabled={isRenaming}
               dir="auto"
               onKeyDown={(e) => {
@@ -298,6 +299,9 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
               }}
               autoFocus
             />
+            <p className="text-xs text-muted-foreground text-right mt-1">
+              {newName.length}/80 characters
+            </p>
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isRenaming}>Cancel</AlertDialogCancel>

@@ -71,9 +71,13 @@ export function CreateNotebookDialog({ children }: { children: React.ReactNode }
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="My Notebook"
+                maxLength={80}
                 required
                 autoFocus
               />
+              <p className="text-xs text-muted-foreground text-right">
+                {title.length}/80 characters
+              </p>
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
           </div>

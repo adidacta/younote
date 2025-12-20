@@ -50,7 +50,8 @@ export function AddPageDialog({ notebookId, children }: AddPageDialogProps) {
 
       const data = await response.json();
       setMetadata(data.metadata);
-      setTitle(data.metadata.video_title);
+      // Truncate title to 120 characters
+      setTitle(data.metadata.video_title.slice(0, 120));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch video");
     } finally {
@@ -154,11 +155,13 @@ export function AddPageDialog({ notebookId, children }: AddPageDialogProps) {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Enter page name"
+                    maxLength={120}
                     required
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Auto-filled from video title, but you can customize it
-                  </p>
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Auto-filled from video title, but you can customize it</span>
+                    <span>{title.length}/120</span>
+                  </div>
                 </div>
 
                 <div className="rounded-lg border p-3 bg-muted/50">

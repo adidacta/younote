@@ -55,7 +55,15 @@ export async function PATCH(
       );
     }
 
-    const notebook = await updateNotebook(id, { title: title.trim() });
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length > 80) {
+      return NextResponse.json(
+        { error: 'Title must be 80 characters or less' },
+        { status: 400 }
+      );
+    }
+
+    const notebook = await updateNotebook(id, { title: trimmedTitle });
 
     return NextResponse.json(notebook);
   } catch (error) {

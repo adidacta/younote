@@ -23,9 +23,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length > 80) {
+      return NextResponse.json(
+        { error: 'Title must be 80 characters or less' },
+        { status: 400 }
+      );
+    }
+
     const notebook = await createNotebook({
       user_id: user.id,
-      title: title.trim(),
+      title: trimmedTitle,
     });
 
     return NextResponse.json(notebook);

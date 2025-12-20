@@ -75,17 +75,23 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
 
   if (isEditing) {
     return (
-      <input
-        ref={inputRef}
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onBlur={handleSave}
-        disabled={isSaving}
-        dir="auto"
-        className="text-foreground bg-background border border-primary rounded px-1 py-0.5 min-w-[200px] focus:outline-none focus:ring-1 focus:ring-primary"
-      />
+      <div className="inline-flex flex-col">
+        <input
+          ref={inputRef}
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={handleSave}
+          disabled={isSaving}
+          maxLength={120}
+          dir="auto"
+          className="text-foreground bg-background border border-primary rounded px-1 py-0.5 min-w-[200px] focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+        <span className="text-xs text-muted-foreground mt-0.5">
+          {title.length}/120
+        </span>
+      </div>
     );
   }
 

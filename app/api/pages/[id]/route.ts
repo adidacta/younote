@@ -29,7 +29,15 @@ export async function PATCH(
       );
     }
 
-    const page = await updatePage(id, { title: title.trim() });
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length > 120) {
+      return NextResponse.json(
+        { error: 'Title must be 120 characters or less' },
+        { status: 400 }
+      );
+    }
+
+    const page = await updatePage(id, { title: trimmedTitle });
 
     return NextResponse.json(page);
   } catch (error) {
