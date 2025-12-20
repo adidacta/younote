@@ -41,6 +41,7 @@ export function AnimatedBreadcrumb({
     <motion.span
       className={className}
       onClick={onClick}
+      dir="auto"
     >
       {letters.map((letter, index) => {
         // Calculate delay based on direction

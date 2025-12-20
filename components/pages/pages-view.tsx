@@ -177,7 +177,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                     </div>
                   </div>
                   <CardHeader>
-                    <CardTitle className="line-clamp-2">{page.title}</CardTitle>
+                    <CardTitle className="line-clamp-2" dir="auto">{page.title}</CardTitle>
                     <CardDescription className="space-y-2">
                       <div className="line-clamp-1">{page.channel_name}</div>
                       <div className="flex items-center gap-1.5 text-xs pt-1">
@@ -254,7 +254,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                     </div>
                   </td>
                   <td className="p-4">
-                    <div className="font-medium line-clamp-2">
+                    <div className="font-medium line-clamp-2" dir="auto">
                       {page.title}
                     </div>
                   </td>
@@ -320,6 +320,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
               className="w-full px-3 py-2 border border-input rounded-md bg-background"
               placeholder="Page name"
               disabled={isRenaming}
+              dir="auto"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleRenameConfirm();

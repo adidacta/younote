@@ -151,7 +151,7 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
               <Link href={`/notebooks/${notebook.id}`}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                   <CardHeader>
-                    <CardTitle className="line-clamp-2">{notebook.title}</CardTitle>
+                    <CardTitle className="line-clamp-2" dir="auto">{notebook.title}</CardTitle>
                     <CardDescription className="space-y-2">
                       <div className="text-xs">
                         Created {new Date(notebook.created_at).toLocaleDateString()}
@@ -227,7 +227,7 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
                   onClick={() => router.push(`/notebooks/${notebook.id}`)}
                 >
                   <td className="p-4">
-                    <div className="font-medium">
+                    <div className="font-medium" dir="auto">
                       {notebook.title}
                     </div>
                   </td>
@@ -290,6 +290,7 @@ export function NotebooksView({ notebooks }: NotebooksViewProps) {
               className="w-full px-3 py-2 border border-input rounded-md bg-background"
               placeholder="Notebook name"
               disabled={isRenaming}
+              dir="auto"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleRenameConfirm();

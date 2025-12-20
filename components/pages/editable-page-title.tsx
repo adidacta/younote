@@ -83,6 +83,7 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
         onKeyDown={handleKeyDown}
         onBlur={handleSave}
         disabled={isSaving}
+        dir="auto"
         className="text-foreground bg-background border border-primary rounded px-1 py-0.5 min-w-[200px] focus:outline-none focus:ring-1 focus:ring-primary"
       />
     );
@@ -95,7 +96,7 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
       onMouseLeave={() => setIsHovered(false)}
       className="font-bold hover:text-primary transition-colors truncate cursor-pointer inline-flex items-center gap-1"
     >
-      <span>{title}</span>
+      <span dir="auto">{title}</span>
       {isHovered && <Pencil className="h-5 w-5 flex-shrink-0" />}
     </button>
   );
