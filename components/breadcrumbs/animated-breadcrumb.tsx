@@ -25,6 +25,9 @@ export function AnimatedBreadcrumb({
 }: AnimatedBreadcrumbProps) {
   const letters = text.split("");
 
+  // Detect if text contains RTL characters (Hebrew, Arabic, etc.)
+  const isRTL = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F]/.test(text);
+
   // If this was previously active, it starts bold and fades to normal
   // If this is currently active, it starts normal and fades to bold
   const initialWeight = wasPreviouslyActive ? 700 : 400;
@@ -42,6 +45,7 @@ export function AnimatedBreadcrumb({
       className={className}
       onClick={onClick}
       dir="auto"
+      style={{ unicodeBidi: "isolate", direction: isRTL ? "rtl" : "ltr" }}
     >
       {letters.map((letter, index) => {
         // Calculate delay based on direction
