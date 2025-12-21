@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ArrowLeft } from "lucide-react";
 import { AnimatedBreadcrumb } from "./animated-breadcrumb";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
@@ -160,10 +160,35 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
     }
   }, [pathname, itemsKey, items]);
 
+  // Get current page (last item) and previous page for mobile view
+  const currentItem = items[items.length - 1];
+  const previousItem = items.length > 1 ? items[items.length - 2] : null;
+
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-2xl mb-1 whitespace-nowrap">
+        {/* Mobile view: Back arrow + current page title (no animation) */}
+        <div className="flex md:hidden flex-col gap-1 mt-12">
+          <div className="flex items-center gap-2 text-lg">
+            {previousItem && (
+              <Link
+                href={previousItem.href}
+                className="hover:opacity-80 transition-opacity"
+              >
+                <ArrowLeft className="h-5 w-5 text-muted-foreground" />
+              </Link>
+            )}
+            <span className="font-semibold">
+              {currentItem?.isEditable && currentItem.editComponent
+                ? currentItem.editComponent
+                : currentItem?.label}
+            </span>
+          </div>
+          {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+        </div>
+
+        {/* Desktop view: Full animated breadcrumbs */}
+        <div className="hidden md:flex items-center gap-2 text-2xl mb-1 whitespace-nowrap">
           {displayItems.map((item, index) => {
             // Calculate positions based on what's currently DISPLAYED
             const displayedIsLast = index === displayItems.length - 1;
@@ -316,9 +341,9 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
             );
           })}
         </div>
-        {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+        {subtitle && <p className="hidden md:block text-sm text-muted-foreground">{subtitle}</p>}
       </div>
-      {action && <div className="ml-2">{action}</div>}
+      {action && <div className="hidden md:block ml-2">{action}</div>}
     </div>
   );
 }

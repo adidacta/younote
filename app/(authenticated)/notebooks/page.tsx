@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { CreateNotebookDialog } from "@/components/notebooks/create-notebook-dialog";
 import { NotebooksView } from "@/components/notebooks/notebooks-view";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
+import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
 import { Plus } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -43,6 +44,13 @@ export default async function NotebooksPage() {
       ) : (
         <NotebooksView notebooks={notebooks} />
       )}
+
+      {/* Floating Action Button for mobile */}
+      <FloatingActionButton>
+        <CreateNotebookDialog>
+          <FABTrigger />
+        </CreateNotebookDialog>
+      </FloatingActionButton>
     </div>
   );
 }

@@ -78,7 +78,10 @@ export default async function AuthenticatedLayout({
 
         {/* User info - absolute positioned on right with 32px padding */}
         <div className="absolute right-4 md:right-8 top-0 h-14 flex items-center gap-2 md:gap-4 z-10">
-          <ThemeSwitcher />
+          {/* Hide theme switcher on mobile/tablet to prevent overlap */}
+          <div className="hidden lg:block">
+            <ThemeSwitcher />
+          </div>
           <Suspense>
             <AuthButton />
           </Suspense>

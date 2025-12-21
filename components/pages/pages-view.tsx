@@ -131,8 +131,8 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
 
   return (
     <div>
-      {/* View toggle */}
-      <div className="flex justify-end mb-4">
+      {/* View toggle - hidden on mobile */}
+      <div className="hidden md:flex justify-end mb-4">
         <div className="inline-flex rounded-lg border border-border p-1">
           <Button
             variant={view === "grid" ? "secondary" : "ghost"}

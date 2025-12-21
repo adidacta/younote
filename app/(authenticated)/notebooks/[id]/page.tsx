@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AddPageDialog } from "@/components/pages/add-page-dialog";
 import { PagesView } from "@/components/pages/pages-view";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
+import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
 import { Plus } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -55,6 +56,13 @@ export default async function NotebookPage({ params }: { params: Promise<{ id: s
           <PagesView pages={pages} notebookId={id} />
         )}
       </div>
+
+      {/* Floating Action Button for mobile */}
+      <FloatingActionButton>
+        <AddPageDialog notebookId={id}>
+          <FABTrigger />
+        </AddPageDialog>
+      </FloatingActionButton>
     </div>
   );
 }
