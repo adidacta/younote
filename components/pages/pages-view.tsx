@@ -319,7 +319,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
               onChange={(e) => setNewName(e.target.value)}
               className="w-full px-3 py-2 border border-input rounded-md bg-background"
               placeholder="Page name"
-              maxLength={120}
+              maxLength={40}
               disabled={isRenaming}
               dir="auto"
               onKeyDown={(e) => {
@@ -330,7 +330,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
               autoFocus
             />
             <p className="text-xs text-muted-foreground text-right mt-1">
-              {newName.length}/120 characters
+              {newName.length}/40 characters
             </p>
           </div>
           <AlertDialogFooter>

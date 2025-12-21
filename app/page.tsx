@@ -23,13 +23,19 @@ export default async function LandingPage() {
         <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image
-              src="/images/favicon.png"
+              src="/images/younote-logo-light.png"
               alt="YouNote"
-              width={32}
-              height={32}
-              className="rounded"
+              width={120}
+              height={40}
+              className="dark:hidden"
             />
-            <h1 className="font-bold text-xl">YouNote</h1>
+            <Image
+              src="/images/younote-logo-dark.png"
+              alt="YouNote"
+              width={120}
+              height={40}
+              className="hidden dark:block"
+            />
           </div>
           <div className="flex gap-2">
             <Button asChild size="sm" variant="outline">

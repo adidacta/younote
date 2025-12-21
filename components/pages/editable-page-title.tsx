@@ -75,7 +75,7 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
 
   if (isEditing) {
     return (
-      <div className="inline-flex flex-col">
+      <div className="inline-block relative">
         <input
           ref={inputRef}
           type="text"
@@ -84,12 +84,12 @@ export function EditablePageTitle({ pageId, initialTitle }: EditablePageTitlePro
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
           disabled={isSaving}
-          maxLength={120}
+          maxLength={40}
           dir="auto"
           className="text-foreground bg-background border border-primary rounded px-1 py-0.5 min-w-[200px] focus:outline-none focus:ring-1 focus:ring-primary"
         />
-        <span className="text-xs text-muted-foreground mt-0.5">
-          {title.length}/120
+        <span className="absolute left-0 top-full text-xs text-muted-foreground mt-0.5 whitespace-nowrap">
+          {title.length}/40
         </span>
       </div>
     );
