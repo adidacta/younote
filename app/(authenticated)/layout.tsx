@@ -68,8 +68,9 @@ export default async function AuthenticatedLayout({
         {/* Search - in same container as page content to align with breadcrumbs */}
         {/* Hidden on mobile to prevent overlap, visible on md+ screens */}
         <div className="container max-w-7xl mx-auto px-4 hidden md:block">
-          <div className="h-14 flex items-center">
-            <div className="w-full max-w-2xl">
+          <div className="h-14 flex items-center justify-center">
+            {/* Add padding to prevent overlap with logo (left) and user buttons (right) */}
+            <div className="w-full max-w-2xl px-40 lg:px-44">
               <CommandPalette notebooks={notebooks} pages={pages} />
             </div>
           </div>
