@@ -66,9 +66,10 @@ export default async function AuthenticatedLayout({
         </div>
 
         {/* Search - in same container as page content to align with breadcrumbs */}
-        <div className="container max-w-7xl mx-auto px-4">
+        {/* Hidden on mobile to prevent overlap, visible on md+ screens */}
+        <div className="container max-w-7xl mx-auto px-4 hidden md:block">
           <div className="h-14 flex items-center">
-            <div className="w-full max-w-2xl ml-32 sm:ml-36 md:ml-0">
+            <div className="w-full max-w-2xl">
               <CommandPalette notebooks={notebooks} pages={pages} />
             </div>
           </div>
