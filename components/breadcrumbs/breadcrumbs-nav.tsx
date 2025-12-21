@@ -163,7 +163,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-2xl mb-1">
+        <div className="flex items-center gap-2 text-2xl mb-1 whitespace-nowrap">
           {displayItems.map((item, index) => {
             // Calculate positions based on what's currently DISPLAYED
             const displayedIsLast = index === displayItems.length - 1;
@@ -318,7 +318,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
         </div>
         {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
       </div>
-      {action && <div>{action}</div>}
+      {action && <div className="ml-2">{action}</div>}
     </div>
   );
 }
