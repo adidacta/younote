@@ -191,9 +191,13 @@ YOUTUBE_API_KEY=AIzxxx...  # Server-side only (NOT prefixed with NEXT_PUBLIC_)
 - Component variants via `class-variance-authority` (see `Button` component)
 - Prose styling for markdown: `prose prose-sm dark:prose-invert`
 
-### Known Issues
+### Known Issues & Tasks
 
-1. **Breadcrumb backward animation** - Bold effect doesn't flow right-to-left when navigating back to Notebooks (sessionStorage detection needs refinement)
+For a complete list of open tasks, bugs, and feature requests, see [TASKS.md](./TASKS.md).
+
+**Active Issues**:
+1. **Breadcrumb animation** - Animation too slow and animates all items instead of just the last two (see TASKS.md #1)
+2. **Content width inconsistency** - Breadcrumbs shift when navigating to pages with YouTube embeds (see TASKS.md #2)
 
 ### Next.js Specifics
 
