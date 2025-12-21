@@ -6,12 +6,31 @@ import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
 import { WelcomeToast } from "@/components/onboarding/welcome-toast";
 import { ONBOARDING_NOTEBOOK_TITLE } from "@/lib/onboarding/templates";
+import { createOnboardingNotebook } from "@/lib/database/onboarding";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
 export default async function NotebooksPage() {
-  const notebooks = await getNotebooksWithStats();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/");
+  }
+
+  let notebooks = await getNotebooksWithStats();
+
+  // If user has no notebooks, create onboarding notebook
+  if (notebooks.length === 0) {
+    const result = await createOnboardingNotebook(user.id);
+    if (result.success) {
+      // Refresh notebooks list to include the new onboarding notebook
+      notebooks = await getNotebooksWithStats();
+    }
+  }
 
   // Check if user has the onboarding notebook
   const hasOnboardingNotebook = notebooks.some(
