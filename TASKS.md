@@ -468,6 +468,234 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
+### 12. Limit Note Height with "Show More" Expansion 🔴
+**Priority**: Medium
+**Type**: Enhancement
+
+**Issue**:
+- Long notes take up too much vertical space in the notes list
+- Makes it difficult to scan through multiple notes
+
+**Requirements**:
+- Limit note display height (e.g., 200px or 4-5 lines)
+- Add "Show more" button/link at bottom of truncated notes
+- Clicking "Show more" expands to reveal full content
+- Optional: "Show less" to collapse back
+- Should work with markdown-rendered content
+
+**Implementation Details**:
+- Apply max-height CSS with overflow hidden
+- Detect if note content exceeds height limit
+- Only show "Show more" button if content is actually truncated
+- Smooth expand/collapse animation
+
+**Files to Modify**:
+- `components/notes/note-item.tsx`
+- Potentially add new state for expanded/collapsed per note
+
+**Questions Before Implementation**:
+1. What height limit? (200px, 300px, or line-based like 5 lines?)
+2. Should state persist when navigating away and back?
+3. Expand/collapse animation speed?
+4. Should "Show more" be text link or button?
+
+---
+
+### 13. Fetch YouTube Transcripts 🔴
+**Priority**: High
+**Type**: Feature
+
+**Requirements**:
+- Automatically fetch YouTube video transcripts when available
+- Display transcript alongside or below video player
+- Parse transcript with timestamps
+- Make transcript timestamps clickable to seek video
+
+**Implementation Details**:
+- Use YouTube API or third-party library (e.g., `youtube-transcript-api`)
+- Fetch transcript when page loads or on-demand
+- Handle cases where transcript is unavailable
+- Store transcript in database for caching?
+- Parse timestamp format (usually `MM:SS` or `HH:MM:SS`)
+
+**Technical Requirements**:
+- Research best method to fetch transcripts:
+  - YouTube Data API v3 (may not support transcripts directly)
+  - Third-party libraries (youtube-transcript, etc.)
+  - Server-side fetching to avoid CORS issues
+- Database storage (optional):
+  - Add `transcript` field to `pages` table (JSONB)
+  - Or create separate `transcripts` table
+
+**Files to Create/Modify**:
+- API route: `/api/youtube/transcript`
+- Transcript display component
+- Update page detail view to show transcript
+- Database migration if storing transcripts
+
+**Questions Before Implementation**:
+1. Where should transcript appear?
+   - Below video player?
+   - In a collapsible panel?
+   - Side panel/drawer?
+2. Should we store fetched transcripts in database or fetch on-demand?
+3. What to show if transcript unavailable? (hide section, show message?)
+4. Should transcript be searchable (Cmd+F within transcript)?
+5. Auto-scroll transcript as video plays?
+
+---
+
+### 14. Remove Next.js FAB (Network Warning) 🔴
+**Priority**: Low
+**Type**: Bug Fix
+
+**Issue**:
+- Next.js FAB (floating action button) appearing in development
+- Likely the Next.js development overlay or inspector
+- May be showing network warnings or other dev tools
+
+**Requirements**:
+- Identify source of Next.js FAB
+- Disable or hide it in development mode
+- Ensure it doesn't appear in production
+
+**Files to Check**:
+- `next.config.ts` - check for devIndicators settings
+- May need to disable via config: `devIndicators: { buildActivityPosition: 'bottom-right' }`
+
+**Questions Before Implementation**:
+1. Is this the Next.js build activity indicator?
+2. Or is it a different development overlay?
+3. Should we hide it completely or just reposition it?
+
+---
+
+### 15. Add "Remember Me" Option at Login 🔴
+**Priority**: Medium
+**Type**: Feature
+
+**Requirements**:
+- Add checkbox for "Remember me" on login form
+- If checked, extend session duration
+- If unchecked, use shorter session (expires on browser close)
+
+**Implementation Details**:
+- Add checkbox UI to login form
+- Configure Supabase session duration based on checkbox
+- Default to unchecked (for security)
+- Store preference in localStorage (optional)
+
+**Supabase Auth Configuration**:
+- Use `persistSession` option
+- Adjust session expiry time based on "Remember me"
+- Consider using refresh token rotation for security
+
+**Files to Modify**:
+- Login form component (`app/auth/login/page.tsx` or similar)
+- Supabase client configuration for session handling
+
+**Questions Before Implementation**:
+1. Session duration when "Remember me" is checked? (7 days, 30 days, 90 days?)
+2. Session duration when unchecked? (Session only, 24 hours?)
+3. Should preference be remembered for next login?
+4. Security considerations - max session length?
+
+---
+
+### 16. Add Terms of Use and Privacy Policy to Sign Up 🔴
+**Priority**: High
+**Type**: Feature - Compliance
+
+**Requirements**:
+- Add checkbox to sign up form: "I agree to the Terms of Use and Privacy Policy"
+- Checkbox must be checked to enable sign up button
+- Links to Terms of Use and Privacy Policy pages
+- Create Terms of Use page
+- Create Privacy Policy page
+
+**Legal Requirements**:
+- Terms of Use content (may need legal review)
+- Privacy Policy content (GDPR, CCPA compliance if applicable)
+- Record user consent in database
+
+**Database Requirements**:
+- Store consent timestamp in user metadata or separate table
+- Track which version of terms/privacy policy user agreed to
+
+**Files to Create/Modify**:
+- Sign up form component
+- `/app/legal/terms-of-use/page.tsx`
+- `/app/legal/privacy-policy/page.tsx`
+- Update Supabase user metadata to store consent
+
+**Questions Before Implementation**:
+1. Do you have existing Terms of Use and Privacy Policy documents?
+2. Should we track which version of terms user agreed to?
+3. Where should links open? (new tab, modal, dedicated page?)
+4. Should existing users be prompted to accept updated terms?
+5. GDPR compliance needed? (EU users)
+6. Do you want to use a template or need custom legal docs?
+
+---
+
+### 17. Add Google Analytics and Session Recording 🔴
+**Priority**: Medium
+**Type**: Feature - Analytics
+
+**Requirements**:
+- Integrate Google Analytics (GA4)
+- Add session recording tool (e.g., Hotjar, LogRocket, FullStory)
+- Track key user events and page views
+- Privacy-compliant implementation
+
+**Google Analytics Setup**:
+- Create GA4 property
+- Add GA tracking script to app
+- Set up custom events:
+  - Notebook created
+  - Page created
+  - Note created
+  - Video played
+  - Share link generated
+- Configure user privacy settings
+
+**Session Recording Setup**:
+- Choose tool: Hotjar, LogRocket, Microsoft Clarity, or FullStory
+- Install tracking script
+- Configure privacy settings (mask sensitive data)
+- Set up recording filters (e.g., only record authenticated users)
+
+**Privacy Considerations**:
+- Cookie consent banner (required for GDPR)
+- Respect Do Not Track (DNT) browser setting
+- Anonymize IP addresses
+- Allow users to opt-out
+- Document in Privacy Policy
+
+**Files to Create/Modify**:
+- Add GA script to `app/layout.tsx`
+- Create analytics utility functions (`lib/analytics.ts`)
+- Event tracking throughout app
+- Cookie consent component
+- Update Privacy Policy
+
+**Questions Before Implementation**:
+1. Google Analytics account set up? (need Measurement ID)
+2. Preferred session recording tool?
+   - **Hotjar** (heatmaps + recordings)
+   - **Microsoft Clarity** (free, good recordings)
+   - **LogRocket** (dev-focused, error tracking)
+   - **FullStory** (comprehensive but expensive)
+3. Which events to track? (beyond the basics listed above)
+4. Cookie consent approach:
+   - Banner at bottom?
+   - Modal on first visit?
+   - Opt-in or opt-out?
+5. Should analytics be disabled for development?
+6. Do you need e-commerce tracking (future monetization)?
+
+---
+
 ## Completed Tasks
 
 None yet.
