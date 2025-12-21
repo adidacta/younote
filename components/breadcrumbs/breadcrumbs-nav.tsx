@@ -91,7 +91,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
     setPreviouslyActiveIndex(prevActiveIndex);
 
     // When going backward, show previous items initially, then fade them out
-    if (goingBackward && prevItems.length > items.length) {
+    if (goingBackward && prevItems && prevItems.length > items.length) {
       // Set direction first (synchronously)
       setIsGoingBackward(true);
 
