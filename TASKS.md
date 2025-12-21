@@ -696,6 +696,336 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
+### 18. Implement Onboarding Notebook (Hybrid Approach) 🔴
+**Priority**: High
+**Type**: Feature - Onboarding
+
+**Objective**:
+Improve new user onboarding by auto-creating a "Welcome to YouNote" notebook with pre-populated tutorial content. Users learn by interacting with real notes.
+
+**Approach**: Option C (Hybrid)
+- Pre-populate complete notebook with tutorial notes
+- Subtle welcome message on first login
+- Fully deletable (users own the content)
+- No forced tutorial overlays for v1
+
+**Demo Video**:
+- YouTube URL: `https://youtu.be/9EKi2E9dVY8`
+- Video Title: (to be fetched via YouTube API)
+
+**Notebook Structure**:
+```
+📓 "Welcome to YouNote"
+  └── 📄 "Quick Start Guide" (with demo video above)
+      ├── 📝 Note 1: Welcome message
+      ├── 📝 Note 2: Guitar reference (00:21 timestamp)
+      ├── 📝 Note 3: Understanding the Hierarchy
+      ├── 📝 Note 4: Creating & Editing Notes
+      ├── 📝 Note 5: Markdown Basics
+      ├── 📝 Note 6: Keyboard Shortcuts
+      └── 📝 Note 7: Sharing Your Notes
+```
+
+**Note Content Templates**:
+
+**Note 1: Welcome! 👋** (at timestamp 00:00)
+```markdown
+# Welcome to YouNote! 🎉
+
+YouNote helps you take **timestamped notes** while watching YouTube videos.
+
+This tutorial notebook will show you the basics. Feel free to:
+- Edit these notes
+- Delete this notebook when ready
+- Or keep it as a reference!
+
+Click on the timestamps in these notes to jump to that moment in the video. Let's get started! 👇
+```
+
+**Note 2: Guitar Reference** (at timestamp 00:21)
+```markdown
+# 00:21 - "Friends Don't Let Friends Get Friends Haircuts"
+
+Notice the sticker on Jerry Cantrell's guitar? This became iconic from Alice in Chains' legendary MTV Unplugged performance in 1996.
+
+**The Story Behind It:**
+The sticker reads "Friends Don't Let Friends Get Friends Haircuts" - a humorous play on the anti-drunk driving slogan "Friends Don't Let Friends Drive Drunk."
+
+During the grunge era of the early '90s, it was common for friend groups to get matching haircuts (think matching bowl cuts or long hair). Jerry's sticker was a tongue-in-cheek commentary on this trend.
+
+**Why This Matters for YouNote:**
+This note demonstrates YouNote's core feature - **timestamped notes!** Click on `00:21` above to jump directly to this moment in the video. Perfect for capturing interesting details, references, or moments you want to remember.
+
+You can add as many timestamped notes as you like. Just type the time in `MM:SS` or `HH:MM:SS` format, and it becomes clickable!
+```
+
+**Note 3: Understanding the Hierarchy** (at timestamp 01:00)
+```markdown
+# 01:00 - How YouNote is Organized
+
+YouNote has three levels:
+
+1. **📓 Notebooks** - Organize by topic or category
+   - Examples: "Guitar Lessons", "Cooking Recipes", "Business Ideas"
+
+2. **📄 Pages** - One page per YouTube video
+   - Each page embeds the video player
+
+3. **📝 Notes** - Timestamped notes for each video
+   - Click timestamps to seek the video
+
+**Example Structure:**
+```
+📓 Music Theory Lessons
+  ├── 📄 "Understanding Chord Progressions"
+  │   ├── 02:15 - What is a chord progression?
+  │   ├── 05:30 - Common progressions (I-IV-V)
+  │   └── 08:45 - Practice examples
+  └── 📄 "Scales Explained"
+      ├── 01:20 - Major scale formula
+      └── 04:50 - Minor scale variations
+```
+
+**Pro Tip:** Create notebooks for different topics. Add pages for each video. Add notes as you watch!
+```
+
+**Note 4: Creating & Editing Notes** (at timestamp 02:00)
+```markdown
+# 02:00 - Taking Notes in YouNote
+
+**Creating a Note:**
+- Click the "+" button (or FAB on mobile) below the video
+- Or use the **New Note** card at the top of the notes section
+- Notes **auto-save** as you type! ✨ (no need to manually save)
+
+**Editing Notes:**
+- Click any note to edit it
+- Changes save automatically after you stop typing
+- Click outside to finish editing
+
+**Deleting Notes:**
+- Hover over a note and click the trash icon
+- Confirm deletion (can't be undone)
+
+**Best Practice:**
+- Add timestamps to your notes: `12:34 - Your note here`
+- Be concise - capture key points, not transcripts
+- Use markdown formatting (see next note!)
+```
+
+**Note 5: Markdown Basics** (at timestamp 03:00)
+```markdown
+# 03:00 - Format Notes with Markdown
+
+YouNote supports **GitHub Flavored Markdown** for rich text formatting:
+
+## Text Formatting
+- **Bold text** → \`**bold**\`
+- *Italic text* → \`*italic*\`
+- ~~Strikethrough~~ → \`~~text~~\`
+- \`Inline code\` → \`\`code\`\`
+
+## Lists
+**Bullet List:**
+- Item 1
+- Item 2
+  - Nested item
+
+**Numbered List:**
+1. First item
+2. Second item
+3. Third item
+
+## Links & Code Blocks
+- [Link text](https://example.com)
+- \`\`\`javascript
+  // Code block
+  const greeting = "Hello!";
+  \`\`\`
+
+## Checkboxes
+- [ ] Unchecked task
+- [x] Completed task
+
+**Try it yourself!** Edit this note and experiment with markdown formatting.
+```
+
+**Note 6: Keyboard Shortcuts** (at timestamp 04:00)
+```markdown
+# 04:00 - ⌨️ Keyboard Shortcuts
+
+Speed up your workflow with these shortcuts:
+
+**Essential Shortcuts:**
+- **Cmd/Ctrl + K** - Quick search
+  - Find any notebook, page, or note instantly
+  - Works from anywhere in the app
+
+- **Cmd/Ctrl + Enter** - Save current note
+  - Forces immediate save (though auto-save is on)
+  - Useful when you want to ensure note is saved
+
+**Coming Soon:**
+- Cmd/Ctrl + / - Toggle markdown toolbar
+- Cmd/Ctrl + B - Bold selected text
+- Cmd/Ctrl + I - Italic selected text
+
+**Pro Tip:** Press `Cmd/Ctrl + K` right now to try the search! Type "Welcome" to find this notebook.
+```
+
+**Note 7: Sharing Your Notes** (at timestamp 05:00)
+```markdown
+# 05:00 - 🔗 Share Your Notes
+
+Share pages with friends, classmates, or teammates:
+
+**How to Share:**
+1. Click the **"Share"** button at the top of any page
+2. Copy the generated link
+3. Send to anyone!
+
+**Privacy:**
+- Shared links are **view-only** (others can't edit)
+- Only the specific page is shared (not your entire notebook)
+- Revoke access anytime by regenerating the link
+
+**Great for:**
+- 📚 Study groups - share lecture notes
+- 👥 Team knowledge - share tutorial notes
+- 🎓 Teaching - share curated resources
+- 💡 Reference materials - bookmark and share
+
+**Try it:** Share this onboarding page with a friend to show them YouNote!
+```
+
+---
+
+**Implementation Plan**:
+
+**Phase 1: Template Content (Priority 1)**
+1. Create `lib/onboarding/templates.ts`:
+   - Store all note content as constants
+   - Easy to update/localize later
+   - Include video URL and metadata
+
+**Phase 2: Database Functions (Priority 1)**
+1. Create `lib/database/onboarding.ts`:
+   ```typescript
+   export async function createOnboardingNotebook(userId: string): Promise<void>
+   ```
+   - Creates "Welcome to YouNote" notebook
+   - Creates page with demo video
+   - Creates all 7 tutorial notes with timestamps
+   - Marks with `is_onboarding: true` flag (optional)
+
+2. Add database columns (optional):
+   ```sql
+   ALTER TABLE notebooks ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
+   ALTER TABLE pages ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
+   ```
+
+**Phase 3: Integration (Priority 1)**
+1. Hook into signup flow:
+   - Option A: Auth callback after user creation
+   - Option B: API route `/api/auth/signup`
+   - Call `createOnboardingNotebook(userId)` after successful signup
+
+2. Error handling:
+   - Log errors but don't block signup
+   - Retry logic if fails
+   - Track success rate for monitoring
+
+**Phase 4: Welcome Experience (Priority 2)**
+1. First login detection:
+   - Check if user has any notebooks
+   - If only onboarding notebook exists → first-time user
+
+2. Welcome message (subtle):
+   - Toast notification: "👋 Welcome! We've created a tutorial notebook to help you get started."
+   - Or small banner at top (dismissible)
+   - Link to onboarding notebook
+
+**Phase 5: Polish (Priority 3)**
+1. Optional enhancements:
+   - Badge on onboarding notebook: "Tutorial" or "Getting Started"
+   - Progress tracking (which notes viewed)
+   - Completion celebration ("You've completed the tutorial! 🎉")
+   - Analytics: track onboarding completion rate
+
+---
+
+**Technical Details**:
+
+**Files to Create:**
+- `lib/onboarding/templates.ts` - Note content templates
+- `lib/database/onboarding.ts` - Database functions
+- `lib/onboarding/index.ts` - Main onboarding logic
+
+**Files to Modify:**
+- Auth signup flow (hook to trigger onboarding)
+- First login detection logic
+- Optional: Add welcome banner component
+
+**Database Migration** (optional):
+```sql
+-- Add onboarding flags
+ALTER TABLE notebooks ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
+ALTER TABLE pages ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
+
+-- Create index for performance
+CREATE INDEX idx_notebooks_is_onboarding ON notebooks(user_id, is_onboarding);
+```
+
+**API Calls:**
+- YouTube API: Fetch video metadata (title, thumbnail, duration)
+- Store in `pages` table as usual
+
+---
+
+**User Experience Flow**:
+
+1. **User signs up** → Account created
+2. **System creates** "Welcome to YouNote" notebook automatically
+3. **User logs in** → Sees welcome toast/banner
+4. **User explores** onboarding notebook
+5. **User learns** by interacting with real timestamped notes
+6. **User deletes** when ready (or keeps as reference)
+
+---
+
+**Success Metrics**:
+- % of new users who view onboarding notebook
+- % who interact with notes (click timestamps)
+- % who create their own notebook after onboarding
+- % who delete onboarding notebook (indicates completion)
+- Retention rate improvement
+
+---
+
+**Questions Before Implementation**:
+1. Should onboarding be **required** or **skippable** during signup?
+2. Welcome message preference:
+   - Toast notification (subtle)?
+   - Banner at top (more visible)?
+   - Modal (more intrusive)?
+   - Silent (just create, no announcement)?
+3. Should we track onboarding progress for analytics?
+4. Future: Add interactive tour overlay (react-joyride)?
+5. Should video auto-play when opening the page, or wait for user?
+
+---
+
+**Dependencies**:
+- YouTube API access (already configured)
+- Existing database functions for notebooks/pages/notes
+
+**Estimated Effort**: 4-6 hours
+- Template creation: 1 hour
+- Database functions: 1-2 hours
+- Integration + testing: 2-3 hours
+
+---
+
 ## Completed Tasks
 
 None yet.
