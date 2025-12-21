@@ -213,6 +213,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
             // Calculate chevron animation (chevron fades with the item after it)
             const nextItemWillBeRemoved = itemsToRemove.has(index + 1);
             let chevronBaseDelay = 0;
+            let chevronDuration = 0.3; // Default duration
             if (isGoingBackward && nextItemWillBeRemoved) {
               // Count how many items after the NEXT one are also being removed
               let numItemsAfterNext = 0;
@@ -222,6 +223,14 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
                 }
               }
               chevronBaseDelay = numItemsAfterNext * 0.3;
+
+              // Calculate duration based on next item's text length
+              // Animation time = (letters - 1) * staggerDelay + letterDuration
+              const nextItem = displayItems[index + 1];
+              const nextItemLength = nextItem.label.length;
+              const staggerDelay = 0.017; // 17ms for backward animation
+              const letterDuration = 0.167; // 167ms per letter
+              chevronDuration = (nextItemLength - 1) * staggerDelay + letterDuration;
             }
 
             // Debug logging for last item
@@ -295,7 +304,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
                       opacity: shouldAnimate && nextItemWillBeRemoved ? 0 : 1
                     }}
                     transition={{
-                      duration: shouldAnimate && nextItemWillBeRemoved ? 0.3 : 0,
+                      duration: shouldAnimate && nextItemWillBeRemoved ? chevronDuration : 0,
                       delay: chevronBaseDelay,
                       ease: "easeInOut"
                     }}
