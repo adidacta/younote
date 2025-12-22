@@ -4,6 +4,7 @@ import { CreateNotebookDialog } from "@/components/notebooks/create-notebook-dia
 import { NotebooksView } from "@/components/notebooks/notebooks-view";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
+import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -22,6 +23,11 @@ export default async function NotebooksPage() {
 
   return (
     <div className="container max-w-7xl mx-auto px-4 py-6">
+      {/* Stats Widgets */}
+      <div className="mb-8">
+        <StatsWidgets />
+      </div>
+
       <BreadcrumbsNav
         items={[
           { label: "Notebooks", href: "/notebooks" },
