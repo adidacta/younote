@@ -61,20 +61,18 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{animatedTotal}</div>
-        {recent > 0 && (
-          <p className="text-xs text-muted-foreground mt-1">
-            <span className="text-green-600 dark:text-green-400 font-medium">
-              +{animatedRecent}
-            </span>{" "}
-            in last 24h
-          </p>
-        )}
-        {recent === 0 && total > 0 && (
-          <p className="text-xs text-muted-foreground mt-1">No new today</p>
-        )}
-        {total === 0 && (
-          <p className="text-xs text-muted-foreground mt-1">Get started!</p>
-        )}
+        <p className="text-xs text-muted-foreground mt-1">
+          {recent > 0 ? (
+            <>
+              <span className="text-green-600 dark:text-green-400 font-medium">
+                +{animatedRecent}
+              </span>{" "}
+              in last 24h
+            </>
+          ) : (
+            <span>+0 in last 24h</span>
+          )}
+        </p>
       </CardContent>
     </Card>
   );
