@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { AnimatedBreadcrumb } from "./animated-breadcrumb";
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,6 +13,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+
+// Vercel-style chevrons up/down icon
+const ChevronsUpDown = ({ className }: { className?: string }) => (
+  <svg
+    height="16"
+    strokeLinejoin="round"
+    viewBox="0 0 16 16"
+    width="16"
+    className={className}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M8.7071 2.39644C8.31658 2.00592 7.68341 2.00592 7.29289 2.39644L4.46966 5.21966L3.93933 5.74999L4.99999 6.81065L5.53032 6.28032L7.99999 3.81065L10.4697 6.28032L11 6.81065L12.0607 5.74999L11.5303 5.21966L8.7071 2.39644ZM5.53032 9.71966L4.99999 9.18933L3.93933 10.25L4.46966 10.7803L7.29289 13.6035C7.68341 13.9941 8.31658 13.9941 8.7071 13.6035L11.5303 10.7803L12.0607 10.25L11 9.18933L10.4697 9.71966L7.99999 12.1893L5.53032 9.71966Z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 export interface DropdownItem {
   id: string;
@@ -213,11 +231,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <button className="hover:bg-accent rounded-sm p-0.5 transition-colors">
-              {isOpen ? (
-                <ChevronUp className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-              )}
+              <ChevronsUpDown className="text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
