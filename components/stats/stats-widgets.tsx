@@ -53,30 +53,47 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
   const animatedTotal = useCountUp(total);
   const animatedRecent = useCountUp(recent, 1500);
 
+  // Define gradient backgrounds for each card type
+  const gradients = {
+    blue: "bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-950/30 dark:to-purple-950/30",
+    purple: "bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-950/30 dark:to-pink-950/30",
+    green: "bg-gradient-to-br from-green-100 to-cyan-100 dark:from-green-950/30 dark:to-cyan-950/30",
+  };
+
+  const iconBackgrounds = {
+    blue: "bg-blue-500",
+    purple: "bg-purple-500",
+    green: "bg-green-500",
+  };
+
+  const gradientKey = title === "Notebooks" ? "blue" : title === "Pages" ? "purple" : "green";
+
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-xl hover:scale-105 duration-300 border-2">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-        <div className={`${iconColor} p-3 rounded-lg bg-muted/50`}>
-          {icon}
+    <Card className={`overflow-hidden transition-all hover:shadow-2xl hover:scale-105 duration-300 border-0 ${gradients[gradientKey]}`}>
+      <CardContent className="flex flex-col items-center justify-center p-8 space-y-4">
+        {/* Large circular icon */}
+        <div className={`${iconBackgrounds[gradientKey]} p-5 rounded-full shadow-lg`}>
+          <div className="text-white">
+            {icon}
+          </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="text-5xl font-bold tracking-tight">
-          {animatedTotal.toLocaleString()}
+
+        {/* Large number */}
+        <div className="text-center">
+          <div className="text-6xl font-black tracking-tight text-foreground">
+            {animatedTotal.toLocaleString()}+
+          </div>
+          <p className="text-base font-semibold text-foreground/80 mt-2">
+            {title}
+          </p>
         </div>
-        <p className="text-sm font-medium">
-          {recent > 0 ? (
-            <>
-              <span className="text-green-600 dark:text-green-400 text-base font-semibold">
-                +{animatedRecent.toLocaleString()}
-              </span>{" "}
-              <span className="text-muted-foreground">in last 24h</span>
-            </>
-          ) : (
-            <span className="text-muted-foreground">+0 in last 24h</span>
-          )}
-        </p>
+
+        {/* 24h stat */}
+        {recent > 0 && (
+          <p className="text-sm font-medium text-foreground/60">
+            +{animatedRecent.toLocaleString()} in last 24h
+          </p>
+        )}
       </CardContent>
     </Card>
   );
