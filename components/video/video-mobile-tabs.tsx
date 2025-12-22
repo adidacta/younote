@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock } from "lucide-react";
+import { Clock, Loader2 } from "lucide-react";
 
 interface Chapter {
   timestamp: number;
   title: string;
+}
+
+interface TranscriptEntry {
+  text: string;
+  offset: number;
+  duration: number;
 }
 
 interface VideoMobileTabsProps {
@@ -21,9 +27,40 @@ export function VideoMobileTabs({
   children,
 }: VideoMobileTabsProps) {
   const [activeTab, setActiveTab] = useState("video");
+  const [transcript, setTranscript] = useState<TranscriptEntry[] | null>(null);
+  const [isLoadingTranscript, setIsLoadingTranscript] = useState(false);
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
 
   // Parse chapters from description
   const chapters = parseChapters(description);
+
+  // Fetch transcript when transcript tab is activated
+  useEffect(() => {
+    if (activeTab === "transcript" && !transcript && !isLoadingTranscript && !transcriptError) {
+      fetchTranscript();
+    }
+  }, [activeTab, transcript, isLoadingTranscript, transcriptError]);
+
+  const fetchTranscript = async () => {
+    setIsLoadingTranscript(true);
+    setTranscriptError(null);
+
+    try {
+      const response = await fetch(`/api/youtube/transcript?videoId=${videoId}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch transcript');
+      }
+
+      setTranscript(data.transcript);
+    } catch (error) {
+      console.error('Error fetching transcript:', error);
+      setTranscriptError(error instanceof Error ? error.message : 'Failed to load transcript');
+    } finally {
+      setIsLoadingTranscript(false);
+    }
+  };
 
   const handleChapterClick = (timestamp: number) => {
     // Switch back to video tab before seeking
@@ -114,10 +151,42 @@ export function VideoMobileTabs({
         </TabsContent>
 
         <TabsContent value="transcript" className="mt-4">
-          <div className="bg-muted/30 rounded-lg p-4 text-center py-12">
-            <p className="text-muted-foreground text-sm">
-              Transcript feature coming soon
-            </p>
+          <div className="bg-muted/30 rounded-lg p-4 max-h-[60vh] overflow-y-auto">
+            {isLoadingTranscript && (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <span className="ml-2 text-sm text-muted-foreground">Loading transcript...</span>
+              </div>
+            )}
+
+            {transcriptError && (
+              <div className="text-center py-12">
+                <p className="text-sm text-muted-foreground mb-2">{transcriptError}</p>
+                <button
+                  onClick={fetchTranscript}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
+            {transcript && transcript.length > 0 && (
+              <div className="space-y-2">
+                {transcript.map((entry, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleChapterClick(entry.offset)}
+                    className="w-full text-left p-2 rounded hover:bg-accent transition-colors group flex items-start gap-3"
+                  >
+                    <span className="text-xs font-mono text-muted-foreground group-hover:text-primary min-w-[48px]">
+                      {formatTimestamp(entry.offset)}
+                    </span>
+                    <span className="text-sm flex-1">{entry.text}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>
