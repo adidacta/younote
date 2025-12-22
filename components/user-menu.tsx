@@ -45,7 +45,7 @@ export function UserMenu({ profile }: UserMenuProps) {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-12 w-12 [&_svg]:!size-8">
           <User />

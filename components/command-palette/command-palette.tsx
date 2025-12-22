@@ -137,7 +137,7 @@ export function CommandPalette({ notebooks, pages, notes }: CommandPaletteProps)
       </button>
 
       {/* Command dialog */}
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog open={open} onOpenChange={setOpen} modal={false}>
         <CommandInput
           placeholder="Search notebooks, pages, notes..."
           value={search}
