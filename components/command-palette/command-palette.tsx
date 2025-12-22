@@ -124,12 +124,8 @@ export function CommandPalette({ notebooks, pages, notes }: CommandPaletteProps)
     <>
       {/* Trigger button */}
       <button
-        onClick={() => {
-          if (!open) {
-            setOpen(true);
-          }
-        }}
-        className="flex items-center justify-between gap-3 px-5 py-2 text-sm text-foreground/70 rounded-lg border-2 border-input bg-muted/30 hover:bg-muted/50 hover:border-foreground/20 transition-all shadow-sm hover:shadow-md whitespace-nowrap"
+        onClick={() => setOpen(true)}
+        className={`flex items-center justify-between gap-3 px-5 py-2 text-sm text-foreground/70 rounded-lg border-2 border-input bg-muted/30 hover:bg-muted/50 hover:border-foreground/20 transition-all shadow-sm hover:shadow-md whitespace-nowrap ${open ? 'pointer-events-none' : ''}`}
       >
         <div className="flex items-center gap-3">
           <Search className="h-5 w-5" />
