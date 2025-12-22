@@ -54,23 +54,27 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
   const animatedRecent = useCountUp(recent, 1500);
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <div className={`${iconColor}`}>{icon}</div>
+    <Card className="overflow-hidden transition-all hover:shadow-xl hover:scale-105 duration-300 border-2">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <div className={`${iconColor} p-3 rounded-lg bg-muted/50`}>
+          {icon}
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{animatedTotal}</div>
-        <p className="text-xs text-muted-foreground mt-1">
+      <CardContent className="space-y-3">
+        <div className="text-5xl font-bold tracking-tight">
+          {animatedTotal.toLocaleString()}
+        </div>
+        <p className="text-sm font-medium">
           {recent > 0 ? (
             <>
-              <span className="text-green-600 dark:text-green-400 font-medium">
-                +{animatedRecent}
+              <span className="text-green-600 dark:text-green-400 text-base font-semibold">
+                +{animatedRecent.toLocaleString()}
               </span>{" "}
-              in last 24h
+              <span className="text-muted-foreground">in last 24h</span>
             </>
           ) : (
-            <span>+0 in last 24h</span>
+            <span className="text-muted-foreground">+0 in last 24h</span>
           )}
         </p>
       </CardContent>
@@ -135,26 +139,26 @@ export function StatsWidgets() {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-3">
       <StatCard
         title="Notebooks"
         total={stats.totalNotebooks}
         recent={stats.notebooks24h}
-        icon={<BookOpen className="h-4 w-4" />}
+        icon={<BookOpen className="h-8 w-8" />}
         iconColor="text-blue-600 dark:text-blue-400"
       />
       <StatCard
         title="Pages"
         total={stats.totalPages}
         recent={stats.pages24h}
-        icon={<FileText className="h-4 w-4" />}
+        icon={<FileText className="h-8 w-8" />}
         iconColor="text-purple-600 dark:text-purple-400"
       />
       <StatCard
         title="Notes"
         total={stats.totalNotes}
         recent={stats.notes24h}
-        icon={<StickyNote className="h-4 w-4" />}
+        icon={<StickyNote className="h-8 w-8" />}
         iconColor="text-green-600 dark:text-green-400"
       />
     </div>
