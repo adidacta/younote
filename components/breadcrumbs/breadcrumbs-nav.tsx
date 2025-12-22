@@ -228,13 +228,13 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
         <Link href={item.href} className="hover:opacity-80 transition-opacity">
           {children}
         </Link>
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen} modal={false}>
           <DropdownMenuTrigger asChild>
             <button className="hover:bg-accent rounded-sm p-0.5 transition-colors">
               <ChevronsUpDown className="text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
+          <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col" sideOffset={4}>
             {item.dropdownItems.length > 5 && (
               <div className="p-2 border-b">
                 <div className="relative">
