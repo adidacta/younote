@@ -234,7 +234,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
               <ChevronsUpDown className="text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col" sideOffset={4}>
+          <DropdownMenuContent align="end" className="w-64 max-h-[400px] overflow-hidden flex flex-col" sideOffset={4}>
             {item.dropdownItems.length > 5 && (
               <div className="p-2 border-b">
                 <div className="relative">
