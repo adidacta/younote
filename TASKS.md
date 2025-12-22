@@ -13,48 +13,6 @@ This file tracks open tasks, bugs, and feature requests for the YouNote project.
 ## Current Tasks
 
 
-### 3. Home Page Statistics Widgets 🔴
-**Priority**: High
-**Type**: Feature
-
-**Requirements**:
-- Display elegant stat widgets on home page showing:
-  1. Total notebooks count
-  2. Total pages count
-  3. Total notes count
-  4. New notebooks created in past 24 hours
-  5. New pages created in past 24 hours
-  6. New notes created in past 24 hours
-
-**Design Requirements**:
-- Elegant, modern widget design
-- Count-up animation when page loads (numbers animate from 0 to actual value)
-- Should fit well with existing dark/light theme
-
-**Technical Requirements**:
-- Query Supabase for counts (total and 24h filtered by `created_at`)
-- Implement count-up animation (consider using a library like `react-countup` or custom implementation)
-- Ensure performant queries with proper indexing
-
-**Files to Create/Modify**:
-- Home page component (likely `/app/(authenticated)/page.tsx` or similar)
-- New API endpoint for stats: `/api/stats`
-- Stats widget component
-
-**Questions Before Implementation**:
-1. Where exactly on the home page should these widgets appear? (top, below hero, in a grid?)
-2. Layout preference:
-   - 3 columns (notebooks | pages | notes)?
-   - 2 rows x 3 columns?
-   - Cards or inline stats?
-3. For the "past 24 hours" counts - should they be:
-   - Displayed as separate numbers below totals?
-   - Shown as a delta (e.g., "+5 today")?
-   - In a tooltip on hover?
-4. Count-up animation speed? (e.g., 1 second, 2 seconds?)
-5. Should these be user-specific stats (my notebooks/pages/notes) or system-wide?
-
----
 
 ### 4. In-App Rating System 🔴
 **Priority**: Medium
@@ -651,6 +609,12 @@ Fixed breadcrumb animation issues including speed, selective animation, and layo
 **Type**: Bug Fix
 
 Resolved content width differences between pages and breadcrumb shifting issues.
+
+### 3. Home Page Statistics Widgets 🟢
+**Completed**: 2025-12-22
+**Type**: Feature
+
+Created elegant stats widgets with count-up animations showing total and 24h counts for notebooks, pages, and notes.
 
 ### 6. Fix Mobile Navigation Bar 🟢
 **Completed**: 2025-12-22
