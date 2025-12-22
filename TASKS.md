@@ -12,81 +12,6 @@ This file tracks open tasks, bugs, and feature requests for the YouNote project.
 
 ## Current Tasks
 
-### 1. Fix Breadcrumb Animation 🟡
-**Priority**: Medium
-**Type**: Bug Fix
-
-**Issue**:
-- Animation is too slow ✅ FIXED (50% faster)
-- Currently animates ALL breadcrumb items when it should only animate the last two ✅ FIXED
-- Problem: When navigating back from a page to a notebook, the "Notebooks" breadcrumb also animates unnecessarily ✅ FIXED
-- Character counter in editable page title causes entire breadcrumb to shift down 🔴 NEW ISSUE
-
-**Requirements**:
-- Make animation faster ✅ DONE
-- Only animate the last two breadcrumb items (current and previous) ✅ DONE
-- The "Notebooks" item should remain static when going back from page → notebook ✅ DONE
-- Fix character counter layout so breadcrumbs don't shift vertically when editing 🔴 TODO
-
-**Files to Check**:
-- Breadcrumb component (likely in `/components/`)
-- Related animation logic using Framer Motion
-- `components/pages/editable-page-title.tsx` - character counter positioning
-
-**Answered Requirements**:
-1. **Speed**: Increase current speed by 50% (need to check current duration first)
-2. **Animation Style**: Keep the letter-by-letter bold transition effect
-3. **Animation Scenarios** (5 total):
-   - **Scenario 1**: Notebooks → Notebook (forward navigation)
-   - **Scenario 2**: Notebook → Notebooks (backward navigation)
-   - **Scenario 3**: Notebook → Page (forward navigation)
-   - **Scenario 4**: Page → Notebook (backward navigation)
-   - **Scenario 5**: Page → Notebooks (backward - direct click)
-
-   **Key Behaviors**:
-   - Going back: Letters completely hide from section we're moving away from
-   - All animations happen on TARGET page (see current page name when navigating back, then it disappears)
-   - Example: Page → Notebook: Still see page name initially, then it quickly disappears and notebook name gets bolder (right to left)
-   - "Notebooks" remains static when going Page → Notebook
-
-4. **Direction Logic**: Keep it (forward = left→right, backward = right→left)
-
----
-
-### 2. Content Width Inconsistency 🔴
-**Priority**: Medium
-**Type**: Bug Fix
-
-**Issue**:
-- Content section width differs between pages
-- Breadcrumbs shift slightly left when navigating from notebooks/notebook → page
-- Likely caused by YouTube embed taking additional space on page view
-
-**Observable Behavior**:
-- Notebooks page: content width X
-- Notebook detail page: content width X
-- Page (with YouTube player): content width X + offset
-- Result: Visible breadcrumb shift
-
-**Requirements**:
-- Ensure consistent content width across all pages
-- Breadcrumbs should not shift position during navigation
-- YouTube embed should not affect overall layout width
-
-**Files to Check**:
-- Layout components for authenticated routes
-- Page component with YouTube player
-- CSS/Tailwind classes for content containers
-
-**Questions Before Implementation**:
-1. Should the YouTube player width match the notebooks/notebook content width, or should content expand to match the player?
-2. What's your preferred max-width for consistency across all pages?
-3. Should the layout be:
-   - Single column (video above notes)?
-   - Side-by-side on larger screens?
-   - Something else?
-
----
 
 ### 3. Home Page Statistics Widgets 🔴
 **Priority**: High
@@ -252,35 +177,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 6. Fix Mobile Navigation Bar 🔴
-**Priority**: High
-**Type**: Bug Fix
-
-**Issue**:
-- Elements in the mobile navigation bar overlap each other
-- Likely responsive design issue at smaller breakpoints
-
-**Requirements**:
-- Fix element positioning/spacing in mobile nav
-- Ensure all nav items are properly visible and accessible
-- Test across different mobile screen sizes (320px, 375px, 390px, 414px)
-- Maintain visual consistency with desktop design
-
-**Files to Check**:
-- Navigation component (likely in `/components/`)
-- Mobile menu implementation
-- Tailwind responsive classes for navigation
-
-**Questions Before Implementation**:
-1. Which elements are overlapping specifically? (I should investigate the code first, but knowing what you're seeing helps)
-2. What screen size are you testing on when you see the overlap?
-3. Should mobile nav be:
-   - Hamburger menu?
-   - Bottom navigation?
-   - Current design but fixed spacing?
-4. Are there elements that should be hidden on mobile to reduce clutter?
-
----
 
 ### 7. Add Nickname to User Registration 🔴
 **Priority**: Medium
@@ -696,336 +592,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 18. Implement Onboarding Notebook (Hybrid Approach) 🔴
-**Priority**: High
-**Type**: Feature - Onboarding
-
-**Objective**:
-Improve new user onboarding by auto-creating a "Welcome to YouNote" notebook with pre-populated tutorial content. Users learn by interacting with real notes.
-
-**Approach**: Option C (Hybrid)
-- Pre-populate complete notebook with tutorial notes
-- Subtle welcome message on first login
-- Fully deletable (users own the content)
-- No forced tutorial overlays for v1
-
-**Demo Video**:
-- YouTube URL: `https://youtu.be/9EKi2E9dVY8`
-- Video Title: (to be fetched via YouTube API)
-
-**Notebook Structure**:
-```
-📓 "Welcome to YouNote"
-  └── 📄 "Quick Start Guide" (with demo video above)
-      ├── 📝 Note 1: Welcome message
-      ├── 📝 Note 2: Guitar reference (00:21 timestamp)
-      ├── 📝 Note 3: Understanding the Hierarchy
-      ├── 📝 Note 4: Creating & Editing Notes
-      ├── 📝 Note 5: Markdown Basics
-      ├── 📝 Note 6: Keyboard Shortcuts
-      └── 📝 Note 7: Sharing Your Notes
-```
-
-**Note Content Templates**:
-
-**Note 1: Welcome! 👋** (at timestamp 00:00)
-```markdown
-# Welcome to YouNote! 🎉
-
-YouNote helps you take **timestamped notes** while watching YouTube videos.
-
-This tutorial notebook will show you the basics. Feel free to:
-- Edit these notes
-- Delete this notebook when ready
-- Or keep it as a reference!
-
-Click on the timestamps in these notes to jump to that moment in the video. Let's get started! 👇
-```
-
-**Note 2: Guitar Reference** (at timestamp 00:21)
-```markdown
-# 00:21 - "Friends Don't Let Friends Get Friends Haircuts"
-
-Notice the sticker on Jerry Cantrell's guitar? This became iconic from Alice in Chains' legendary MTV Unplugged performance in 1996.
-
-**The Story Behind It:**
-The sticker reads "Friends Don't Let Friends Get Friends Haircuts" - a humorous play on the anti-drunk driving slogan "Friends Don't Let Friends Drive Drunk."
-
-During the grunge era of the early '90s, it was common for friend groups to get matching haircuts (think matching bowl cuts or long hair). Jerry's sticker was a tongue-in-cheek commentary on this trend.
-
-**Why This Matters for YouNote:**
-This note demonstrates YouNote's core feature - **timestamped notes!** Click on `00:21` above to jump directly to this moment in the video. Perfect for capturing interesting details, references, or moments you want to remember.
-
-You can add as many timestamped notes as you like. Just type the time in `MM:SS` or `HH:MM:SS` format, and it becomes clickable!
-```
-
-**Note 3: Understanding the Hierarchy** (at timestamp 01:00)
-```markdown
-# 01:00 - How YouNote is Organized
-
-YouNote has three levels:
-
-1. **📓 Notebooks** - Organize by topic or category
-   - Examples: "Guitar Lessons", "Cooking Recipes", "Business Ideas"
-
-2. **📄 Pages** - One page per YouTube video
-   - Each page embeds the video player
-
-3. **📝 Notes** - Timestamped notes for each video
-   - Click timestamps to seek the video
-
-**Example Structure:**
-```
-📓 Music Theory Lessons
-  ├── 📄 "Understanding Chord Progressions"
-  │   ├── 02:15 - What is a chord progression?
-  │   ├── 05:30 - Common progressions (I-IV-V)
-  │   └── 08:45 - Practice examples
-  └── 📄 "Scales Explained"
-      ├── 01:20 - Major scale formula
-      └── 04:50 - Minor scale variations
-```
-
-**Pro Tip:** Create notebooks for different topics. Add pages for each video. Add notes as you watch!
-```
-
-**Note 4: Creating & Editing Notes** (at timestamp 02:00)
-```markdown
-# 02:00 - Taking Notes in YouNote
-
-**Creating a Note:**
-- Click the "+" button (or FAB on mobile) below the video
-- Or use the **New Note** card at the top of the notes section
-- Notes **auto-save** as you type! ✨ (no need to manually save)
-
-**Editing Notes:**
-- Click any note to edit it
-- Changes save automatically after you stop typing
-- Click outside to finish editing
-
-**Deleting Notes:**
-- Hover over a note and click the trash icon
-- Confirm deletion (can't be undone)
-
-**Best Practice:**
-- Add timestamps to your notes: `12:34 - Your note here`
-- Be concise - capture key points, not transcripts
-- Use markdown formatting (see next note!)
-```
-
-**Note 5: Markdown Basics** (at timestamp 03:00)
-```markdown
-# 03:00 - Format Notes with Markdown
-
-YouNote supports **GitHub Flavored Markdown** for rich text formatting:
-
-## Text Formatting
-- **Bold text** → \`**bold**\`
-- *Italic text* → \`*italic*\`
-- ~~Strikethrough~~ → \`~~text~~\`
-- \`Inline code\` → \`\`code\`\`
-
-## Lists
-**Bullet List:**
-- Item 1
-- Item 2
-  - Nested item
-
-**Numbered List:**
-1. First item
-2. Second item
-3. Third item
-
-## Links & Code Blocks
-- [Link text](https://example.com)
-- \`\`\`javascript
-  // Code block
-  const greeting = "Hello!";
-  \`\`\`
-
-## Checkboxes
-- [ ] Unchecked task
-- [x] Completed task
-
-**Try it yourself!** Edit this note and experiment with markdown formatting.
-```
-
-**Note 6: Keyboard Shortcuts** (at timestamp 04:00)
-```markdown
-# 04:00 - ⌨️ Keyboard Shortcuts
-
-Speed up your workflow with these shortcuts:
-
-**Essential Shortcuts:**
-- **Cmd/Ctrl + K** - Quick search
-  - Find any notebook, page, or note instantly
-  - Works from anywhere in the app
-
-- **Cmd/Ctrl + Enter** - Save current note
-  - Forces immediate save (though auto-save is on)
-  - Useful when you want to ensure note is saved
-
-**Coming Soon:**
-- Cmd/Ctrl + / - Toggle markdown toolbar
-- Cmd/Ctrl + B - Bold selected text
-- Cmd/Ctrl + I - Italic selected text
-
-**Pro Tip:** Press `Cmd/Ctrl + K` right now to try the search! Type "Welcome" to find this notebook.
-```
-
-**Note 7: Sharing Your Notes** (at timestamp 05:00)
-```markdown
-# 05:00 - 🔗 Share Your Notes
-
-Share pages with friends, classmates, or teammates:
-
-**How to Share:**
-1. Click the **"Share"** button at the top of any page
-2. Copy the generated link
-3. Send to anyone!
-
-**Privacy:**
-- Shared links are **view-only** (others can't edit)
-- Only the specific page is shared (not your entire notebook)
-- Revoke access anytime by regenerating the link
-
-**Great for:**
-- 📚 Study groups - share lecture notes
-- 👥 Team knowledge - share tutorial notes
-- 🎓 Teaching - share curated resources
-- 💡 Reference materials - bookmark and share
-
-**Try it:** Share this onboarding page with a friend to show them YouNote!
-```
-
----
-
-**Implementation Plan**:
-
-**Phase 1: Template Content (Priority 1)**
-1. Create `lib/onboarding/templates.ts`:
-   - Store all note content as constants
-   - Easy to update/localize later
-   - Include video URL and metadata
-
-**Phase 2: Database Functions (Priority 1)**
-1. Create `lib/database/onboarding.ts`:
-   ```typescript
-   export async function createOnboardingNotebook(userId: string): Promise<void>
-   ```
-   - Creates "Welcome to YouNote" notebook
-   - Creates page with demo video
-   - Creates all 7 tutorial notes with timestamps
-   - Marks with `is_onboarding: true` flag (optional)
-
-2. Add database columns (optional):
-   ```sql
-   ALTER TABLE notebooks ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
-   ALTER TABLE pages ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
-   ```
-
-**Phase 3: Integration (Priority 1)**
-1. Hook into signup flow:
-   - Option A: Auth callback after user creation
-   - Option B: API route `/api/auth/signup`
-   - Call `createOnboardingNotebook(userId)` after successful signup
-
-2. Error handling:
-   - Log errors but don't block signup
-   - Retry logic if fails
-   - Track success rate for monitoring
-
-**Phase 4: Welcome Experience (Priority 2)**
-1. First login detection:
-   - Check if user has any notebooks
-   - If only onboarding notebook exists → first-time user
-
-2. Welcome message (subtle):
-   - Toast notification: "👋 Welcome! We've created a tutorial notebook to help you get started."
-   - Or small banner at top (dismissible)
-   - Link to onboarding notebook
-
-**Phase 5: Polish (Priority 3)**
-1. Optional enhancements:
-   - Badge on onboarding notebook: "Tutorial" or "Getting Started"
-   - Progress tracking (which notes viewed)
-   - Completion celebration ("You've completed the tutorial! 🎉")
-   - Analytics: track onboarding completion rate
-
----
-
-**Technical Details**:
-
-**Files to Create:**
-- `lib/onboarding/templates.ts` - Note content templates
-- `lib/database/onboarding.ts` - Database functions
-- `lib/onboarding/index.ts` - Main onboarding logic
-
-**Files to Modify:**
-- Auth signup flow (hook to trigger onboarding)
-- First login detection logic
-- Optional: Add welcome banner component
-
-**Database Migration** (optional):
-```sql
--- Add onboarding flags
-ALTER TABLE notebooks ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
-ALTER TABLE pages ADD COLUMN is_onboarding BOOLEAN DEFAULT false;
-
--- Create index for performance
-CREATE INDEX idx_notebooks_is_onboarding ON notebooks(user_id, is_onboarding);
-```
-
-**API Calls:**
-- YouTube API: Fetch video metadata (title, thumbnail, duration)
-- Store in `pages` table as usual
-
----
-
-**User Experience Flow**:
-
-1. **User signs up** → Account created
-2. **System creates** "Welcome to YouNote" notebook automatically
-3. **User logs in** → Sees welcome toast/banner
-4. **User explores** onboarding notebook
-5. **User learns** by interacting with real timestamped notes
-6. **User deletes** when ready (or keeps as reference)
-
----
-
-**Success Metrics**:
-- % of new users who view onboarding notebook
-- % who interact with notes (click timestamps)
-- % who create their own notebook after onboarding
-- % who delete onboarding notebook (indicates completion)
-- Retention rate improvement
-
----
-
-**Questions Before Implementation**:
-1. Should onboarding be **required** or **skippable** during signup?
-2. Welcome message preference:
-   - Toast notification (subtle)?
-   - Banner at top (more visible)?
-   - Modal (more intrusive)?
-   - Silent (just create, no announcement)?
-3. Should we track onboarding progress for analytics?
-4. Future: Add interactive tour overlay (react-joyride)?
-5. Should video auto-play when opening the page, or wait for user?
-
----
-
-**Dependencies**:
-- YouTube API access (already configured)
-- Existing database functions for notebooks/pages/notes
-
-**Estimated Effort**: 4-6 hours
-- Template creation: 1 hour
-- Database functions: 1-2 hours
-- Integration + testing: 2-3 hours
-
----
-
 ### 19. Add Notes Outline/Navigation Sidebar 🔴
 **Priority**: Medium
 **Type**: Feature - Navigation Enhancement
@@ -1109,7 +675,35 @@ Add a collapsible outline/navigation panel on page detail view that displays all
 
 ## Completed Tasks
 
-None yet.
+### 1. Fix Breadcrumb Animation 🟢
+**Completed**: 2025-12-22
+**Type**: Bug Fix
+
+Fixed breadcrumb animation issues including speed, selective animation, and layout shifts.
+
+### 2. Content Width Inconsistency 🟢
+**Completed**: 2025-12-22
+**Type**: Bug Fix
+
+Resolved content width differences between pages and breadcrumb shifting issues.
+
+### 6. Fix Mobile Navigation Bar 🟢
+**Completed**: 2025-12-22
+**Type**: Bug Fix
+
+Fixed overlapping elements in mobile navigation bar.
+
+### 13. Fetch YouTube Transcripts 🟢
+**Completed**: 2025-12-22
+**Type**: Feature
+
+Implemented YouTube transcript fetching using `youtube-transcript` package with clickable timestamps.
+
+### 18. Implement Onboarding Notebook 🟢
+**Completed**: 2025-12-22
+**Type**: Feature - Onboarding
+
+Implemented hybrid onboarding approach with auto-created tutorial notebook for new users.
 
 ---
 
