@@ -3,6 +3,7 @@ import { getNotesByPageId } from "@/lib/database/notes";
 import { getNotebookById, getNotebooksWithStats } from "@/lib/database/notebooks";
 import { notFound } from "next/navigation";
 import { NotesList } from "@/components/notes/notes-list";
+import { NotesOutline } from "@/components/notes/notes-outline";
 import { ShareDialog } from "@/components/sharing/share-dialog";
 import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
@@ -106,13 +107,22 @@ export default async function PageDetailPage({
 
           {/* Notes section - LEFT side on desktop, BELOW tabs on mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <NotesList
-              notes={notes}
-              pageId={pageId}
-              videoId={page.youtube_video_id}
-              highlightNoteId={highlightNoteId}
-              searchQuery={searchQuery}
-            />
+            <div className="flex gap-4">
+              {/* Vertical dots navigation - hidden on mobile */}
+              <div className="hidden md:block">
+                <NotesOutline notes={notes} />
+              </div>
+              {/* Notes list */}
+              <div className="flex-1">
+                <NotesList
+                  notes={notes}
+                  pageId={pageId}
+                  videoId={page.youtube_video_id}
+                  highlightNoteId={highlightNoteId}
+                  searchQuery={searchQuery}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

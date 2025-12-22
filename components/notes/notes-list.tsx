@@ -59,6 +59,7 @@ export function NotesList({
           {notes.map((note) => (
             <div
               key={note.id}
+              data-note-id={note.id}
               ref={(el) => {
                 noteRefs.current[note.id] = el;
               }}
