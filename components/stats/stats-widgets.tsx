@@ -80,17 +80,17 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
 
         {/* Large number */}
         <div className="text-center">
-          <div className="text-6xl font-black tracking-tight text-foreground">
-            {animatedTotal.toLocaleString()}+
+          <div className="text-6xl font-bold tracking-tight text-foreground/70">
+            {animatedTotal.toLocaleString()}
           </div>
-          <p className="text-base font-semibold text-foreground/80 mt-2">
+          <p className="text-base font-semibold text-foreground/60 mt-2">
             {title}
           </p>
         </div>
 
         {/* 24h stat */}
         {recent > 0 && (
-          <p className="text-sm font-medium text-foreground/60">
+          <p className="text-sm font-medium text-foreground/50">
             +{animatedRecent.toLocaleString()} in last 24h
           </p>
         )}
