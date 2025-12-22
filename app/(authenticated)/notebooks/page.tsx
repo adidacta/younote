@@ -4,8 +4,6 @@ import { CreateNotebookDialog } from "@/components/notebooks/create-notebook-dia
 import { NotebooksView } from "@/components/notebooks/notebooks-view";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
-import { WelcomeToast } from "@/components/onboarding/welcome-toast";
-import { ONBOARDING_NOTEBOOK_TITLE } from "@/lib/onboarding/templates";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -22,19 +20,8 @@ export default async function NotebooksPage() {
 
   const notebooks = await getNotebooksWithStats();
 
-  // Check if user has the onboarding notebook
-  const hasOnboardingNotebook = notebooks.some(
-    (nb) => nb.title === ONBOARDING_NOTEBOOK_TITLE
-  );
-
   return (
     <div className="container max-w-7xl mx-auto px-4 py-6">
-      {/* Welcome toast for new users */}
-      <WelcomeToast
-        notebookCount={notebooks.length}
-        hasOnboardingNotebook={hasOnboardingNotebook}
-      />
-
       <BreadcrumbsNav
         items={[
           { label: "Notebooks", href: "/notebooks" },
