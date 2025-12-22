@@ -52,8 +52,8 @@ export function SignUpForm({
       // If email confirmation is disabled, user is automatically logged in
       // Check if we have a session and redirect accordingly
       if (data.session) {
-        // User is logged in, redirect to notebooks
-        router.push("/notebooks");
+        // User is logged in, redirect to setup page for account initialization
+        router.push("/auth/setup");
       } else {
         // User needs to confirm email, show success page
         router.push("/auth/sign-up-success");

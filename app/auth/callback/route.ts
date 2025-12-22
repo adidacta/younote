@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { createOnboardingNotebook, hasOnboardingNotebook } from "@/lib/database/onboarding";
+import { hasOnboardingNotebook } from "@/lib/database/onboarding";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -21,17 +21,11 @@ export async function GET(request: Request) {
       const hasOnboarding = await hasOnboardingNotebook(userId);
 
       if (!hasOnboarding) {
-        // Create onboarding notebook for new users
-        const result = await createOnboardingNotebook(userId);
-
-        if (result.success) {
-          console.log(`Created onboarding notebook for new user: ${userId}`);
-        } else {
-          console.error(`Failed to create onboarding notebook: ${result.error}`);
-          // Don't block the user from logging in if onboarding creation fails
-        }
+        // New user - redirect to setup page for onboarding creation
+        return NextResponse.redirect(`${origin}/auth/setup`);
       }
 
+      // Existing user - redirect to requested page
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
