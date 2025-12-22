@@ -8,6 +8,8 @@ import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { VideoSection } from "@/components/video/video-section";
 import { BookOpen, FileText } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { getNotebooksBreadcrumb } from "@/lib/breadcrumb/personalize";
 
 export const dynamic = 'force-dynamic';
 
@@ -31,6 +33,17 @@ export default async function PageDetailPage({
     notFound();
   }
 
+  // Fetch user nickname
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user
+    ? await supabase
+        .from("user_profiles")
+        .select("nickname")
+        .eq("user_id", user.id)
+        .single()
+    : { data: null };
+
   const notes = await getNotesByPageId(pageId);
   const allNotebooks = await getNotebooksWithStats();
   const pagesInNotebook = await getPagesByNotebookIdWithStats(id);
@@ -40,7 +53,7 @@ export default async function PageDetailPage({
       <BreadcrumbsNav
         items={[
           {
-            label: "Notebooks",
+            label: getNotebooksBreadcrumb(profile?.nickname),
             href: "/notebooks",
             dropdownItems: allNotebooks.map((nb) => ({
               id: nb.id,

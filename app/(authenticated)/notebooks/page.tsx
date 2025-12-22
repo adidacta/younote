@@ -7,6 +7,7 @@ import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-actio
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Plus, BookOpen } from "lucide-react";
+import { getNotebooksBreadcrumb } from "@/lib/breadcrumb/personalize";
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +19,13 @@ export default async function NotebooksPage() {
     redirect("/");
   }
 
+  // Fetch user nickname
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("nickname")
+    .eq("user_id", user.id)
+    .single();
+
   const notebooks = await getNotebooksWithStats();
 
   return (
@@ -25,7 +33,7 @@ export default async function NotebooksPage() {
       <BreadcrumbsNav
         items={[
           {
-            label: "Notebooks",
+            label: getNotebooksBreadcrumb(profile?.nickname),
             href: "/notebooks",
             dropdownItems: notebooks.map((nb) => ({
               id: nb.id,

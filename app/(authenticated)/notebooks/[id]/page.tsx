@@ -7,6 +7,8 @@ import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
 import { Plus, BookOpen, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getNotebooksBreadcrumb } from "@/lib/breadcrumb/personalize";
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +20,17 @@ export default async function NotebookPage({ params }: { params: Promise<{ id: s
     notFound();
   }
 
+  // Fetch user nickname
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user
+    ? await supabase
+        .from("user_profiles")
+        .select("nickname")
+        .eq("user_id", user.id)
+        .single()
+    : { data: null };
+
   const pages = await getPagesByNotebookIdWithStats(id);
   const allNotebooks = await getNotebooksWithStats();
 
@@ -26,7 +39,7 @@ export default async function NotebookPage({ params }: { params: Promise<{ id: s
       <BreadcrumbsNav
         items={[
           {
-            label: "Notebooks",
+            label: getNotebooksBreadcrumb(profile?.nickname),
             href: "/notebooks",
             dropdownItems: allNotebooks.map((nb) => ({
               id: nb.id,
