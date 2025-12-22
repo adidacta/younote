@@ -16,6 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 export function SignUpForm({
   className,
@@ -25,6 +26,7 @@ export function SignUpForm({
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -214,25 +216,27 @@ export function SignUpForm({
               </form>
             </>
           ) : (
-            <form onSubmit={handleSignUp}>
-              <div className="flex flex-col gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    disabled
-                    className="bg-muted"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setStep("email")}
-                    className="text-xs text-muted-foreground hover:text-primary text-left"
-                  >
-                    Change email
-                  </button>
-                </div>
+            <>
+              <button
+                type="button"
+                onClick={() => setStep("email")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </button>
+              <form onSubmit={handleSignUp}>
+                <div className="flex flex-col gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      disabled
+                      className="bg-muted"
+                    />
+                  </div>
                 <div className="grid gap-2">
                   <Label htmlFor="nickname">Nickname</Label>
                   <Input
@@ -252,14 +256,28 @@ export function SignUpForm({
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    required
-                    minLength={6}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     At least 6 characters
                   </p>
@@ -301,6 +319,7 @@ export function SignUpForm({
                 </Button>
               </div>
             </form>
+            </>
           )}
         </CardContent>
       </Card>
