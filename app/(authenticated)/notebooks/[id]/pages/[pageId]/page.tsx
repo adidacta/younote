@@ -12,10 +12,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function PageDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string; pageId: string }>;
+  searchParams: Promise<{ note?: string; q?: string }>;
 }) {
   const { id, pageId } = await params;
+  const { note: highlightNoteId, q: searchQuery } = await searchParams;
   const page = await getPageById(pageId);
 
   if (!page) {
@@ -68,7 +71,13 @@ export default async function PageDetailPage({
 
           {/* Notes section - LEFT side on desktop, BELOW video on mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <NotesList notes={notes} pageId={pageId} videoId={page.youtube_video_id} />
+            <NotesList
+              notes={notes}
+              pageId={pageId}
+              videoId={page.youtube_video_id}
+              highlightNoteId={highlightNoteId}
+              searchQuery={searchQuery}
+            />
           </div>
         </div>
       </div>

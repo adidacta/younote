@@ -3,14 +3,37 @@
 import { Note } from "@/types/database";
 import { NoteItem } from "./note-item";
 import { NewNoteCard } from "./new-note-card";
+import { useEffect, useRef } from "react";
 
 interface NotesListProps {
   notes: Note[];
   pageId: string;
   videoId: string;
+  highlightNoteId?: string;
+  searchQuery?: string;
 }
 
-export function NotesList({ notes, pageId, videoId }: NotesListProps) {
+export function NotesList({
+  notes,
+  pageId,
+  videoId,
+  highlightNoteId,
+  searchQuery,
+}: NotesListProps) {
+  const noteRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  // Scroll to highlighted note
+  useEffect(() => {
+    if (highlightNoteId && noteRefs.current[highlightNoteId]) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        noteRefs.current[highlightNoteId]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 100);
+    }
+  }, [highlightNoteId]);
   return (
     <div className="space-y-6">
       {/* Always show new note card at top */}
@@ -34,7 +57,19 @@ export function NotesList({ notes, pageId, videoId }: NotesListProps) {
       {notes.length > 0 ? (
         <div className="space-y-4">
           {notes.map((note) => (
-            <NoteItem key={note.id} note={note} videoId={videoId} />
+            <div
+              key={note.id}
+              ref={(el) => {
+                noteRefs.current[note.id] = el;
+              }}
+            >
+              <NoteItem
+                note={note}
+                videoId={videoId}
+                isHighlighted={note.id === highlightNoteId}
+                searchQuery={searchQuery}
+              />
+            </div>
           ))}
         </div>
       ) : (

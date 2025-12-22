@@ -17,17 +17,29 @@ import { toast } from "sonner";
 interface NoteItemProps {
   note: Note;
   videoId: string;
+  isHighlighted?: boolean;
+  searchQuery?: string;
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
-export function NoteItem({ note, videoId }: NoteItemProps) {
+export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(note.content);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showHighlight, setShowHighlight] = useState(isHighlighted);
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Fade out highlight after 3 seconds
+  useEffect(() => {
+    if (isHighlighted) {
+      setShowHighlight(true);
+      const timer = setTimeout(() => setShowHighlight(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isHighlighted]);
 
   // Debounce content changes for auto-save
   const debouncedContent = useDebounce(content, 800);
@@ -170,7 +182,13 @@ export function NoteItem({ note, videoId }: NoteItemProps) {
   }, [isEditing, content]);
 
   return (
-    <Card className="group/card hover:shadow-md transition-all duration-200">
+    <Card
+      className={`group/card hover:shadow-md transition-all duration-200 ${
+        showHighlight
+          ? 'ring-2 ring-primary ring-offset-2 ring-offset-background shadow-lg'
+          : ''
+      }`}
+    >
       <CardContent className="pt-4 relative">
         {/* Hover Toolbar */}
         <div className="absolute -top-3 right-4 opacity-0 group-hover/card:opacity-100 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10">
@@ -281,6 +299,7 @@ export function NoteItem({ note, videoId }: NoteItemProps) {
             {content ? (
               <MarkdownRenderer
                 content={content}
+                searchQuery={searchQuery}
                 onContentChange={async (newContent) => {
                   // Auto-save when checkbox is toggled
                   setContent(newContent);

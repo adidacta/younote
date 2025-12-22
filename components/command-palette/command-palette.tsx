@@ -217,7 +217,7 @@ export function CommandPalette({ notebooks, pages, notes }: CommandPaletteProps)
                       onSelect={() =>
                         handleSelect(() =>
                           router.push(
-                            `/notebooks/${notebookId}/pages/${note.page_id}`
+                            `/notebooks/${notebookId}/pages/${note.page_id}?note=${note.id}&q=${encodeURIComponent(search)}`
                           )
                         )
                       }
