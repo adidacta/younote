@@ -189,38 +189,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 12. Limit Note Height with "Show More" Expansion 🔴
-**Priority**: Medium
-**Type**: Enhancement
-
-**Issue**:
-- Long notes take up too much vertical space in the notes list
-- Makes it difficult to scan through multiple notes
-
-**Requirements**:
-- Limit note display height (e.g., 200px or 4-5 lines)
-- Add "Show more" button/link at bottom of truncated notes
-- Clicking "Show more" expands to reveal full content
-- Optional: "Show less" to collapse back
-- Should work with markdown-rendered content
-
-**Implementation Details**:
-- Apply max-height CSS with overflow hidden
-- Detect if note content exceeds height limit
-- Only show "Show more" button if content is actually truncated
-- Smooth expand/collapse animation
-
-**Files to Modify**:
-- `components/notes/note-item.tsx`
-- Potentially add new state for expanded/collapsed per note
-
-**Questions Before Implementation**:
-1. What height limit? (200px, 300px, or line-based like 5 lines?)
-2. Should state persist when navigating away and back?
-3. Expand/collapse animation speed?
-4. Should "Show more" be text link or button?
-
----
 
 ### 14. Remove Next.js FAB (Network Warning) 🔴
 **Priority**: Low
@@ -468,6 +436,18 @@ Implemented hybrid onboarding approach with auto-created tutorial notebook for n
 **Type**: Feature
 
 Implemented user nickname system with required field during registration. Created user_profiles table with validation (3-20 chars, alphanumeric only). Added settings page at /settings for editing nickname. Nicknames stored in both user metadata and database.
+
+### 12. Limit Note Height with "Show More" Expansion 🟢
+**Completed**: 2025-12-22
+**Type**: Enhancement
+
+Implemented note height limiting with expand/collapse functionality:
+- Notes limited to 200px height by default
+- Automatically detects if content is truncated
+- "Show more/Show less" button for long notes
+- Smooth 300ms expand/collapse animation
+- Fade gradient overlay when truncated
+- Button only appears if content actually exceeds height limit
 
 ---
 
