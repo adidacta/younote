@@ -171,24 +171,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 11. Fix Logo Aspect Ratio Warning 🔴
-**Priority**: Low
-**Type**: Bug Fix
-
-**Issue**:
-- Console warning: "Image with src '/images/younote-logo-light.png' has either width or height modified, but not the other"
-- Need to maintain aspect ratio when using CSS to change image size
-
-**Requirements**:
-- Add `width: "auto"` or `height: "auto"` styles to maintain aspect ratio
-- Fix for both light and dark logo variants
-
-**Files to Check**:
-- `app/page.tsx` or wherever the logo is used in the authenticated layout
-- Look for Image components with only one dimension specified
-
----
-
 
 ### 14. Remove Next.js FAB (Network Warning) 🔴
 **Priority**: Low
@@ -448,6 +430,15 @@ Implemented note height limiting with expand/collapse functionality:
 - Smooth 300ms expand/collapse animation
 - Fade gradient overlay when truncated
 - Button only appears if content actually exceeds height limit
+
+### 11. Fix Logo Aspect Ratio Warning 🟢
+**Completed**: 2025-12-22
+**Type**: Bug Fix
+
+Fixed logo aspect ratio inconsistency:
+- Changed authenticated layout logo dimensions from 150x30 to 120x40
+- Now consistent 3:1 aspect ratio across all pages (home, auth pages, authenticated layout)
+- Eliminates console warning about modified image dimensions
 
 ---
 
