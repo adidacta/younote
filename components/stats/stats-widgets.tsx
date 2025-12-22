@@ -112,8 +112,21 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
 }
 
 export function StatsWidgets() {
-  const [stats, setStats] = useState<StatsData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<StatsData | null>(() => {
+    // Try to load cached stats from sessionStorage
+    if (typeof window !== 'undefined') {
+      const cached = sessionStorage.getItem('stats-data');
+      if (cached) {
+        try {
+          return JSON.parse(cached);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  });
+  const [isLoading, setIsLoading] = useState(!stats);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -125,6 +138,8 @@ export function StatsWidgets() {
         }
         const data = await response.json();
         setStats(data);
+        // Cache stats data in sessionStorage
+        sessionStorage.setItem('stats-data', JSON.stringify(data));
       } catch (err) {
         console.error("Error fetching stats:", err);
         setError(err instanceof Error ? err.message : "Failed to load stats");
