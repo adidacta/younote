@@ -55,16 +55,16 @@ export default async function AuthenticatedLayout({
             <Image
               src="/images/younote-logo-light.png"
               alt="YouNote"
-              width={150}
-              height={30}
+              width={120}
+              height={40}
               className="dark:hidden"
               priority
             />
             <Image
               src="/images/younote-logo-dark.png"
               alt="YouNote"
-              width={150}
-              height={30}
+              width={120}
+              height={40}
               className="hidden dark:block"
               priority
             />
