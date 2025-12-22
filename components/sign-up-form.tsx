@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,6 +24,7 @@ export function SignUpForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -35,6 +37,12 @@ export function SignUpForm({
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!agreedToTerms) {
+      setError("You must agree to the Terms of Use and Privacy Policy");
       setIsLoading(false);
       return;
     }
@@ -110,8 +118,40 @@ export function SignUpForm({
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </div>
+
+              {/* Terms and Privacy Policy Checkbox */}
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="terms"
+                  checked={agreedToTerms}
+                  onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                  className="mt-1"
+                />
+                <Label
+                  htmlFor="terms"
+                  className="text-sm font-normal leading-relaxed cursor-pointer"
+                >
+                  I agree to the{" "}
+                  <Link
+                    href="/legal/terms-of-use"
+                    target="_blank"
+                    className="underline underline-offset-2 hover:text-primary"
+                  >
+                    Terms of Use
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/legal/privacy-policy"
+                    target="_blank"
+                    className="underline underline-offset-2 hover:text-primary"
+                  >
+                    Privacy Policy
+                  </Link>
+                </Label>
+              </div>
+
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading || !agreedToTerms}>
                 {isLoading ? "Creating an account..." : "Sign up"}
               </Button>
             </div>

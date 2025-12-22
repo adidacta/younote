@@ -130,8 +130,30 @@ export default async function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-t-foreground/10 py-8">
-        <div className="container max-w-7xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 YouNote. Free forever.</p>
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+            <p>© 2025 YouNote. Free forever.</p>
+            <div className="flex items-center gap-6">
+              <Link
+                href="/legal/terms-of-use"
+                className="hover:text-foreground transition-colors"
+              >
+                Terms of Use
+              </Link>
+              <Link
+                href="/legal/privacy-policy"
+                className="hover:text-foreground transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <a
+                href="mailto:adi@adidacta.com"
+                className="hover:text-foreground transition-colors"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
