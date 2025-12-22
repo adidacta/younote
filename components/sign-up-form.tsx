@@ -16,8 +16,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Image from "next/image";
-import { BookOpen, FileText, StickyNote } from "lucide-react";
 
 export function SignUpForm({
   className,
@@ -117,60 +115,10 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {/* Logo and Welcome Section */}
-      <div className="flex flex-col items-center gap-4 text-center">
-        <Image
-          src="/images/younote-logo-light.png"
-          alt="YouNote"
-          width={180}
-          height={36}
-          className="dark:hidden"
-          priority
-        />
-        <Image
-          src="/images/younote-logo-dark.png"
-          alt="YouNote"
-          width={180}
-          height={36}
-          className="hidden dark:block"
-          priority
-        />
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Transform YouTube into Your Learning Library
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Take timestamped notes while watching videos. Organize your insights. Never forget what you learned.
-          </p>
-        </div>
-      </div>
-
-      {/* Features Preview */}
-      <div className="grid grid-cols-3 gap-4 p-4 rounded-lg bg-muted/50">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="p-2 rounded-full bg-primary/10">
-            <BookOpen className="h-5 w-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium">Organize Notebooks</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="p-2 rounded-full bg-primary/10">
-            <FileText className="h-5 w-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium">Video Pages</span>
-        </div>
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="p-2 rounded-full bg-primary/10">
-            <StickyNote className="h-5 w-5 text-primary" />
-          </div>
-          <span className="text-xs font-medium">Timestamped Notes</span>
-        </div>
-      </div>
-
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Create your free account</CardTitle>
-          <CardDescription>Start taking smarter notes today</CardDescription>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardDescription>Get started for free - no credit card required</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
