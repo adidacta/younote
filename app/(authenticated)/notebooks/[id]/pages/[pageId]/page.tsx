@@ -7,8 +7,8 @@ import { NotesList } from "@/components/notes/notes-list";
 import { ShareDialog } from "@/components/sharing/share-dialog";
 import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
-import { VideoInfoTabs } from "@/components/video/video-info-tabs";
-import { VideoMobileTabs } from "@/components/video/video-mobile-tabs";
+import { VideoTabsWrapper } from "@/components/video/video-tabs-wrapper";
+import { VideoMobileTabsWrapper } from "@/components/video/video-mobile-tabs-wrapper";
 
 export const dynamic = 'force-dynamic';
 
@@ -71,22 +71,24 @@ export default async function PageDetailPage({
                 videoId={page.youtube_video_id}
                 title={page.video_title}
               />
-              <VideoInfoTabs
+              <VideoTabsWrapper
                 description={page.description}
                 videoId={page.youtube_video_id}
+                pageId={pageId}
               />
             </div>
 
             {/* Mobile: Tabbed interface (Video | Description | Transcript) */}
-            <VideoMobileTabs
+            <VideoMobileTabsWrapper
               description={page.description}
               videoId={page.youtube_video_id}
+              pageId={pageId}
             >
               <YouTubePlayer
                 videoId={page.youtube_video_id}
                 title={page.video_title}
               />
-            </VideoMobileTabs>
+            </VideoMobileTabsWrapper>
           </div>
 
           {/* Notes section - LEFT side on desktop, BELOW tabs on mobile */}

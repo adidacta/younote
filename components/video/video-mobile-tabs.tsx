@@ -48,7 +48,7 @@ export function VideoMobileTabs({
           <TabsTrigger value="description" className="flex-1">
             Description
           </TabsTrigger>
-          <TabsTrigger value="transcript" className="flex-1" disabled>
+          <TabsTrigger value="transcript" className="flex-1">
             Transcript
           </TabsTrigger>
         </TabsList>
