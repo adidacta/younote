@@ -99,39 +99,29 @@ YouNote has three levels:
   },
   {
     timestamp: 180,
-    content: `# 03:00 - Format Notes with Markdown
+    content: `# 03:00 - Here are typing tips to make note taking fast:
 
-YouNote supports **GitHub Flavored Markdown** for rich text formatting:
+**Want a title?** Add \`#\` before a line
 
-## Text Formatting
-- **Bold text** → \`**bold**\`
-- *Italic text* → \`*italic*\`
-- ~~Strikethrough~~ → \`~~text~~\`
-- \`Inline code\` → \`\`code\`\`
+**Want a subtitle?** Add \`##\` before a line
 
-## Lists
-**Bullet List:**
-- Item 1
-- Item 2
-  - Nested item
+**Want bold text?** Wrap with \`**text**\` or press ⌘B
 
-**Numbered List:**
-1. First item
-2. Second item
-3. Third item
+**Want italic?** Wrap with \`*text*\` or press ⌘I
 
-## Links & Code Blocks
-- [Link text](https://example.com)
-- \`\`\`javascript
-  // Code block
-  const greeting = "Hello!";
-  \`\`\`
+**Want strikethrough?** Wrap with \`~~text~~\`
 
-## Checkboxes
-- [ ] Unchecked task
-- [x] Completed task
+**Want a link?** Type \`[text](url)\` or press ⌘K
 
-**Try it yourself!** Edit this note and experiment with markdown formatting.`
+**Want code?** Wrap with \`\\\`code\\\`\`
+
+**Want a bullet list?** Start with \`-\` (dash + space)
+
+**Want numbers?** Start with \`1.\` (number + dot + space)
+
+**Want a task?** Start with \`- [ ]\` (dash + space + brackets)
+
+Press **⌘+Enter** (Cmd+Enter) to save your note quickly!`
   },
   {
     timestamp: 240,
