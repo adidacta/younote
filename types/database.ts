@@ -19,6 +19,7 @@ export interface Page {
   thumbnail_url: string;
   channel_name: string;
   duration_seconds: number;
+  description: string;
   created_at: string;
   updated_at: string;
 }
@@ -58,4 +59,5 @@ export interface YouTubeVideoMetadata {
   thumbnail_url: string;
   channel_name: string;
   duration_seconds: number;
+  description: string;
 }

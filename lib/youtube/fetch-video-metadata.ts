@@ -55,5 +55,6 @@ export async function fetchYouTubeVideoMetadata(
     thumbnail_url: thumbnailUrl,
     channel_name: snippet.channelTitle,
     duration_seconds: parseDuration(contentDetails.duration),
+    description: snippet.description || '',
   };
 }

@@ -56,6 +56,7 @@ async function fetchYouTubeMetadata(videoId: string) {
       thumbnail: video.snippet.thumbnails.high.url,
       channelName: video.snippet.channelTitle,
       durationSeconds: parseDuration(video.contentDetails.duration),
+      description: video.snippet.description || "",
     };
   } catch (error) {
     console.error("Error fetching YouTube metadata:", error);
@@ -113,6 +114,7 @@ export async function createOnboardingNotebook(
           "https://i.ytimg.com/vi/9EKi2E9dVY8/hqdefault.jpg",
         channel_name: videoMetadata?.channelName || "Alice in Chains",
         duration_seconds: videoMetadata?.durationSeconds || 330, // 5:30 fallback
+        description: videoMetadata?.description || "",
       })
       .select()
       .single();

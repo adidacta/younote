@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
       thumbnail_url: metadata.thumbnail_url,
       channel_name: metadata.channel_name,
       duration_seconds: metadata.duration_seconds,
+      description: metadata.description,
     });
 
     // If this is the first page, create a markdown guide note
