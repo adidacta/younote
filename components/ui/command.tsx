@@ -51,7 +51,7 @@ function CommandDialog({
       <DialogContent
         className={cn(
           "overflow-hidden p-0 sm:max-w-xl",
-          "!top-[5%] md:!top-[5%] !translate-y-0 md:!translate-y-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-10 data-[state=closed]:slide-out-to-top-10 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[state=open]:duration-300 data-[state=closed]:duration-200",
+          "!top-[5%] md:!top-[5%] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:slide-in-from-top-10 data-[state=closed]:slide-out-to-top-10 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[state=open]:duration-300 data-[state=closed]:duration-200",
           className
         )}
         showCloseButton={showCloseButton}
