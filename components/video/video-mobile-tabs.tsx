@@ -187,6 +187,14 @@ export function VideoMobileTabs({
                 ))}
               </div>
             )}
+
+            {transcript && transcript.length === 0 && !isLoadingTranscript && !transcriptError && (
+              <div className="text-center py-12">
+                <p className="text-sm text-muted-foreground">
+                  No transcript available for this video.
+                </p>
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>
