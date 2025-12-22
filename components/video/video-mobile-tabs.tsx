@@ -29,11 +29,14 @@ export function VideoMobileTabs({
     // Switch back to video tab before seeking
     setActiveTab("video");
 
-    // Seek video to timestamp (with small delay for tab switch)
+    // Seek video to timestamp and start playing (with small delay for tab switch)
     setTimeout(() => {
       const player = (window as any).youtubePlayer;
       if (player && typeof player.seekTo === 'function') {
         player.seekTo(timestamp, true);
+        if (typeof player.playVideo === 'function') {
+          player.playVideo();
+        }
       }
     }, 100);
   };

@@ -26,10 +26,13 @@ export function VideoInfoTabs({
   const chapters = parseChapters(description);
 
   const handleChapterClick = (timestamp: number) => {
-    // Seek video to timestamp
+    // Seek video to timestamp and start playing
     const player = (window as any).youtubePlayer;
     if (player && typeof player.seekTo === 'function') {
       player.seekTo(timestamp, true);
+      if (typeof player.playVideo === 'function') {
+        player.playVideo();
+      }
     }
   };
 
