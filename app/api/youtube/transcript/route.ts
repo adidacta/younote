@@ -15,8 +15,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch transcript from YouTube
-    const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+    // Fetch transcript from YouTube (tries default language of video)
+    const transcript = await YoutubeTranscript.fetchTranscript(videoId, {
+      lang: undefined // Let it auto-detect video's default language
+    });
+
+    console.log(`Transcript for ${videoId}:`, transcript?.length || 0, 'entries');
 
     // Transform to our format
     const formattedTranscript = transcript.map((entry: any) => ({
@@ -24,6 +28,8 @@ export async function GET(request: NextRequest) {
       offset: Math.floor(entry.offset / 1000), // Convert ms to seconds
       duration: Math.floor(entry.duration / 1000),
     }));
+
+    console.log(`Formatted transcript:`, formattedTranscript?.length || 0, 'entries');
 
     return NextResponse.json({ transcript: formattedTranscript });
   } catch (error) {

@@ -53,6 +53,7 @@ export function VideoInfoTabs({
         throw new Error(data.error || 'Failed to fetch transcript');
       }
 
+      console.log('Transcript data received:', data.transcript?.length, 'entries');
       setTranscript(data.transcript);
     } catch (error) {
       console.error('Error fetching transcript:', error);
