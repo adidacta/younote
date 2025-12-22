@@ -29,14 +29,24 @@ export function VideoMobileTabs({
     // Switch back to video tab before seeking
     setActiveTab("video");
 
-    // Seek video to timestamp and start playing (with small delay for tab switch)
+    // Start playing first, then seek to timestamp (with delay for tab switch)
     setTimeout(() => {
       const player = (window as any).youtubePlayer;
-      if (player && typeof player.seekTo === 'function') {
-        player.seekTo(timestamp, true);
-        if (typeof player.playVideo === 'function') {
-          player.playVideo();
-        }
+      console.log('Mobile chapter click:', {
+        timestamp,
+        currentState: player?.getPlayerState?.()
+      });
+
+      if (player && typeof player.playVideo === 'function' && typeof player.seekTo === 'function') {
+        // Play first to start the video
+        player.playVideo();
+        console.log('Called playVideo, state:', player.getPlayerState?.());
+
+        // Then seek to the timestamp after a brief delay
+        setTimeout(() => {
+          player.seekTo(timestamp, true);
+          console.log('Seeked to', timestamp, 'state:', player.getPlayerState?.());
+        }, 100);
       }
     }, 100);
   };

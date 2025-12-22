@@ -26,13 +26,23 @@ export function VideoInfoTabs({
   const chapters = parseChapters(description);
 
   const handleChapterClick = (timestamp: number) => {
-    // Seek video to timestamp and start playing
+    // Start playing first, then seek to timestamp
     const player = (window as any).youtubePlayer;
-    if (player && typeof player.seekTo === 'function') {
-      player.seekTo(timestamp, true);
-      if (typeof player.playVideo === 'function') {
-        player.playVideo();
-      }
+    console.log('Desktop chapter click:', {
+      timestamp,
+      currentState: player?.getPlayerState?.()
+    });
+
+    if (player && typeof player.playVideo === 'function' && typeof player.seekTo === 'function') {
+      // Play first to start the video
+      player.playVideo();
+      console.log('Called playVideo, state:', player.getPlayerState?.());
+
+      // Then seek to the timestamp after a brief delay
+      setTimeout(() => {
+        player.seekTo(timestamp, true);
+        console.log('Seeked to', timestamp, 'state:', player.getPlayerState?.());
+      }, 100);
     }
   };
 

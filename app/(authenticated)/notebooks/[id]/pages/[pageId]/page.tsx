@@ -2,13 +2,11 @@ import { getPageById } from "@/lib/database/pages";
 import { getNotesByPageId } from "@/lib/database/notes";
 import { getNotebookById } from "@/lib/database/notebooks";
 import { notFound } from "next/navigation";
-import { YouTubePlayer } from "@/components/youtube/youtube-player";
 import { NotesList } from "@/components/notes/notes-list";
 import { ShareDialog } from "@/components/sharing/share-dialog";
 import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
-import { VideoTabsWrapper } from "@/components/video/video-tabs-wrapper";
-import { VideoMobileTabsWrapper } from "@/components/video/video-mobile-tabs-wrapper";
+import { VideoSection } from "@/components/video/video-section";
 
 export const dynamic = 'force-dynamic';
 
@@ -64,31 +62,12 @@ export default async function PageDetailPage({
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Video player + tabs - RIGHT side on desktop, TOP on mobile */}
-          <div className="lg:col-span-2 order-1 lg:order-2 space-y-4">
-            {/* Desktop: Video + tabs below */}
-            <div className="hidden lg:block space-y-4">
-              <YouTubePlayer
-                videoId={page.youtube_video_id}
-                title={page.video_title}
-              />
-              <VideoTabsWrapper
-                description={page.description}
-                videoId={page.youtube_video_id}
-                pageId={pageId}
-              />
-            </div>
-
-            {/* Mobile: Tabbed interface (Video | Description | Transcript) */}
-            <VideoMobileTabsWrapper
-              description={page.description}
+          <div className="lg:col-span-2 order-1 lg:order-2">
+            <VideoSection
               videoId={page.youtube_video_id}
-              pageId={pageId}
-            >
-              <YouTubePlayer
-                videoId={page.youtube_video_id}
-                title={page.video_title}
-              />
-            </VideoMobileTabsWrapper>
+              videoTitle={page.video_title}
+              description={page.description}
+            />
           </div>
 
           {/* Notes section - LEFT side on desktop, BELOW tabs on mobile */}
