@@ -220,86 +220,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 19. Add Notes Outline/Navigation Sidebar 🔴
-**Priority**: Medium
-**Type**: Feature - Navigation Enhancement
-
-**Description**:
-Add a collapsible outline/navigation panel on page detail view that displays all notes on the current page, allowing quick navigation to specific notes.
-
-**Requirements**:
-- Display list of all notes in the current page (outline view)
-- Show note titles/first line of content as links
-- Position: Left of the notes list, using current padding space
-- Clickable items that scroll to the corresponding note
-- Collapsible functionality (show/hide the outline)
-- Should not interfere with responsive layout
-- Persist collapsed/expanded state (localStorage or session)
-
-**Layout Details**:
-**Current Layout:**
-```
-[Video Player        ] [    Notes List    ]
-                       [                   ]
-```
-
-**New Layout:**
-```
-[Video Player        ] [Outline] [Notes  ]
-                       [  Nav  ] [ List  ]
-                       [       ] [       ]
-```
-
-**Implementation Details**:
-- Extract note titles or first 50-80 characters as outline items
-- Highlight current note in outline when scrolling
-- Smooth scroll to note when clicking outline item
-- Toggle button to collapse/expand outline (arrow icon)
-- Width: ~200-250px when expanded, ~20-30px when collapsed
-- Mobile: Auto-collapse or hide completely on small screens
-
-**Technical Requirements**:
-- Track scroll position to highlight active note in outline
-- Use intersection observer for scroll-based highlighting
-- Store collapsed state in localStorage: `notesOutlineCollapsed`
-- Accessible keyboard navigation (tab through outline items)
-
-**Files to Create/Modify**:
-- Create: `components/notes/notes-outline.tsx` - New outline component
-- Modify: `app/(authenticated)/notebooks/[id]/pages/[pageId]/page.tsx` - Add outline to layout
-- Modify: `components/notes/notes-list.tsx` - May need to add IDs for scroll targets
-
-**Questions Before Implementation**:
-1. Should outline show:
-   - Note titles only (if note starts with # heading)?
-   - First line of each note?
-   - First X characters?
-   - Timestamp + first line?
-2. Collapsed state:
-   - Default to expanded or collapsed?
-   - Icon-only when collapsed or completely hidden?
-3. Mobile behavior:
-   - Hide completely?
-   - Move to bottom sheet/drawer?
-   - Keep but auto-collapsed?
-4. Should outline be sortable?
-   - Match notes list order (newest/oldest)?
-   - Always chronological by timestamp?
-5. Visual style:
-   - Indent for hierarchy (if using headings)?
-   - Different icons for timestamped vs non-timestamped notes?
-   - Show note count in collapsed state?
-
-**Dependencies**:
-- None (can be implemented immediately)
-
-**Estimated Effort**: 3-4 hours
-- Component creation: 1-2 hours
-- Layout integration: 1 hour
-- Scroll tracking + highlighting: 1 hour
-- Testing + polish: 1 hour
-
----
 
 ## Completed Tasks
 
@@ -383,6 +303,19 @@ Implemented personalized breadcrumbs:
 - Handles possessive apostrophe correctly (e.g., "James's Notebooks")
 - Falls back to "Notebooks" if no nickname is set
 - Updated all three notebook pages (list, detail, page detail)
+
+### 19. Add Notes Outline/Navigation Sidebar 🟢
+**Completed**: 2025-12-22
+**Type**: Feature - Navigation Enhancement
+
+Implemented minimalistic vertical dots navigation:
+- Created `NotesOutline` component with vertical dots (one dot per note)
+- Active note shown as filled dot (●), inactive notes as outlined dots (○)
+- Click any dot to smooth scroll to that note
+- Uses Intersection Observer to automatically track and highlight visible note
+- Always visible on desktop (~30px wide), hidden on mobile
+- Super minimalistic design - no text, no tooltips, no collapse functionality
+- Added `data-note-id` attributes to notes for scroll tracking
 
 ---
 
