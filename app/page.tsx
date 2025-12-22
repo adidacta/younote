@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { BookOpen, PlayCircle, Share2 } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
+import { PageTransition } from "@/components/page-transition";
 
 export default async function LandingPage() {
   // If user is already logged in, redirect to notebooks
@@ -18,9 +19,10 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-b-foreground/10">
+    <PageTransition>
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="border-b border-b-foreground/10">
         <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image
@@ -165,6 +167,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </PageTransition>
   );
 }

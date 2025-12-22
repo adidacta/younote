@@ -2,12 +2,14 @@ import { SignUpForm } from "@/components/sign-up-form";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PageTransition } from "@/components/page-transition";
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh flex-col">
-      {/* Header - same as home page */}
-      <header className="border-b border-b-foreground/10">
+    <PageTransition>
+      <div className="flex min-h-svh flex-col">
+        {/* Header - same as home page */}
+        <header className="border-b border-b-foreground/10">
         <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <Image
@@ -39,6 +41,7 @@ export default function Page() {
           <SignUpForm />
         </div>
       </div>
-    </div>
+      </div>
+    </PageTransition>
   );
 }
