@@ -12,6 +12,20 @@ import {
 } from "@/lib/onboarding/templates";
 
 /**
+ * Convert ISO 8601 duration (PT5M30S) to seconds
+ */
+function parseDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+
+  const hours = parseInt(match[1] || "0");
+  const minutes = parseInt(match[2] || "0");
+  const seconds = parseInt(match[3] || "0");
+
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+/**
  * Fetch YouTube video metadata
  */
 async function fetchYouTubeMetadata(videoId: string) {
@@ -41,7 +55,7 @@ async function fetchYouTubeMetadata(videoId: string) {
       title: video.snippet.title,
       thumbnail: video.snippet.thumbnails.high.url,
       channelName: video.snippet.channelTitle,
-      duration: video.contentDetails.duration,
+      durationSeconds: parseDuration(video.contentDetails.duration),
     };
   } catch (error) {
     console.error("Error fetching YouTube metadata:", error);
@@ -93,12 +107,12 @@ export async function createOnboardingNotebook(
         title: ONBOARDING_PAGE_TITLE,
         youtube_url: ONBOARDING_VIDEO_URL,
         youtube_video_id: ONBOARDING_VIDEO_ID,
-        video_title: videoMetadata?.title || "Alice in Chains - Nutshell",
+        video_title: videoMetadata?.title || "Alice in Chains - Nutshell (MTV Unplugged)",
         thumbnail_url:
           videoMetadata?.thumbnail ||
           "https://i.ytimg.com/vi/9EKi2E9dVY8/hqdefault.jpg",
         channel_name: videoMetadata?.channelName || "Alice in Chains",
-        duration: videoMetadata?.duration || "PT5M30S",
+        duration_seconds: videoMetadata?.durationSeconds || 330, // 5:30 fallback
       })
       .select()
       .single();
@@ -113,7 +127,7 @@ export async function createOnboardingNotebook(
       page_id: page.id,
       user_id: userId,
       content: note.content,
-      timestamp: note.timestamp,
+      timestamp_seconds: note.timestamp,
     }));
 
     const { error: notesError } = await supabase
