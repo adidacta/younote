@@ -22,6 +22,7 @@ export function SignUpForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -34,6 +35,25 @@ export function SignUpForm({
     const supabase = createClient();
     setIsLoading(true);
     setError(null);
+
+    // Validate nickname
+    if (!nickname || nickname.trim().length === 0) {
+      setError("Nickname is required");
+      setIsLoading(false);
+      return;
+    }
+
+    if (nickname.length < 3 || nickname.length > 20) {
+      setError("Nickname must be between 3 and 20 characters");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
+      setError("Nickname can only contain letters and numbers");
+      setIsLoading(false);
+      return;
+    }
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
@@ -53,6 +73,9 @@ export function SignUpForm({
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            nickname: nickname,
+          },
         },
       });
       if (error) throw error;
@@ -93,6 +116,23 @@ export function SignUpForm({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="nickname">Nickname</Label>
+                <Input
+                  id="nickname"
+                  type="text"
+                  placeholder="johndoe"
+                  required
+                  minLength={3}
+                  maxLength={20}
+                  pattern="[a-zA-Z0-9]+"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  3-20 characters, letters and numbers only
+                </p>
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">

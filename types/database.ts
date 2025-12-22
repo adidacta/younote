@@ -1,5 +1,13 @@
 // Database type definitions for YouTube Note-Taking App
 
+export interface UserProfile {
+  id: string;
+  user_id: string;
+  nickname: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Notebook {
   id: string;
   user_id: string;
@@ -43,12 +51,14 @@ export interface SharedPage {
 }
 
 // Insert types (without auto-generated fields)
+export type UserProfileInsert = Omit<UserProfile, 'id' | 'created_at' | 'updated_at'>;
 export type NotebookInsert = Omit<Notebook, 'id' | 'created_at' | 'updated_at'>;
 export type PageInsert = Omit<Page, 'id' | 'created_at' | 'updated_at'>;
 export type NoteInsert = Omit<Note, 'id' | 'created_at' | 'updated_at'>;
 export type SharedPageInsert = Omit<SharedPage, 'id' | 'created_at' | 'expires_at'> & { expires_at?: string | null };
 
 // Update types (all fields optional except id)
+export type UserProfileUpdate = Partial<Omit<UserProfile, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
 export type NotebookUpdate = Partial<Omit<Notebook, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
 export type PageUpdate = Partial<Omit<Page, 'id' | 'user_id' | 'notebook_id' | 'created_at' | 'updated_at'>>;
 export type NoteUpdate = Partial<Omit<Note, 'id' | 'user_id' | 'page_id' | 'created_at' | 'updated_at'>>;

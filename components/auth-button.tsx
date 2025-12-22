@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/lib/supabase/server";
-import { LogoutButton } from "./logout-button";
+import { getUserProfile } from "@/lib/database/user-profiles";
+import { UserMenu } from "./user-menu";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -11,9 +12,19 @@ export async function AuthButton() {
 
   const user = data?.claims;
 
-  return user ? (
-    <LogoutButton />
-  ) : (
+  if (user) {
+    // Fetch user profile for the menu
+    let profile = null;
+    try {
+      profile = await getUserProfile();
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+
+    return <UserMenu profile={profile} />;
+  }
+
+  return (
     <div className="flex gap-2">
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/auth/login">Sign in</Link>

@@ -135,51 +135,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-
-### 7. Add Nickname to User Registration 🔴
-**Priority**: Medium
-**Type**: Feature
-
-**Requirements**:
-- Add nickname field to user registration flow
-- Nickname should be optional or required (decide which)
-- Validate nickname (length, allowed characters, uniqueness?)
-- Store nickname in user profile
-
-**Database Requirements**:
-- Add `nickname` field to user profiles table
-- If using Supabase Auth metadata:
-  - Store in `auth.users.raw_user_meta_data`
-- Or create separate `user_profiles` table:
-  - `id` (uuid, primary key)
-  - `user_id` (uuid, foreign key to auth.users, unique)
-  - `nickname` (text)
-  - `created_at` (timestamp)
-  - `updated_at` (timestamp)
-
-**Files to Create/Modify**:
-- Registration form component
-- User profile type definitions in `/types/database.ts`
-- Database migration for user profiles
-- Auth signup flow
-
-**Questions Before Implementation**:
-1. Should nickname be **required** or **optional**?
-2. If optional, what should fallback display be? (email username? "User"? first name?)
-3. Validation rules:
-   - Min/max length? (suggested: 3-20 characters)
-   - Allowed characters? (alphanumeric only? allow spaces? emojis? special chars?)
-   - Must be unique across all users?
-4. Should users be able to edit nickname after registration?
-   - If yes, from where? (settings page?)
-   - Should there be a cooldown between changes?
-5. Storage preference:
-   - **Option A**: Store in `auth.users.raw_user_meta_data` (simpler)
-   - **Option B**: Create separate `user_profiles` table (more flexible)
-6. Display name vs nickname - are they the same thing or separate fields?
-
----
-
 ### 8. Personalized Breadcrumb - "[Nickname]'s Notebooks" 🔴
 **Priority**: Low
 **Type**: Enhancement
@@ -213,94 +168,6 @@ Implement a system to collect feature requests and bug reports from users within
    - "My Notebooks"
    - Something else?
 4. Should this personalization apply elsewhere too? (page titles, navigation, etc.)
-
----
-
-### 9. Move "How to Note" Below Video 🔴
-**Priority**: Medium
-**Type**: Enhancement
-
-**Current State**:
-- "How to Note" guide is currently displayed somewhere on the page (location TBD)
-
-**Requirements**:
-- Relocate the "How to Note" guide to appear below the YouTube video player
-- Keep the exact same style as regular notes
-- Keep the same functionality as regular notes (markdown rendering, editing capabilities, etc.)
-- Should visually integrate seamlessly with other notes
-
-**Implementation Details**:
-- Move component position in page layout
-- Ensure it's clearly identifiable as a guide (maybe with a subtle badge/icon?)
-- Consider making it collapsible to save space
-- Should it be editable by the user? (clarify)
-
-**Files to Modify**:
-- Page component with YouTube player
-- "How to Note" guide component
-- Layout/styling for notes section
-
-**Questions Before Implementation**:
-1. Where is the "How to Note" guide currently located? (I should find it in the code)
-2. Should the guide be:
-   - **Always visible** below the video?
-   - **Collapsible** (can be expanded/collapsed)?
-   - **Dismissible** (hide forever after clicking X)?
-   - **Read-only** or **editable** by the user?
-3. If editable - do changes persist per-user or per-page?
-4. Should it have a visual distinction (border, background, icon) to show it's a guide, not a regular note?
-5. Does "same style as notes" mean:
-   - Same card/container design?
-   - Same markdown rendering?
-   - Same auto-save behavior (if editable)?
-
----
-
-### 10. Add Cmd+K Shortcut to "How to Note" Guide 🔴
-**Priority**: Low
-**Type**: Enhancement
-
-**Requirements**:
-- Add information about `Cmd+K` (or `Ctrl+K` on Windows) keyboard shortcut
-- Document that this opens the search widget/command palette
-- Include this in the "How to Note" guide
-
-**Concern to Address**:
-- **Potential Conflict**: Does `Cmd+K` shortcut conflict with hyperlink creation in markdown editors?
-- Need to verify if markdown editor uses `Cmd+K` for links
-- If conflict exists, decide:
-  - Change search widget shortcut to something else?
-  - Disable `Cmd+K` link shortcut in markdown editor?
-  - Use different key based on context (editor vs general app)?
-
-**Files to Modify**:
-- "How to Note" guide content/component
-- Potentially keyboard shortcut handling logic
-
-**Testing Required**:
-- Test `Cmd+K` behavior when:
-  - Not focused in any input
-  - Focused in note editor
-  - Focused in other inputs (notebook name, page title, etc.)
-
-**Dependencies**:
-- Related to Task #9 (moving How to Note guide)
-
-**Questions Before Implementation**:
-1. About the keyboard shortcut conflict:
-   - Does your current markdown editor use Cmd+K for anything?
-   - Should I check the note editor component first?
-   - If there IS a conflict, which should take priority?
-     - Search widget (global shortcut)
-     - Link creation (when focused in editor)
-2. How should the guide explain this:
-   - "Press Cmd+K (Ctrl+K on Windows) to open search"?
-   - Include visual keyboard icons?
-   - Mention both shortcuts in different sections?
-3. Should this be added to:
-   - Just the "How to Note" guide?
-   - Also to a keyboard shortcuts help page?
-   - Command palette search terms?
 
 ---
 
@@ -352,50 +219,6 @@ Implement a system to collect feature requests and bug reports from users within
 2. Should state persist when navigating away and back?
 3. Expand/collapse animation speed?
 4. Should "Show more" be text link or button?
-
----
-
-### 13. Fetch YouTube Transcripts 🔴
-**Priority**: High
-**Type**: Feature
-
-**Requirements**:
-- Automatically fetch YouTube video transcripts when available
-- Display transcript alongside or below video player
-- Parse transcript with timestamps
-- Make transcript timestamps clickable to seek video
-
-**Implementation Details**:
-- Use YouTube API or third-party library (e.g., `youtube-transcript-api`)
-- Fetch transcript when page loads or on-demand
-- Handle cases where transcript is unavailable
-- Store transcript in database for caching?
-- Parse timestamp format (usually `MM:SS` or `HH:MM:SS`)
-
-**Technical Requirements**:
-- Research best method to fetch transcripts:
-  - YouTube Data API v3 (may not support transcripts directly)
-  - Third-party libraries (youtube-transcript, etc.)
-  - Server-side fetching to avoid CORS issues
-- Database storage (optional):
-  - Add `transcript` field to `pages` table (JSONB)
-  - Or create separate `transcripts` table
-
-**Files to Create/Modify**:
-- API route: `/api/youtube/transcript`
-- Transcript display component
-- Update page detail view to show transcript
-- Database migration if storing transcripts
-
-**Questions Before Implementation**:
-1. Where should transcript appear?
-   - Below video player?
-   - In a collapsible panel?
-   - Side panel/drawer?
-2. Should we store fetched transcripts in database or fetch on-demand?
-3. What to show if transcript unavailable? (hide section, show message?)
-4. Should transcript be searchable (Cmd+F within transcript)?
-5. Auto-scroll transcript as video plays?
 
 ---
 
@@ -639,6 +462,12 @@ Created comprehensive Terms of Use and Privacy Policy pages with GDPR/CCPA compl
 **Type**: Feature - Onboarding
 
 Implemented hybrid onboarding approach with auto-created tutorial notebook for new users.
+
+### 7. Add Nickname to User Registration 🟢
+**Completed**: 2025-12-22
+**Type**: Feature
+
+Implemented user nickname system with required field during registration. Created user_profiles table with validation (3-20 chars, alphanumeric only). Added settings page at /settings for editing nickname. Nicknames stored in both user metadata and database.
 
 ---
 

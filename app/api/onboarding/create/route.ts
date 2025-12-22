@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createOnboardingNotebook } from "@/lib/database/onboarding";
+import { createUserProfile } from "@/lib/database/user-profiles";
 import { NextResponse } from "next/server";
 
 export async function POST() {
@@ -14,6 +15,27 @@ export async function POST() {
   }
 
   try {
+    // Create user profile from metadata
+    const nickname = user.user_metadata?.nickname;
+
+    if (!nickname) {
+      return NextResponse.json(
+        { error: "Nickname not found in user metadata" },
+        { status: 400 }
+      );
+    }
+
+    try {
+      await createUserProfile({
+        user_id: user.id,
+        nickname: nickname,
+      });
+    } catch (error) {
+      // If profile already exists, that's okay - continue
+      console.log("User profile may already exist:", error);
+    }
+
+    // Create onboarding notebook
     const result = await createOnboardingNotebook(user.id);
 
     if (result.success) {
