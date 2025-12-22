@@ -29,8 +29,11 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showHighlight, setShowHighlight] = useState(isHighlighted);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Fade out highlight after 3 seconds
   useEffect(() => {
@@ -50,6 +53,27 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
       setIsEditing(true);
     }
   }, [note.content]);
+
+  // Check if content is truncated
+  useEffect(() => {
+    if (!isEditing && contentRef.current) {
+      const checkTruncation = () => {
+        const element = contentRef.current;
+        if (element) {
+          // Check if content height exceeds 200px
+          const isTruncatedNow = element.scrollHeight > 200;
+          setIsTruncated(isTruncatedNow);
+        }
+      };
+
+      // Check immediately
+      checkTruncation();
+
+      // Check again after a short delay to ensure content is rendered
+      const timer = setTimeout(checkTruncation, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [content, isEditing]);
 
   // Auto-save when debounced content changes
   useEffect(() => {
@@ -297,26 +321,50 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
         ) : (
           <div className="relative" dir="auto">
             {content ? (
-              <MarkdownRenderer
-                content={content}
-                searchQuery={searchQuery}
-                onContentChange={async (newContent) => {
-                  // Auto-save when checkbox is toggled
-                  setContent(newContent);
-                  try {
-                    await fetch(`/api/notes/${note.id}`, {
-                      method: 'PATCH',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ content: newContent }),
-                    });
-                    router.refresh();
-                  } catch (error) {
-                    console.error('Error saving note:', error);
-                    toast.error('Failed to save checkbox state');
-                  }
-                }}
-                editable={true}
-              />
+              <>
+                <div className="relative">
+                  <div
+                    ref={contentRef}
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      !isExpanded && isTruncated ? 'max-h-[200px]' : ''
+                    }`}
+                    style={isExpanded ? { maxHeight: 'none' } : undefined}
+                  >
+                    <MarkdownRenderer
+                    content={content}
+                    searchQuery={searchQuery}
+                    onContentChange={async (newContent) => {
+                      // Auto-save when checkbox is toggled
+                      setContent(newContent);
+                      try {
+                        await fetch(`/api/notes/${note.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ content: newContent }),
+                        });
+                        router.refresh();
+                      } catch (error) {
+                        console.error('Error saving note:', error);
+                        toast.error('Failed to save checkbox state');
+                      }
+                    }}
+                    editable={true}
+                  />
+                  </div>
+                  {/* Fade gradient overlay when truncated */}
+                  {!isExpanded && isTruncated && (
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                  )}
+                </div>
+                {isTruncated && (
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="mt-2 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    {isExpanded ? 'Show less' : 'Show more'}
+                  </button>
+                )}
+              </>
             ) : (
               <p className="text-muted-foreground text-sm italic py-4">
                 Empty note - hover and click edit to add content
