@@ -1,11 +1,11 @@
-import { getNotebookById } from "@/lib/database/notebooks";
+import { getNotebookById, getNotebooksWithStats } from "@/lib/database/notebooks";
 import { getPagesByNotebookIdWithStats } from "@/lib/database/pages";
 import { Button } from "@/components/ui/button";
 import { AddPageDialog } from "@/components/pages/add-page-dialog";
 import { PagesView } from "@/components/pages/pages-view";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
-import { Plus } from "lucide-react";
+import { Plus, BookOpen, FileText } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
@@ -19,13 +19,32 @@ export default async function NotebookPage({ params }: { params: Promise<{ id: s
   }
 
   const pages = await getPagesByNotebookIdWithStats(id);
+  const allNotebooks = await getNotebooksWithStats();
 
   return (
     <div className="container max-w-7xl mx-auto px-4 py-6">
       <BreadcrumbsNav
         items={[
-          { label: "Notebooks", href: "/notebooks" },
-          { label: notebook.title, href: `/notebooks/${id}` },
+          {
+            label: "Notebooks",
+            href: "/notebooks",
+            dropdownItems: allNotebooks.map((nb) => ({
+              id: nb.id,
+              label: nb.title,
+              href: `/notebooks/${nb.id}`,
+              icon: <BookOpen className="h-4 w-4" />,
+            })),
+          },
+          {
+            label: notebook.title,
+            href: `/notebooks/${id}`,
+            dropdownItems: pages.map((page) => ({
+              id: page.id,
+              label: page.title,
+              href: `/notebooks/${id}/pages/${page.id}`,
+              icon: <FileText className="h-4 w-4" />,
+            })),
+          },
         ]}
         subtitle={`${pages.length} ${pages.length === 1 ? 'page' : 'pages'}`}
         action={

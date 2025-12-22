@@ -1,17 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, ArrowLeft } from "lucide-react";
+import { ChevronRight, ArrowLeft, Search } from "lucide-react";
 import { AnimatedBreadcrumb } from "./animated-breadcrumb";
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+
+export interface DropdownItem {
+  id: string;
+  label: string;
+  href: string;
+  icon?: React.ReactNode;
+}
 
 interface BreadcrumbItem {
   label: string;
   href: string;
   isEditable?: boolean;
   editComponent?: React.ReactNode;
+  dropdownItems?: DropdownItem[];
 }
 
 interface BreadcrumbsNavProps {
@@ -164,6 +179,80 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
   const currentItem = items[items.length - 1];
   const previousItem = items.length > 1 ? items[items.length - 2] : null;
 
+  // Component for breadcrumb with dropdown
+  const BreadcrumbWithDropdown = ({
+    item,
+    children
+  }: {
+    item: BreadcrumbItem;
+    children: React.ReactNode;
+  }) => {
+    const router = useRouter();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+
+    if (!item.dropdownItems || item.dropdownItems.length === 0) {
+      return (
+        <Link href={item.href} className="hover:opacity-80 transition-opacity">
+          {children}
+        </Link>
+      );
+    }
+
+    const filteredItems = searchQuery
+      ? item.dropdownItems.filter(dropItem =>
+          dropItem.label.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : item.dropdownItems;
+
+    return (
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger asChild>
+          <button className="hover:opacity-80 transition-opacity cursor-pointer">
+            {children}
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
+          {item.dropdownItems.length > 5 && (
+            <div className="p-2 border-b">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 h-9"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            </div>
+          )}
+          <div className="overflow-y-auto">
+            {filteredItems.length === 0 ? (
+              <div className="p-4 text-sm text-muted-foreground text-center">
+                No results found
+              </div>
+            ) : (
+              filteredItems.map((dropItem) => (
+                <DropdownMenuItem
+                  key={dropItem.id}
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push(dropItem.href);
+                  }}
+                  className="cursor-pointer"
+                >
+                  {dropItem.icon && <span className="mr-2">{dropItem.icon}</span>}
+                  <span className="truncate">{dropItem.label}</span>
+                </DropdownMenuItem>
+              ))
+            )}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex-1 min-w-0">
@@ -306,10 +395,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
                     {item.editComponent}
                   </div>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className="hover:opacity-80 transition-opacity"
-                  >
+                  <BreadcrumbWithDropdown item={item}>
                     <AnimatedBreadcrumb
                       text={item.label}
                       isActive={false}
@@ -320,7 +406,7 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
                       shouldFadeOut={willBeRemoved}
                       baseDelay={baseDelay}
                     />
-                  </Link>
+                  </BreadcrumbWithDropdown>
                 )}
                 {index < displayItems.length - 1 && (
                   <motion.div

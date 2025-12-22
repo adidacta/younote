@@ -6,7 +6,7 @@ import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { FloatingActionButton, FABTrigger } from "@/components/ui/floating-action-button";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, BookOpen } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,16 @@ export default async function NotebooksPage() {
     <div className="container max-w-7xl mx-auto px-4 py-6">
       <BreadcrumbsNav
         items={[
-          { label: "Notebooks", href: "/notebooks" },
+          {
+            label: "Notebooks",
+            href: "/notebooks",
+            dropdownItems: notebooks.map((nb) => ({
+              id: nb.id,
+              label: nb.title,
+              href: `/notebooks/${nb.id}`,
+              icon: <BookOpen className="h-4 w-4" />,
+            })),
+          },
         ]}
         subtitle={`${notebooks.length} ${notebooks.length === 1 ? 'notebook' : 'notebooks'}`}
         action={

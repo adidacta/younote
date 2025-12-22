@@ -1,12 +1,13 @@
-import { getPageById } from "@/lib/database/pages";
+import { getPageById, getPagesByNotebookIdWithStats } from "@/lib/database/pages";
 import { getNotesByPageId } from "@/lib/database/notes";
-import { getNotebookById } from "@/lib/database/notebooks";
+import { getNotebookById, getNotebooksWithStats } from "@/lib/database/notebooks";
 import { notFound } from "next/navigation";
 import { NotesList } from "@/components/notes/notes-list";
 import { ShareDialog } from "@/components/sharing/share-dialog";
 import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
 import { VideoSection } from "@/components/video/video-section";
+import { BookOpen, FileText } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -31,13 +32,33 @@ export default async function PageDetailPage({
   }
 
   const notes = await getNotesByPageId(pageId);
+  const allNotebooks = await getNotebooksWithStats();
+  const pagesInNotebook = await getPagesByNotebookIdWithStats(id);
 
   return (
     <div className="container max-w-7xl mx-auto px-4 py-6">
       <BreadcrumbsNav
         items={[
-          { label: "Notebooks", href: "/notebooks" },
-          { label: notebook.title, href: `/notebooks/${id}` },
+          {
+            label: "Notebooks",
+            href: "/notebooks",
+            dropdownItems: allNotebooks.map((nb) => ({
+              id: nb.id,
+              label: nb.title,
+              href: `/notebooks/${nb.id}`,
+              icon: <BookOpen className="h-4 w-4" />,
+            })),
+          },
+          {
+            label: notebook.title,
+            href: `/notebooks/${id}`,
+            dropdownItems: pagesInNotebook.map((p) => ({
+              id: p.id,
+              label: p.title,
+              href: `/notebooks/${id}/pages/${p.id}`,
+              icon: <FileText className="h-4 w-4" />,
+            })),
+          },
           {
             label: page.title,
             href: `/notebooks/${id}/pages/${pageId}`,
