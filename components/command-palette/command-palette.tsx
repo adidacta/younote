@@ -10,7 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { BookOpen, FileText, Plus, Search } from "lucide-react";
+import { BookOpen, FileText, Plus, Search, StickyNote } from "lucide-react";
 
 interface Notebook {
   id: string;
@@ -24,12 +24,20 @@ interface Page {
   video_title: string;
 }
 
+interface Note {
+  id: string;
+  page_id: string;
+  content: string;
+  timestamp_seconds: number | null;
+}
+
 interface CommandPaletteProps {
   notebooks: Notebook[];
   pages: Page[];
+  notes: Note[];
 }
 
-export function CommandPalette({ notebooks, pages }: CommandPaletteProps) {
+export function CommandPalette({ notebooks, pages, notes }: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -58,9 +66,58 @@ export function CommandPalette({ notebooks, pages }: CommandPaletteProps) {
       page.video_title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const filteredNotes = notes
+    .filter((note) =>
+      note.content.toLowerCase().includes(search.toLowerCase())
+    )
+    .slice(0, 10); // Limit to 10 results to avoid overwhelming the UI
+
   const handleSelect = (callback: () => void) => {
     setOpen(false);
     callback();
+  };
+
+  // Helper to get a snippet of note content for display
+  const getNoteSnippet = (content: string, searchTerm: string, maxLength: number = 100) => {
+    // Remove markdown formatting for cleaner display
+    const cleanContent = content.replace(/[#*`~\[\]]/g, '');
+
+    if (cleanContent.length <= maxLength) {
+      return cleanContent;
+    }
+
+    // Find the search term and show context around it
+    const lowerContent = cleanContent.toLowerCase();
+    const lowerSearch = searchTerm.toLowerCase();
+    const index = lowerContent.indexOf(lowerSearch);
+
+    if (index === -1) {
+      return cleanContent.substring(0, maxLength) + '...';
+    }
+
+    // Show 30 chars before and 70 chars after the match
+    const start = Math.max(0, index - 30);
+    const end = Math.min(cleanContent.length, index + searchTerm.length + 70);
+
+    let snippet = cleanContent.substring(start, end);
+    if (start > 0) snippet = '...' + snippet;
+    if (end < cleanContent.length) snippet = snippet + '...';
+
+    return snippet;
+  };
+
+  // Helper to format timestamp
+  const formatTimestamp = (seconds: number | null) => {
+    if (seconds === null) return '';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Helper to get notebook_id for a note
+  const getNotebookIdForNote = (note: Note) => {
+    const page = pages.find(p => p.id === note.page_id);
+    return page?.notebook_id;
   };
 
   return (
@@ -82,7 +139,7 @@ export function CommandPalette({ notebooks, pages }: CommandPaletteProps) {
       {/* Command dialog */}
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
-          placeholder="Search notebooks, pages..."
+          placeholder="Search notebooks, pages, notes..."
           value={search}
           onValueChange={setSearch}
         />
@@ -144,6 +201,42 @@ export function CommandPalette({ notebooks, pages }: CommandPaletteProps) {
                     </div>
                   </CommandItem>
                 ))}
+              </CommandGroup>
+            )}
+
+            {/* Notes */}
+            {filteredNotes.length > 0 && (
+              <CommandGroup heading="Notes" className="mb-2">
+                {filteredNotes.map((note) => {
+                  const notebookId = getNotebookIdForNote(note);
+                  if (!notebookId) return null;
+
+                  return (
+                    <CommandItem
+                      key={note.id}
+                      onSelect={() =>
+                        handleSelect(() =>
+                          router.push(
+                            `/notebooks/${notebookId}/pages/${note.page_id}`
+                          )
+                        )
+                      }
+                      className="px-3 py-2.5"
+                    >
+                      <StickyNote className="mr-3 h-4 w-4 flex-shrink-0" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm truncate">
+                          {note.timestamp_seconds !== null && (
+                            <span className="text-muted-foreground mr-2">
+                              {formatTimestamp(note.timestamp_seconds)}
+                            </span>
+                          )}
+                          {getNoteSnippet(note.content, search)}
+                        </span>
+                      </div>
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             )}
           </CommandList>

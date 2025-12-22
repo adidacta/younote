@@ -23,7 +23,7 @@ export default async function AuthenticatedLayout({
     redirect("/");
   }
 
-  // Fetch notebooks and pages for command palette
+  // Fetch notebooks, pages, and notes for command palette
   const { data: notebooksData } = await supabase
     .from("notebooks")
     .select("id, title")
@@ -36,8 +36,15 @@ export default async function AuthenticatedLayout({
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
+  const { data: notesData } = await supabase
+    .from("notes")
+    .select("id, page_id, content, timestamp_seconds")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
   const notebooks = notebooksData || [];
   const pages = pagesData || [];
+  const notes = notesData || [];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -71,7 +78,7 @@ export default async function AuthenticatedLayout({
           <div className="h-14 flex items-center justify-center">
             {/* Add padding to prevent overlap with logo (left) and user buttons (right) */}
             <div className="w-full max-w-2xl px-40 lg:px-44">
-              <CommandPalette notebooks={notebooks} pages={pages} />
+              <CommandPalette notebooks={notebooks} pages={pages} notes={notes} />
             </div>
           </div>
         </div>
