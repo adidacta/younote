@@ -498,41 +498,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 16. Add Terms of Use and Privacy Policy to Sign Up 🔴
-**Priority**: High
-**Type**: Feature - Compliance
-
-**Requirements**:
-- Add checkbox to sign up form: "I agree to the Terms of Use and Privacy Policy"
-- Checkbox must be checked to enable sign up button
-- Links to Terms of Use and Privacy Policy pages
-- Create Terms of Use page
-- Create Privacy Policy page
-
-**Legal Requirements**:
-- Terms of Use content (may need legal review)
-- Privacy Policy content (GDPR, CCPA compliance if applicable)
-- Record user consent in database
-
-**Database Requirements**:
-- Store consent timestamp in user metadata or separate table
-- Track which version of terms/privacy policy user agreed to
-
-**Files to Create/Modify**:
-- Sign up form component
-- `/app/legal/terms-of-use/page.tsx`
-- `/app/legal/privacy-policy/page.tsx`
-- Update Supabase user metadata to store consent
-
-**Questions Before Implementation**:
-1. Do you have existing Terms of Use and Privacy Policy documents?
-2. Should we track which version of terms user agreed to?
-3. Where should links open? (new tab, modal, dedicated page?)
-4. Should existing users be prompted to accept updated terms?
-5. GDPR compliance needed? (EU users)
-6. Do you want to use a template or need custom legal docs?
-
----
 
 ### 17. Add Google Analytics and Session Recording 🔴
 **Priority**: Medium
@@ -698,6 +663,12 @@ Fixed overlapping elements in mobile navigation bar.
 **Type**: Feature
 
 Implemented YouTube transcript fetching using `youtube-transcript` package with clickable timestamps.
+
+### 16. Add Terms of Use and Privacy Policy 🟢
+**Completed**: 2025-12-22
+**Type**: Feature - Compliance
+
+Created comprehensive Terms of Use and Privacy Policy pages with GDPR/CCPA compliance. Added required checkbox to sign-up form with links to legal pages.
 
 ### 18. Implement Onboarding Notebook 🟢
 **Completed**: 2025-12-22
