@@ -7,53 +7,38 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     // Calculate 24 hours ago timestamp
     const twentyFourHoursAgo = new Date();
     twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
     const twentyFourHoursAgoISO = twentyFourHoursAgo.toISOString();
 
-    // Fetch total counts
+    // Fetch total counts (system-wide, all users)
     const [notebooksResult, pagesResult, notesResult] = await Promise.all([
       supabase
         .from("notebooks")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id),
+        .select("id", { count: "exact", head: true }),
       supabase
         .from("pages")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id),
+        .select("id", { count: "exact", head: true }),
       supabase
         .from("notes")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id),
+        .select("id", { count: "exact", head: true }),
     ]);
 
-    // Fetch 24h counts
+    // Fetch 24h counts (system-wide, all users)
     const [notebooks24hResult, pages24hResult, notes24hResult] =
       await Promise.all([
         supabase
           .from("notebooks")
           .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id)
           .gte("created_at", twentyFourHoursAgoISO),
         supabase
           .from("pages")
           .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id)
           .gte("created_at", twentyFourHoursAgoISO),
         supabase
           .from("notes")
           .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id)
           .gte("created_at", twentyFourHoursAgoISO),
       ]);
 

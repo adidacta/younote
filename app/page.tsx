@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { BookOpen, PlayCircle, Share2 } from "lucide-react";
+import { StatsWidgets } from "@/components/stats/stats-widgets";
 
 export default async function LandingPage() {
   // If user is already logged in, redirect to notebooks
@@ -124,6 +125,14 @@ export default async function LandingPage() {
                 and course notes.
               </p>
             </div>
+          </div>
+
+          {/* Stats Section */}
+          <div className="mt-20">
+            <h3 className="text-2xl font-bold text-center mb-8">
+              Join thousands of learners
+            </h3>
+            <StatsWidgets />
           </div>
         </div>
       </main>
