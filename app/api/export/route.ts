@@ -119,7 +119,7 @@ ${page.description || 'No description available'}
     }
 
     // Generate zip file
-    const zipContent = await zip.generateAsync({ type: "uint8array" });
+    const zipContent = await zip.generateAsync({ type: "blob" });
 
     // Return zip file
     return new NextResponse(zipContent, {
