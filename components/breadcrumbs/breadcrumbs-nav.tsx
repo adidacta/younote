@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, ArrowLeft, Search } from "lucide-react";
+import { ChevronRight, ArrowLeft, Search, ChevronDown } from "lucide-react";
 import { AnimatedBreadcrumb } from "./animated-breadcrumb";
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -206,50 +206,55 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
       : item.dropdownItems;
 
     return (
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <button className="hover:opacity-80 transition-opacity cursor-pointer">
-            {children}
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
-          {item.dropdownItems.length > 5 && (
-            <div className="p-2 border-b">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 h-9"
-                  onClick={(e) => e.stopPropagation()}
-                />
+      <div className="flex items-center gap-1">
+        <Link href={item.href} className="hover:opacity-80 transition-opacity">
+          {children}
+        </Link>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+          <DropdownMenuTrigger asChild>
+            <button className="hover:bg-accent rounded-sm p-0.5 transition-colors">
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
+            {item.dropdownItems.length > 5 && (
+              <div className="p-2 border-b">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-8 h-9"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <div className="overflow-y-auto">
-            {filteredItems.length === 0 ? (
-              <div className="p-4 text-sm text-muted-foreground text-center">
-                No results found
-              </div>
-            ) : (
-              filteredItems.map((dropItem) => (
-                <DropdownMenuItem
-                  key={dropItem.id}
-                  onClick={() => {
-                    setIsOpen(false);
-                    router.push(dropItem.href);
-                  }}
-                  className="cursor-pointer"
-                >
-                  {dropItem.icon && <span className="mr-2">{dropItem.icon}</span>}
-                  <span className="truncate">{dropItem.label}</span>
-                </DropdownMenuItem>
-              ))
             )}
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <div className="overflow-y-auto">
+              {filteredItems.length === 0 ? (
+                <div className="p-4 text-sm text-muted-foreground text-center">
+                  No results found
+                </div>
+              ) : (
+                filteredItems.map((dropItem) => (
+                  <DropdownMenuItem
+                    key={dropItem.id}
+                    onClick={() => {
+                      setIsOpen(false);
+                      router.push(dropItem.href);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {dropItem.icon && <span className="mr-2">{dropItem.icon}</span>}
+                    <span className="truncate">{dropItem.label}</span>
+                  </DropdownMenuItem>
+                ))
+              )}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     );
   };
 
