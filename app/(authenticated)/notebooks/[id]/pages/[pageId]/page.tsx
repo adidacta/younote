@@ -7,6 +7,8 @@ import { NotesList } from "@/components/notes/notes-list";
 import { ShareDialog } from "@/components/sharing/share-dialog";
 import { EditablePageTitle } from "@/components/pages/editable-page-title";
 import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
+import { VideoInfoTabs } from "@/components/video/video-info-tabs";
+import { VideoMobileTabs } from "@/components/video/video-mobile-tabs";
 
 export const dynamic = 'force-dynamic';
 
@@ -61,15 +63,33 @@ export default async function PageDetailPage({
       {/* Main content */}
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Video player - RIGHT side on desktop, TOP on mobile */}
-          <div className="lg:col-span-2 order-1 lg:order-2">
-            <YouTubePlayer
+          {/* Video player + tabs - RIGHT side on desktop, TOP on mobile */}
+          <div className="lg:col-span-2 order-1 lg:order-2 space-y-4">
+            {/* Desktop: Video + tabs below */}
+            <div className="hidden lg:block space-y-4">
+              <YouTubePlayer
+                videoId={page.youtube_video_id}
+                title={page.video_title}
+              />
+              <VideoInfoTabs
+                description={page.description}
+                videoId={page.youtube_video_id}
+              />
+            </div>
+
+            {/* Mobile: Tabbed interface (Video | Description | Transcript) */}
+            <VideoMobileTabs
+              description={page.description}
               videoId={page.youtube_video_id}
-              title={page.video_title}
-            />
+            >
+              <YouTubePlayer
+                videoId={page.youtube_video_id}
+                title={page.video_title}
+              />
+            </VideoMobileTabs>
           </div>
 
-          {/* Notes section - LEFT side on desktop, BELOW video on mobile */}
+          {/* Notes section - LEFT side on desktop, BELOW tabs on mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1">
             <NotesList
               notes={notes}
