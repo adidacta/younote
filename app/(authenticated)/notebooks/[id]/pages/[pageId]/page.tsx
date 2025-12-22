@@ -108,11 +108,11 @@ export default async function PageDetailPage({
           {/* Notes section - LEFT side on desktop, BELOW tabs on mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1">
             <div className="flex gap-4">
-              {/* Vertical dots navigation - hidden on mobile */}
-              <div className="hidden md:block">
+              {/* Vertical dots navigation - pulled outside with negative margin */}
+              <div className="hidden lg:block -ml-12">
                 <NotesOutline notes={notes} />
               </div>
-              {/* Notes list */}
+
               <div className="flex-1">
                 <NotesList
                   notes={notes}
