@@ -162,39 +162,6 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
-### 15. Add "Remember Me" Option at Login 🔴
-**Priority**: Medium
-**Type**: Feature
-
-**Requirements**:
-- Add checkbox for "Remember me" on login form
-- If checked, extend session duration
-- If unchecked, use shorter session (expires on browser close)
-
-**Implementation Details**:
-- Add checkbox UI to login form
-- Configure Supabase session duration based on checkbox
-- Default to unchecked (for security)
-- Store preference in localStorage (optional)
-
-**Supabase Auth Configuration**:
-- Use `persistSession` option
-- Adjust session expiry time based on "Remember me"
-- Consider using refresh token rotation for security
-
-**Files to Modify**:
-- Login form component (`app/auth/login/page.tsx` or similar)
-- Supabase client configuration for session handling
-
-**Questions Before Implementation**:
-1. Session duration when "Remember me" is checked? (7 days, 30 days, 90 days?)
-2. Session duration when unchecked? (Session only, 24 hours?)
-3. Should preference be remembered for next login?
-4. Security considerations - max session length?
-
----
-
-
 ### 17. Add Google Analytics and Session Recording 🔴
 **Priority**: Medium
 **Type**: Feature - Analytics
