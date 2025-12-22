@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, ArrowLeft, Search, ChevronDown } from "lucide-react";
+import { ArrowLeft, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { AnimatedBreadcrumb } from "./animated-breadcrumb";
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -213,7 +213,11 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <button className="hover:bg-accent rounded-sm p-0.5 transition-colors">
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              {isOpen ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-64 max-h-[400px] overflow-hidden flex flex-col">
@@ -424,8 +428,9 @@ export function BreadcrumbsNav({ items, subtitle, action }: BreadcrumbsNavProps)
                       delay: chevronBaseDelay,
                       ease: "easeInOut"
                     }}
+                    className="text-muted-foreground mx-1"
                   >
-                    <ChevronRight className="h-6 w-6 text-muted-foreground" />
+                    /
                   </motion.div>
                 )}
               </div>
