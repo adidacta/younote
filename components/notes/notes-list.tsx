@@ -35,7 +35,7 @@ export function NotesList({
     }
   }, [highlightNoteId]);
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-[50vh]">
       {/* Always show new note card at top */}
       <NewNoteCard pageId={pageId} />
 
