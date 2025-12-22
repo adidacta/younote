@@ -125,14 +125,14 @@ export function CommandPalette({ notebooks, pages, notes }: CommandPaletteProps)
       {/* Trigger button */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center justify-between gap-2 w-full max-w-2xl px-4 py-2.5 text-sm text-muted-foreground rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+        className="flex items-center justify-between gap-3 px-5 py-2 text-sm text-foreground/70 rounded-lg border-2 border-input bg-muted/30 hover:bg-muted/50 hover:border-foreground/20 transition-all shadow-sm hover:shadow-md whitespace-nowrap"
       >
-        <div className="flex items-center gap-2">
-          <Search className="h-4 w-4" />
-          <span>Search...</span>
+        <div className="flex items-center gap-3">
+          <Search className="h-5 w-5" />
+          <span className="font-medium">Search notebooks, pages, notes...</span>
         </div>
-        <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-          <span className="text-xs">⌘</span>K
+        <kbd className="pointer-events-none hidden sm:inline-flex h-6 select-none items-center gap-1 rounded border border-foreground/20 bg-background px-2 font-mono text-xs font-medium text-muted-foreground shadow-sm">
+          <span className="text-sm">⌘</span>K
         </kbd>
       </button>
 

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserProfile, createUserProfile } from "@/lib/database/user-profiles";
 import { SettingsForm } from "@/components/settings-form";
-import { BreadcrumbsNav } from "@/components/breadcrumbs/breadcrumbs-nav";
+import { BackButton } from "@/components/back-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function SettingsPage() {
@@ -47,12 +47,15 @@ export default async function SettingsPage() {
     if (!profile) {
       return (
         <div className="container max-w-7xl mx-auto px-4 py-6">
-          <BreadcrumbsNav
-            items={[
-              { label: "Settings", href: "/settings" },
-            ]}
-            subtitle="Manage your account settings and preferences"
-          />
+          <div className="mb-3">
+            <BackButton />
+          </div>
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold tracking-tight mb-2">Settings</h1>
+            <p className="text-muted-foreground">
+              Manage your account settings and preferences
+            </p>
+          </div>
           <Card className="max-w-2xl">
             <CardHeader>
               <CardTitle>Profile Not Found</CardTitle>
@@ -73,12 +76,15 @@ export default async function SettingsPage() {
 
   return (
     <div className="container max-w-7xl mx-auto px-4 py-6">
-      <BreadcrumbsNav
-        items={[
-          { label: "Settings", href: "/settings" },
-        ]}
-        subtitle="Manage your account settings and preferences"
-      />
+      <div className="mb-3">
+        <BackButton />
+      </div>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Settings</h1>
+        <p className="text-muted-foreground">
+          Manage your account settings and preferences
+        </p>
+      </div>
       <SettingsForm profile={profile} />
     </div>
   );

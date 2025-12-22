@@ -1,5 +1,4 @@
 import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { CommandPalette } from "@/components/command-palette/command-palette";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -56,16 +55,16 @@ export default async function AuthenticatedLayout({
             <Image
               src="/images/younote-logo-light.png"
               alt="YouNote"
-              width={120}
-              height={24}
+              width={150}
+              height={30}
               className="dark:hidden"
               priority
             />
             <Image
               src="/images/younote-logo-dark.png"
               alt="YouNote"
-              width={120}
-              height={24}
+              width={150}
+              height={30}
               className="hidden dark:block"
               priority
             />
@@ -85,10 +84,6 @@ export default async function AuthenticatedLayout({
 
         {/* User info - absolute positioned on right with 32px padding */}
         <div className="absolute right-4 md:right-8 top-0 h-14 flex items-center gap-2 md:gap-4 z-10">
-          {/* Hide theme switcher on mobile/tablet to prevent overlap */}
-          <div className="hidden lg:block">
-            <ThemeSwitcher />
-          </div>
           <Suspense>
             <AuthButton />
           </Suspense>
