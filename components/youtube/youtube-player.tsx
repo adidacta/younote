@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AlertCircle, ExternalLink } from "lucide-react";
+import { AlertCircle, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface YouTubePlayerProps {
@@ -13,7 +13,10 @@ interface YouTubePlayerProps {
 export function YouTubePlayer({ videoId, title, startSeconds }: YouTubePlayerProps) {
   const [player, setPlayer] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isInPiP, setIsInPiP] = useState(false);
+  const [isPiPManuallyDisabled, setIsPiPManuallyDisabled] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Generate embed URL
   const embedUrl = `https://www.youtube.com/embed/${videoId}${
@@ -88,6 +91,42 @@ export function YouTubePlayer({ videoId, title, startSeconds }: YouTubePlayerPro
     }
   }, [player]);
 
+  // Intersection Observer to detect when video scrolls out of view
+  useEffect(() => {
+    if (!containerRef.current || isPiPManuallyDisabled) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1, // Trigger when less than 10% of video is visible
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        // Enter PiP when video scrolls out of view
+        if (!entry.isIntersecting && !isPiPManuallyDisabled) {
+          setIsInPiP(true);
+        }
+        // Exit PiP when video is back in view
+        else if (entry.isIntersecting) {
+          setIsInPiP(false);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [isPiPManuallyDisabled]);
+
+  const handleClosePiP = () => {
+    setIsInPiP(false);
+    setIsPiPManuallyDisabled(true);
+    // Scroll back to video
+    containerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   if (error) {
     return (
       <div className="relative w-full aspect-video bg-muted rounded-lg overflow-hidden flex items-center justify-center">
@@ -107,15 +146,53 @@ export function YouTubePlayer({ videoId, title, startSeconds }: YouTubePlayerPro
   }
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
-      <iframe
-        ref={iframeRef}
-        src={embedUrl}
-        title={title}
-        className="absolute top-0 left-0 w-full h-full"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-      />
-    </div>
+    <>
+      {/* Main video container */}
+      <div
+        ref={containerRef}
+        className="relative w-full aspect-video bg-black rounded-lg overflow-hidden"
+      >
+        {/* Iframe wrapper - stays in normal position or moves to PiP */}
+        <div
+          className={`
+            ${isInPiP
+              ? 'fixed bottom-4 right-4 w-80 aspect-video shadow-2xl border border-border z-50'
+              : 'absolute top-0 left-0 w-full h-full'
+            }
+            bg-black rounded-lg overflow-hidden transition-all duration-300
+          `}
+        >
+          {/* Close button in PiP mode */}
+          {isInPiP && (
+            <button
+              onClick={handleClosePiP}
+              className="absolute top-2 right-2 z-10 p-1.5 bg-black/70 hover:bg-black/90 rounded-full transition-colors"
+              aria-label="Close mini player"
+            >
+              <X className="h-4 w-4 text-white" />
+            </button>
+          )}
+
+          {/* Single iframe - never unmounts */}
+          <iframe
+            ref={iframeRef}
+            src={embedUrl}
+            title={title}
+            className="absolute top-0 left-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+
+        {/* Placeholder when in PiP */}
+        {isInPiP && (
+          <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+            <p className="text-sm text-muted-foreground">
+              Video playing in mini player
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
