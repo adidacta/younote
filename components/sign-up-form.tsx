@@ -123,6 +123,16 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      {step === "details" && (
+        <button
+          type="button"
+          onClick={() => setStep("email")}
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </button>
+      )}
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Create your account</CardTitle>
@@ -216,16 +226,7 @@ export function SignUpForm({
               </form>
             </>
           ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => setStep("email")}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </button>
-              <form onSubmit={handleSignUp}>
+            <form onSubmit={handleSignUp}>
                 <div className="flex flex-col gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="email">Email address</Label>
@@ -319,7 +320,6 @@ export function SignUpForm({
                 </Button>
               </div>
             </form>
-            </>
           )}
         </CardContent>
       </Card>
