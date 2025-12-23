@@ -12,7 +12,53 @@ This file tracks open tasks, bugs, and feature requests for the YouNote project.
 
 ## Current Tasks
 
+### 20. Chrome Extension for YouTube.com Note-Taking 🔴
+**Priority**: High
+**Type**: Feature - Browser Extension
 
+**Objective**:
+Create a Chrome extension that allows users to take notes directly while watching videos on YouTube.com, seamlessly integrating with the YouNote web app.
+
+**Core Features**:
+- Inject note-taking UI into YouTube.com video pages
+- Capture current video timestamp when creating notes
+- Auto-detect YouTube video ID and metadata
+- Sync notes to YouNote account in real-time
+- Quick access to existing notes for the current video
+- Option to create new page/notebook or add to existing
+
+**Technical Requirements**:
+- Chrome Extension Manifest V3
+- Content script injection on youtube.com
+- Background service worker for API communication
+- Authentication with YouNote backend (OAuth or API key)
+- Real-time sync with Supabase database
+- Minimal performance impact on YouTube
+
+**UI/UX Considerations**:
+- Non-intrusive overlay or sidebar on YouTube video page
+- Keyboard shortcut to quickly capture notes (e.g., Ctrl+Shift+N)
+- Visual indicator when notes exist for current video
+- Toggle to show/hide extension interface
+- Responsive to YouTube's theater mode and fullscreen
+
+**Implementation Questions**:
+1. UI placement: Sidebar, overlay, or below video player?
+2. Authentication method: OAuth flow or API key?
+3. Should extension work offline with local storage sync?
+4. Should it support YouTube playlist note-taking?
+5. Integration with existing notebooks - auto-create or prompt user?
+6. Should we support other video platforms (Vimeo, etc.)?
+
+**Files to Create**:
+- `extension/manifest.json` - Extension configuration
+- `extension/content.js` - Content script for YouTube pages
+- `extension/background.js` - Background service worker
+- `extension/popup.html` - Extension popup UI
+- `extension/options.html` - Extension settings page
+- API authentication endpoints for extension
+
+---
 
 ### 4. In-App Rating System 🔴
 **Priority**: Medium

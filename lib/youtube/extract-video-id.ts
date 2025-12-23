@@ -2,6 +2,7 @@
  * Extract YouTube video ID from various URL formats
  * Supports:
  * - https://www.youtube.com/watch?v=VIDEO_ID
+ * - https://www.youtube.com/live/VIDEO_ID
  * - https://youtu.be/VIDEO_ID
  * - https://www.youtube.com/embed/VIDEO_ID
  * - https://m.youtube.com/watch?v=VIDEO_ID
@@ -17,6 +18,8 @@ export function extractYouTubeVideoId(url: string): string | null {
   const patterns = [
     // youtube.com/watch?v=VIDEO_ID
     /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    // youtube.com/live/VIDEO_ID (for live streams)
+    /(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
     // youtu.be/VIDEO_ID
     /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
     // youtube.com/embed/VIDEO_ID
