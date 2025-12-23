@@ -1,0 +1,223 @@
+/* YouNote Extension Styles for YouTube */
+
+#younote-extension-container {
+  margin: 24px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.younote-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.younote-card.younote-not-auth {
+  background: #f9fafb;
+}
+
+/* Collapsed state */
+.younote-card.younote-collapsed .younote-content {
+  display: none;
+}
+
+/* Success flash animation */
+@keyframes younote-flash {
+  0%, 100% {
+    background: #ffffff;
+  }
+  50% {
+    background: #d1fae5;
+  }
+}
+
+.younote-card.younote-flash-success {
+  animation: younote-flash 0.3s ease;
+}
+
+/* Header */
+.younote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.younote-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.younote-toggle-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.younote-toggle-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Content */
+.younote-content {
+  padding: 20px;
+}
+
+.younote-message {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Textarea */
+.younote-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.younote-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.younote-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Info section */
+.younote-info {
+  margin: 12px 0;
+}
+
+.younote-timestamp {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Buttons */
+.younote-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.younote-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.younote-btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.younote-btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.younote-btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Feedback messages */
+.younote-feedback {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.younote-feedback-info {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.younote-feedback-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.younote-feedback-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Dark mode support (YouTube dark theme) */
+html[dark] .younote-card,
+html[dark="true"] .younote-card {
+  background: #0f0f0f;
+  border-color: #272727;
+}
+
+html[dark] .younote-header,
+html[dark="true"] .younote-header {
+  border-bottom-color: #272727;
+}
+
+html[dark] .younote-title,
+html[dark="true"] .younote-title {
+  color: #f1f1f1;
+}
+
+html[dark] .younote-textarea,
+html[dark="true"] .younote-textarea {
+  background: #0f0f0f;
+  border-color: #272727;
+  color: #f1f1f1;
+}
+
+html[dark] .younote-textarea::placeholder,
+html[dark="true"] .younote-textarea::placeholder {
+  color: #717171;
+}
+
+html[dark] .younote-message,
+html[dark="true"] .younote-message {
+  color: #aaaaaa;
+}
+
+html[dark] .younote-timestamp,
+html[dark="true"] .younote-timestamp {
+  color: #aaaaaa;
+}
+
+html[dark] .younote-toggle-btn,
+html[dark="true"] .younote-toggle-btn {
+  color: #aaaaaa;
+}
+
+html[dark] .younote-toggle-btn:hover,
+html[dark="true"] .younote-toggle-btn:hover {
+  background: #272727;
+  color: #f1f1f1;
+}
