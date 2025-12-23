@@ -35,16 +35,33 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching transcript:', error);
 
-    // Check if it's a "no transcript available" error
-    if (error instanceof Error && error.message.includes('Could not find')) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch transcript';
+
+    // Check for specific error types and provide user-friendly messages
+    if (errorMessage.includes('Could not find')) {
       return NextResponse.json(
         { error: 'No transcript available for this video' },
         { status: 404 }
       );
     }
 
+    if (errorMessage.includes('Transcript is disabled')) {
+      return NextResponse.json(
+        { error: 'Transcripts have been disabled for this video by the creator' },
+        { status: 404 }
+      );
+    }
+
+    if (errorMessage.includes('not available') || errorMessage.includes('unavailable')) {
+      return NextResponse.json(
+        { error: 'Transcript is not available for this video' },
+        { status: 404 }
+      );
+    }
+
+    // Generic error for other cases
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch transcript' },
+      { error: 'Unable to load transcript. This video may not have captions available.' },
       { status: 500 }
     );
   }
