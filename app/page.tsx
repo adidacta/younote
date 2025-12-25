@@ -11,7 +11,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { BookOpen, PlayCircle, Share2, GraduationCap, Briefcase, Search, Check } from "lucide-react";
+import { BookOpen, PlayCircle, Share2, Target, GraduationCap, Briefcase, Search, Check } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { PageTransition } from "@/components/page-transition";
 import { AnnouncementsButton } from "@/components/announcements/announcements-button";
@@ -237,7 +237,7 @@ export default async function LandingPage() {
       {/* Features Section */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 text-left">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-6 w-6 text-primary" />
@@ -255,6 +255,16 @@ export default async function LandingPage() {
               </div>
               <p className="text-muted-foreground">
                 Capture insights at the perfect timestamp. Click to jump back to any moment—no more scrubbing through hours of video to find that one thing.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-2">
+                <Target className="h-6 w-6 text-primary" />
+                <h3 className="font-semibold text-lg">Zero Distractions, Pure Focus</h3>
+              </div>
+              <p className="text-muted-foreground">
+                No algorithm pulling you toward cat videos. No recommended rabbit holes. Just you, the video you chose, and your notes. Perfect for learners with focus challenges.
               </p>
             </div>
 
@@ -333,6 +343,10 @@ export default async function LandingPage() {
                   <li className="flex items-start gap-2">
                     <span className="font-medium">• Timestamps matter:</span>
                     <span>YouNote creates clickable timestamps automatically. Click any timestamp to jump to that exact moment in the video - no more manual scrubbing.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-medium">• Zero distractions:</span>
+                    <span>No algorithm pulling you away. No recommended videos. No rabbit holes. Just you, your chosen video, and your notes. Perfect for learners with ADHD or focus challenges.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-medium">• Purpose-built:</span>
