@@ -10,10 +10,53 @@ body > #younote-extension-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 400px;
+  width: 420px;
   max-width: calc(100vw - 40px);
   z-index: 9999;
   margin: 0;
+}
+
+/* Standout styling for floating widget */
+body > #younote-extension-container .younote-card {
+  background: #1a1a1a !important;
+  border: 2px solid #3b82f6 !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3), 0 0 0 1px rgba(59, 130, 246, 0.1) !important;
+}
+
+body > #younote-extension-container .younote-title {
+  color: #ffffff !important;
+}
+
+body > #younote-extension-container .younote-header {
+  border-bottom-color: #2a2a2a !important;
+  background: #1f1f1f;
+}
+
+body > #younote-extension-container .younote-message {
+  color: #d1d5db !important;
+}
+
+body > #younote-extension-container .younote-textarea {
+  background: #0a0a0a !important;
+  border-color: #3a3a3a !important;
+  color: #ffffff !important;
+}
+
+body > #younote-extension-container .younote-textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+body > #younote-extension-container .younote-timestamp {
+  color: #9ca3af !important;
+}
+
+body > #younote-extension-container .younote-toggle-btn {
+  color: #9ca3af !important;
+}
+
+body > #younote-extension-container .younote-toggle-btn:hover {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
 }
 
 .younote-card {
