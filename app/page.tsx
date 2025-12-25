@@ -4,9 +4,8 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { BookOpen, PlayCircle, Share2, BellRing } from "lucide-react";
+import { BookOpen, PlayCircle, Share2 } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
-import { AnnouncementsList } from "@/components/announcements/announcements-list";
 import { PageTransition } from "@/components/page-transition";
 
 export default async function LandingPage() {
@@ -146,24 +145,6 @@ export default async function LandingPage() {
               Join {userCount} avid learners
             </h3>
             <StatsWidgets />
-          </div>
-
-          {/* Announcements Section */}
-          <div className="mt-20">
-            <h3 className="text-2xl font-bold text-center mb-8 flex items-center justify-center gap-2">
-              <BellRing className="h-6 w-6 text-primary" />
-              What's New in YouNote
-            </h3>
-            <div className="max-w-2xl mx-auto">
-              <AnnouncementsList variant="page" />
-            </div>
-            <div className="text-center mt-8">
-              <Button asChild size="lg" variant="outline">
-                <Link href="/auth/sign-up">
-                  Sign up to get notified of new features
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </main>
