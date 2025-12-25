@@ -13,7 +13,7 @@ export function ConnectExtensionButton() {
 
   useEffect(() => {
     // Check if extension is installed by trying to send a message
-    if (typeof window !== 'undefined' && window.chrome?.runtime) {
+    if (typeof window !== 'undefined' && (window as any).chrome?.runtime) {
       // Try to detect YouNote extension
       // We'll check for a specific extension ID or use a broadcast approach
       setIsExtensionInstalled(true);
