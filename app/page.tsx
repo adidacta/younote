@@ -7,6 +7,8 @@ import Image from "next/image";
 import { BookOpen, PlayCircle, Share2 } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { PageTransition } from "@/components/page-transition";
+import { AnnouncementsButton } from "@/components/announcements/announcements-button";
+import { Suspense } from "react";
 
 export default async function LandingPage() {
   // If user is already logged in, redirect to notebooks
@@ -50,7 +52,10 @@ export default async function LandingPage() {
               className="hidden dark:block"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <Suspense>
+              <AnnouncementsButton />
+            </Suspense>
             <Button asChild size="sm">
               <Link href="/auth/sign-up">Sign up free</Link>
             </Button>
