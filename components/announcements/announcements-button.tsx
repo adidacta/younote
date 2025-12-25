@@ -34,7 +34,7 @@ export function AnnouncementsButton() {
   // Don't render anything until mounted (avoid hydration mismatch)
   if (!mounted) {
     return (
-      <Button variant="ghost" className="h-12 w-12 [&_svg]:!size-8" disabled>
+      <Button variant="ghost" className="h-9 w-9 [&_svg]:!size-5" disabled>
         <BellRing />
         <span className="sr-only">Announcements</span>
       </Button>
@@ -44,7 +44,7 @@ export function AnnouncementsButton() {
   return (
     <DropdownMenu modal={false} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-12 w-12 relative [&_svg]:!size-8">
+        <Button variant="ghost" className="h-9 w-9 relative [&_svg]:!size-5">
           <BellRing />
           {unreadCount > 0 && (
             <Badge

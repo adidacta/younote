@@ -52,9 +52,11 @@ export default async function LandingPage() {
               className="hidden dark:block"
             />
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-4 items-center">
             <Suspense>
-              <AnnouncementsButton />
+              <div className="mr-2">
+                <AnnouncementsButton />
+              </div>
             </Suspense>
             <Button asChild size="sm">
               <Link href="/auth/sign-up">Sign up free</Link>
