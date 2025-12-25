@@ -98,10 +98,15 @@ export default async function LandingPage() {
 
           {/* Headline */}
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              YouTube is amazing for learning. Timestamped notes make it unforgettable.
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <div className="space-y-3">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                YouTube is amazing for avid learners
+              </h1>
+              <p className="text-2xl md:text-3xl font-semibold text-primary">
+                Add timestamped notes to make it unforgettable!
+              </p>
+            </div>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto pt-2">
               Turn hours of video into organized knowledge you can actually use. Capture insights at the perfect moment, build your own reference library, and never lose a breakthrough idea again.
             </p>
           </div>
