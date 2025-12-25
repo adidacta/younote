@@ -1,6 +1,7 @@
 // YouNote Auth Detector - Runs on YouNote domain to capture auth session
 
-console.log('[YouNote Extension] Auth detector loaded');
+console.log('[YouNote Extension] Auth detector loaded on:', window.location.href);
+console.log('[YouNote Extension] Extension ID:', chrome.runtime.id);
 
 // Check for auth session periodically
 let checkInterval = null;
@@ -8,19 +9,28 @@ let lastAuthState = null;
 
 async function checkForAuth() {
   try {
+    console.log('[YouNote Extension] Checking for auth...');
+
     // Check if we're logged in by looking for user data in localStorage
     // Supabase stores session data in localStorage with keys like:
     // sb-<project-id>-auth-token
 
     const storageKeys = Object.keys(localStorage);
+    console.log('[YouNote Extension] LocalStorage keys:', storageKeys);
+
     const supabaseAuthKey = storageKeys.find(key =>
       key.startsWith('sb-') && key.includes('-auth-token')
     );
 
     if (!supabaseAuthKey) {
       console.log('[YouNote Extension] No auth token found in localStorage');
+      console.log('[YouNote Extension] Looking for keys starting with "sb-"...');
+      const sbKeys = storageKeys.filter(k => k.startsWith('sb-'));
+      console.log('[YouNote Extension] Found sb- keys:', sbKeys);
       return;
     }
+
+    console.log('[YouNote Extension] Found auth key:', supabaseAuthKey);
 
     const authDataStr = localStorage.getItem(supabaseAuthKey);
     if (!authDataStr) {
@@ -136,10 +146,15 @@ function showAuthSuccessMessage() {
 }
 
 // Start checking for auth on page load
+console.log('[YouNote Extension] Starting auth detection...');
 checkForAuth();
 
 // Check periodically while page is open (every 2 seconds)
 checkInterval = setInterval(checkForAuth, 2000);
+
+// Also check after a delay (in case page hasn't fully loaded)
+setTimeout(checkForAuth, 1000);
+setTimeout(checkForAuth, 3000);
 
 // Also check when localStorage changes
 window.addEventListener('storage', (e) => {

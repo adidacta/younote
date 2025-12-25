@@ -48,8 +48,8 @@ function showNotLoggedInState() {
 // Login button click
 loginBtn.addEventListener("click", async () => {
   try {
-    // Open YouNote in new tab
-    await chrome.tabs.create({ url: YOUNOTE_URL });
+    // Open YouNote login page in new tab
+    await chrome.tabs.create({ url: `${YOUNOTE_URL}/auth/login` });
 
     // Close popup
     window.close();
