@@ -94,15 +94,25 @@ function createNoteUI() {
 
 // Find where to insert the note UI
 function findInsertionPoint() {
-  // Try to find the secondary column (below video)
-  const secondary = document.querySelector('#secondary');
-  if (secondary) {
-    return secondary;
+  // Try multiple selectors for YouTube's changing DOM
+  const selectors = [
+    '#secondary',                           // Classic YouTube
+    '#secondary-inner',                     // New YouTube layout
+    'ytd-watch-flexy #secondary',          // YouTube Polymer
+    '#columns #secondary',                  // Alternative layout
+  ];
+
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element) {
+      console.log('[YouNote] Found insertion point:', selector);
+      return element;
+    }
   }
 
-  // Fallback: find any suitable container
-  const belowPlayer = document.querySelector('#below');
-  return belowPlayer;
+  console.error('[YouNote] Could not find insertion point. Trying body as fallback.');
+  // Last resort: return body (will still work but not ideal placement)
+  return document.body;
 }
 
 // Update UI based on authentication status
