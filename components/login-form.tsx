@@ -16,10 +16,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+interface LoginFormProps extends React.ComponentPropsWithoutRef<"div"> {
+  shareToken?: string;
+  shareType?: 'page' | 'note';
+}
+
 export function LoginForm({
   className,
+  shareToken,
+  shareType,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +45,25 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      router.push("/notebooks");
+
+      // If share context exists, fork the content and redirect to it
+      if (shareToken && shareType) {
+        const forkResponse = await fetch('/api/share/fork', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ share_token: shareToken, share_type: shareType })
+        });
+
+        if (forkResponse.ok) {
+          const { page_id, notebook_id } = await forkResponse.json();
+          router.push(`/notebooks/${notebook_id}/pages/${page_id}`);
+        } else {
+          // Fork failed, just go to notebooks
+          router.push("/notebooks");
+        }
+      } else {
+        router.push("/notebooks");
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -51,10 +76,16 @@ export function LoginForm({
     setError(null);
 
     try {
+      // Build callback URL with share context if present
+      let callbackUrl = `${window.location.origin}/auth/callback`;
+      if (shareToken && shareType) {
+        callbackUrl += `?share_token=${shareToken}&share_type=${shareType}`;
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl,
         },
       });
       if (error) throw error;

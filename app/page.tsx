@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { BookOpen, PlayCircle, Share2 } from "lucide-react";
@@ -9,7 +10,7 @@ import { PageTransition } from "@/components/page-transition";
 
 export default async function LandingPage() {
   // If user is already logged in, redirect to notebooks
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -17,6 +18,15 @@ export default async function LandingPage() {
   if (user) {
     redirect("/notebooks");
   }
+
+  // Get actual user count for brutal honesty
+  // Use service role to count all auth users
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const adminClient = createClient(supabaseUrl, serviceKey);
+
+  const { data: { users } } = await adminClient.auth.admin.listUsers();
+  const userCount = users?.length || 0;
 
   return (
     <PageTransition>
@@ -132,7 +142,7 @@ export default async function LandingPage() {
           {/* Stats Section */}
           <div className="mt-20">
             <h3 className="text-2xl font-bold text-center mb-8">
-              Join thousands of learners
+              Join {userCount} avid learners
             </h3>
             <StatsWidgets />
           </div>

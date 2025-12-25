@@ -18,10 +18,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 
+interface SignUpFormProps extends React.ComponentPropsWithoutRef<"div"> {
+  shareToken?: string;
+  shareType?: 'page' | 'note';
+}
+
 export function SignUpForm({
   className,
+  shareToken,
+  shareType,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: SignUpFormProps) {
   const [step, setStep] = useState<"email" | "details">("email");
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
@@ -37,10 +44,16 @@ export function SignUpForm({
     setError(null);
 
     try {
+      // Build callback URL with share context if present
+      let callbackUrl = `${window.location.origin}/auth/callback`;
+      if (shareToken && shareType) {
+        callbackUrl += `?share_token=${shareToken}&share_type=${shareType}`;
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl,
         },
       });
       if (error) throw error;
@@ -93,11 +106,17 @@ export function SignUpForm({
     }
 
     try {
+      // Build callback URL with share context if present
+      let callbackUrl = `${window.location.origin}/auth/callback`;
+      if (shareToken && shareType) {
+        callbackUrl += `?share_token=${shareToken}&share_type=${shareType}`;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: callbackUrl,
           data: {
             nickname: nickname,
           },
@@ -108,8 +127,12 @@ export function SignUpForm({
       // If email confirmation is disabled, user is automatically logged in
       // Check if we have a session and redirect accordingly
       if (data.session) {
-        // User is logged in, redirect to setup page for account initialization
-        router.push("/auth/setup");
+        // User is logged in, redirect to setup page with share context
+        let setupUrl = "/auth/setup";
+        if (shareToken && shareType) {
+          setupUrl += `?share_token=${shareToken}&share_type=${shareType}`;
+        }
+        router.push(setupUrl);
       } else {
         // User needs to confirm email, show success page
         router.push("/auth/sign-up-success");

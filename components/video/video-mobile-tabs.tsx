@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Loader2 } from "lucide-react";
+import { SignUpBenefits } from "@/components/sharing/signup-benefits";
 
 interface Chapter {
   timestamp: number;
@@ -19,12 +20,18 @@ interface VideoMobileTabsProps {
   description: string;
   videoId: string;
   children: React.ReactNode; // Video player component
+  readOnly?: boolean; // For shared/public views
+  shareToken?: string; // Required when readOnly is true
+  shareType?: 'page' | 'note'; // Required when readOnly is true
 }
 
 export function VideoMobileTabs({
   description,
   videoId,
   children,
+  readOnly = false,
+  shareToken,
+  shareType,
 }: VideoMobileTabsProps) {
   const [activeTab, setActiveTab] = useState("video");
   const [transcript, setTranscript] = useState<TranscriptEntry[] | null>(null);
@@ -96,11 +103,14 @@ export function VideoMobileTabs({
             Video
           </TabsTrigger>
           <TabsTrigger value="description" className="flex-1">
-            Description
+            {readOnly ? "Sign Up" : "Description"}
           </TabsTrigger>
-          <TabsTrigger value="transcript" className="flex-1">
-            Transcript
-          </TabsTrigger>
+          {/* Hide transcript tab in shared/public views */}
+          {!readOnly && (
+            <TabsTrigger value="transcript" className="flex-1">
+              Transcript
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="video" className="mt-4">
@@ -109,6 +119,9 @@ export function VideoMobileTabs({
         </TabsContent>
 
         <TabsContent value="description" className="mt-4">
+          {readOnly && shareToken && shareType ? (
+            <SignUpBenefits shareToken={shareToken} shareType={shareType} compact />
+          ) : (
           <div className="bg-muted/30 rounded-lg p-4 max-h-[60vh] overflow-y-auto">
             {/* Chapters Section */}
             {chapters.length > 0 && (
@@ -148,10 +161,13 @@ export function VideoMobileTabs({
               </p>
             )}
           </div>
+          )}
         </TabsContent>
 
-        <TabsContent value="transcript" className="mt-4">
-          <div className="bg-muted/30 rounded-lg p-4 max-h-[60vh] overflow-y-auto">
+        {/* Hide transcript content in shared/public views */}
+        {!readOnly && (
+          <TabsContent value="transcript" className="mt-4">
+            <div className="bg-muted/30 rounded-lg p-4 max-h-[60vh] overflow-y-auto">
             {isLoadingTranscript && (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -197,6 +213,7 @@ export function VideoMobileTabs({
             )}
           </div>
         </TabsContent>
+        )}
       </Tabs>
     </div>
   );

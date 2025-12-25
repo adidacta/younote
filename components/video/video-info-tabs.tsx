@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Loader2 } from "lucide-react";
+import { SignUpBenefits } from "@/components/sharing/signup-benefits";
 
 interface Chapter {
   timestamp: number; // in seconds
@@ -19,12 +20,18 @@ interface VideoInfoTabsProps {
   description: string;
   videoId: string;
   className?: string;
+  readOnly?: boolean; // For shared/public views - shows benefits instead of description
+  shareToken?: string; // Required when readOnly is true
+  shareType?: 'page' | 'note'; // Required when readOnly is true
 }
 
 export function VideoInfoTabs({
   description,
   videoId,
   className = "",
+  readOnly = false,
+  shareToken,
+  shareType,
 }: VideoInfoTabsProps) {
   const [activeTab, setActiveTab] = useState("description");
   const [transcript, setTranscript] = useState<TranscriptEntry[] | null>(null);
@@ -85,18 +92,24 @@ export function VideoInfoTabs({
   };
 
   return (
-    <div className={`${className} transition-opacity duration-200 opacity-70 hover:opacity-100`}>
+    <div className={className}>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full">
           <TabsTrigger value="description" className="flex-1">
-            Description
+            {readOnly ? "Sign Up" : "Description"}
           </TabsTrigger>
-          <TabsTrigger value="transcript" className="flex-1">
-            Transcript
-          </TabsTrigger>
+          {/* Hide transcript tab in shared/public views */}
+          {!readOnly && (
+            <TabsTrigger value="transcript" className="flex-1">
+              Transcript
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="description" className="mt-4">
+          {readOnly && shareToken && shareType ? (
+            <SignUpBenefits shareToken={shareToken} shareType={shareType} />
+          ) : (
           <div className="bg-muted/30 rounded-lg p-4 max-h-[400px] overflow-y-auto">
             {/* Chapters Section */}
             {chapters.length > 0 && (
@@ -136,55 +149,59 @@ export function VideoInfoTabs({
               </p>
             )}
           </div>
+          )}
         </TabsContent>
 
-        <TabsContent value="transcript" className="mt-4">
-          <div className="bg-muted/30 rounded-lg p-4 max-h-[400px] overflow-y-auto">
-            {isLoadingTranscript && (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="ml-2 text-sm text-muted-foreground">Loading transcript...</span>
-              </div>
-            )}
+        {/* Hide transcript content in shared/public views */}
+        {!readOnly && (
+          <TabsContent value="transcript" className="mt-4">
+            <div className="bg-muted/30 rounded-lg p-4 max-h-[400px] overflow-y-auto">
+              {isLoadingTranscript && (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <span className="ml-2 text-sm text-muted-foreground">Loading transcript...</span>
+                </div>
+              )}
 
-            {transcriptError && (
-              <div className="text-center py-12">
-                <p className="text-sm text-muted-foreground mb-2">{transcriptError}</p>
-                <button
-                  onClick={fetchTranscript}
-                  className="text-sm text-primary hover:underline"
-                >
-                  Try again
-                </button>
-              </div>
-            )}
-
-            {transcript && transcript.length > 0 && (
-              <div className="space-y-2">
-                {transcript.map((entry, index) => (
+              {transcriptError && (
+                <div className="text-center py-12">
+                  <p className="text-sm text-muted-foreground mb-2">{transcriptError}</p>
                   <button
-                    key={index}
-                    onClick={() => handleChapterClick(entry.offset)}
-                    className="w-full text-left p-2 rounded hover:bg-accent transition-colors group flex items-start gap-3"
+                    onClick={fetchTranscript}
+                    className="text-sm text-primary hover:underline"
                   >
-                    <span className="text-xs font-mono text-muted-foreground group-hover:text-primary min-w-[48px]">
-                      {formatTimestamp(entry.offset)}
-                    </span>
-                    <span className="text-sm flex-1">{entry.text}</span>
+                    Try again
                   </button>
-                ))}
-              </div>
-            )}
+                </div>
+              )}
 
-            {transcript && transcript.length === 0 && !isLoadingTranscript && !transcriptError && (
-              <div className="text-center py-12">
-                <p className="text-sm text-muted-foreground">
-                  No transcript available for this video.
-                </p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
+              {transcript && transcript.length > 0 && (
+                <div className="space-y-2">
+                  {transcript.map((entry, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleChapterClick(entry.offset)}
+                      className="w-full text-left p-2 rounded hover:bg-accent transition-colors group flex items-start gap-3"
+                    >
+                      <span className="text-xs font-mono text-muted-foreground group-hover:text-primary min-w-[48px]">
+                        {formatTimestamp(entry.offset)}
+                      </span>
+                      <span className="text-sm flex-1">{entry.text}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {transcript && transcript.length === 0 && !isLoadingTranscript && !transcriptError && (
+                <div className="text-center py-12">
+                  <p className="text-sm text-muted-foreground">
+                    No transcript available for this video.
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

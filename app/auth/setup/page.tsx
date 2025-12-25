@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, CheckCircle2 } from "lucide-react";
@@ -17,6 +17,7 @@ export default function SetupPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     let mounted = true;
@@ -51,9 +52,41 @@ export default function SetupPage() {
         if (!mounted) return;
         setIsComplete(true);
 
-        // Wait a moment to show completion, then redirect
-        setTimeout(() => {
-          if (mounted) {
+        // Check if coming from shared link
+        const shareToken = searchParams.get('share_token');
+        const shareType = searchParams.get('share_type');
+
+        // Wait a moment to show completion, then fork content if needed
+        setTimeout(async () => {
+          if (!mounted) return;
+
+          if (shareToken && shareType) {
+            // Fork shared content to user's account
+            try {
+              const forkResponse = await fetch('/api/share/fork', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  share_token: shareToken,
+                  share_type: shareType
+                })
+              });
+
+              if (forkResponse.ok) {
+                const { page_id, notebook_id } = await forkResponse.json();
+                // Redirect to the forked content
+                router.push(`/notebooks/${notebook_id}/pages/${page_id}`);
+              } else {
+                // Fork failed, redirect to notebooks anyway
+                console.error('Failed to fork content');
+                router.push("/notebooks");
+              }
+            } catch (error) {
+              console.error('Error forking content:', error);
+              router.push("/notebooks");
+            }
+          } else {
+            // No share context, redirect to notebooks
             router.push("/notebooks");
           }
         }, 800);

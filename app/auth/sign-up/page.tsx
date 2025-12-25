@@ -4,7 +4,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/page-transition";
 
-export default function Page() {
+interface SignUpPageProps {
+  searchParams: Promise<{
+    share_token?: string;
+    share_type?: string;
+  }>;
+}
+
+export default async function Page({ searchParams }: SignUpPageProps) {
+  const params = await searchParams;
   return (
     <PageTransition>
       <div className="flex min-h-svh flex-col">
@@ -38,7 +46,10 @@ export default function Page() {
       {/* Centered sign-up form */}
       <div className="flex flex-1 items-center justify-center p-6 md:p-10">
         <div className="w-full max-w-sm">
-          <SignUpForm />
+          <SignUpForm
+            shareToken={params.share_token}
+            shareType={params.share_type as 'page' | 'note' | undefined}
+          />
         </div>
       </div>
       </div>

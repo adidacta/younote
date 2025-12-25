@@ -19,11 +19,12 @@ interface NoteItemProps {
   videoId: string;
   isHighlighted?: boolean;
   searchQuery?: string;
+  readOnly?: boolean; // For shared notes view
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
-export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItemProps) {
+export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly = false }: NoteItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(note.content);
   const [saveState, setSaveState] = useState<SaveState>('idle');
@@ -47,12 +48,12 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
   // Debounce content changes for auto-save
   const debouncedContent = useDebounce(content, 800);
 
-  // Auto-focus on new empty notes
+  // Auto-focus on new empty notes (but not in read-only mode)
   useEffect(() => {
-    if (!note.content && !isEditing) {
+    if (!note.content && !isEditing && !readOnly) {
       setIsEditing(true);
     }
-  }, [note.content]);
+  }, [note.content, readOnly]);
 
   // Check if content is truncated
   useEffect(() => {
@@ -149,14 +150,26 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
   };
 
   const handleShare = async () => {
-    const shareUrl = generateTimestampUrl(videoId, note.timestamp_seconds || 0);
-    const shareText = `Check out this YouNote I made: ${note.content}. Watch the clip here: ${shareUrl}`;
     try {
-      await navigator.clipboard.writeText(shareText);
-      toast.success('Note copied to clipboard');
-    } catch (error) {
-      console.error('Error copying to clipboard:', error);
-      toast.error('Failed to copy note');
+      // Generate share link for this individual note
+      const response = await fetch('/api/share/note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note_id: note.id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate share link');
+      }
+
+      const { share_token } = await response.json();
+      const shareUrl = `${window.location.origin}/share/note/${share_token}`;
+
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Note share link copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to share note:', err);
+      toast.error('Failed to generate share link');
     }
   };
 
@@ -239,28 +252,32 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
             <Share2 className="h-4 w-4" />
           </Button>
 
-          {/* Edit */}
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 hover:bg-amber-500/10 hover:text-amber-500"
-            onClick={() => setIsEditing(true)}
-            title="Edit note"
-          >
-            <Edit2 className="h-4 w-4" />
-          </Button>
+          {/* Edit - only show if not read-only */}
+          {!readOnly && (
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 hover:bg-amber-500/10 hover:text-amber-500"
+              onClick={() => setIsEditing(true)}
+              title="Edit note"
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+          )}
 
-          {/* Delete */}
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
-            onClick={handleDelete}
-            disabled={isDeleting}
-            title="Delete note"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {/* Delete - only show if not read-only */}
+          {!readOnly && (
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              title="Delete note"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
 
         {/* Note content */}
@@ -334,8 +351,12 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery }: NoteItem
                     content={content}
                     searchQuery={searchQuery}
                     onContentChange={async (newContent) => {
-                      // Auto-save when checkbox is toggled
+                      // Update content state for frontend display
                       setContent(newContent);
+
+                      // Only save to database if not in read-only mode
+                      if (readOnly) return;
+
                       try {
                         await fetch(`/api/notes/${note.id}`, {
                           method: 'PATCH',

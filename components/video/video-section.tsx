@@ -9,9 +9,12 @@ interface VideoSectionProps {
   videoId: string;
   videoTitle: string;
   description: string;
+  readOnly?: boolean; // For shared/public views
+  shareToken?: string; // Required when readOnly is true
+  shareType?: 'page' | 'note'; // Required when readOnly is true
 }
 
-export function VideoSection({ videoId, videoTitle, description }: VideoSectionProps) {
+export function VideoSection({ videoId, videoTitle, description, readOnly = false, shareToken, shareType }: VideoSectionProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -36,6 +39,9 @@ export function VideoSection({ videoId, videoTitle, description }: VideoSectionP
           <VideoInfoTabs
             description={description}
             videoId={videoId}
+            readOnly={readOnly}
+            shareToken={shareToken}
+            shareType={shareType}
           />
         </div>
       )}
@@ -45,6 +51,9 @@ export function VideoSection({ videoId, videoTitle, description }: VideoSectionP
         <VideoMobileTabs
           description={description}
           videoId={videoId}
+          readOnly={readOnly}
+          shareToken={shareToken}
+          shareType={shareType}
         >
           <YouTubePlayer
             videoId={videoId}

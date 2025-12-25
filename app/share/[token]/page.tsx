@@ -10,6 +10,9 @@ import { formatTimestamp } from "@/lib/youtube/format-timestamp";
 import { generateTimestampUrl } from "@/lib/youtube/generate-timestamp-url";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ShareCTABanner } from "@/components/sharing/share-cta-banner";
+import Image from "next/image";
+import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
@@ -43,14 +46,32 @@ export default async function SharePage({ params }: SharePageProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Mobile CTA Banner - Sticky Top */}
+      <div className="lg:hidden">
+        <ShareCTABanner variant="mobile" shareToken={token} shareType="page" />
+      </div>
+
       {/* Header */}
-      <header className="border-b border-b-foreground/10 h-14 flex items-center px-4">
-        <div className="flex-1">
-          <h1 className="font-semibold">YouNote - Shared Page</h1>
+      <header className="border-b border-b-foreground/10">
+        <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+              src="/images/younote-logo-light.png"
+              alt="YouNote"
+              width={120}
+              height={40}
+              className="dark:hidden"
+            />
+            <Image
+              src="/images/younote-logo-dark.png"
+              alt="YouNote"
+              width={120}
+              height={40}
+              className="hidden dark:block"
+            />
+          </Link>
+          <span className="text-sm text-muted-foreground">Shared Page</span>
         </div>
-        <Button asChild variant="outline" size="sm">
-          <a href="/">Sign In to Create Your Own</a>
-        </Button>
       </header>
 
       {/* Content */}
@@ -66,6 +87,11 @@ export default async function SharePage({ params }: SharePageProps) {
               videoId={page.youtube_video_id}
               title={page.video_title}
             />
+
+            {/* Desktop CTA Banner - Under Video */}
+            <div className="hidden lg:block">
+              <ShareCTABanner variant="desktop" shareToken={token} shareType="page" />
+            </div>
           </div>
 
           {/* Notes Section */}

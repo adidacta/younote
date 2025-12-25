@@ -20,6 +20,11 @@ export async function GET() {
     twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
     const twentyFourHoursAgoISO = twentyFourHoursAgo.toISOString();
 
+    // Fetch total user count from auth
+    const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
+    if (usersError) throw usersError;
+    const totalUsers = users?.length || 0;
+
     // Fetch total counts (system-wide, all users)
     const [notebooksResult, pagesResult, notesResult] = await Promise.all([
       supabase
@@ -59,6 +64,7 @@ export async function GET() {
     if (notes24hResult.error) throw notes24hResult.error;
 
     return NextResponse.json({
+      totalUsers,
       totalNotebooks: notebooksResult.count || 0,
       totalPages: pagesResult.count || 0,
       totalNotes: notesResult.count || 0,
