@@ -37,31 +37,45 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Check if user is authenticated
 async function checkAuthStatus() {
   try {
-    const result = await chrome.storage.local.get(["authToken"]);
+    console.log('[YouNote Background] Checking auth status...');
+    const result = await chrome.storage.local.get(["authToken", "userNickname"]);
+    console.log('[YouNote Background] Current storage:', {
+      hasToken: !!result.authToken,
+      hasNickname: !!result.userNickname
+    });
 
     if (!result.authToken) {
+      console.log('[YouNote Background] No auth token found');
       return { authenticated: false };
     }
 
     // Verify token with API
+    console.log('[YouNote Background] Verifying token with API...');
     const response = await fetch(`${YOUNOTE_API_URL}/user`, {
       headers: {
         Authorization: `Bearer ${result.authToken}`,
       },
     });
 
+    console.log('[YouNote Background] API response status:', response.status);
+
     if (response.ok) {
       const data = await response.json();
+      console.log('[YouNote Background] Token valid, user:', data.email);
       // Store user nickname
       await chrome.storage.local.set({ userNickname: data.nickname || "User" });
       return { authenticated: true, user: data };
     } else {
       // Token invalid, clear storage
+      console.error('[YouNote Background] Token invalid (status ' + response.status + '), clearing storage');
+      const errorText = await response.text();
+      console.error('[YouNote Background] API error:', errorText);
       await chrome.storage.local.remove(["authToken", "userNickname"]);
       return { authenticated: false };
     }
   } catch (error) {
-    console.error("Error checking auth status:", error);
+    console.error('[YouNote Background] Error checking auth status:', error);
+    // DON'T clear storage on network errors - might just be temporary
     return { authenticated: false, error: error.message };
   }
 }
