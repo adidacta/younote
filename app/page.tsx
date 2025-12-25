@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { BookOpen, PlayCircle, Share2 } from "lucide-react";
+import { BookOpen, PlayCircle, Share2, GraduationCap, Briefcase, Search, Check } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { PageTransition } from "@/components/page-transition";
 import { AnnouncementsButton } from "@/components/announcements/announcements-button";
@@ -35,7 +42,7 @@ export default async function LandingPage() {
       <div className="min-h-screen flex flex-col">
         {/* Header */}
         <header className="border-b border-b-foreground/10">
-        <div className="container max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image
               src="/images/younote-logo-light.png"
@@ -69,8 +76,8 @@ export default async function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-20">
+        <div className="max-w-4xl mx-auto text-center space-y-10">
           {/* Logo */}
           <div className="flex justify-center">
             <Image
@@ -108,10 +115,130 @@ export default async function LandingPage() {
               <Link href="/auth/login">Sign in</Link>
             </Button>
           </div>
+        </div>
+      </main>
 
-          {/* Features */}
-          <div className="grid md:grid-cols-3 gap-8 mt-16 text-left">
-            <div className="space-y-3">
+      {/* Use Cases Section */}
+      <section className="py-24 bg-muted/30">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold">Who uses YouNote?</h2>
+            <p className="text-xl text-muted-foreground">Built for learners of all kinds</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Students */}
+            <Card className="text-left hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <div className="mb-4">
+                  <div className="inline-flex p-3 rounded-full bg-primary/10">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-xl">Students & Academic Learners</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground">
+                  Master your coursework and ace your exams with organized study materials.
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Take notes on lecture videos and course content</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Build study guides organized by subject</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Review key concepts by jumping to exact timestamps</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Prepare for exams with timestamped reference materials</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Professionals */}
+            <Card className="text-left hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <div className="mb-4">
+                  <div className="inline-flex p-3 rounded-full bg-primary/10">
+                    <Briefcase className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-xl">Professionals & Career Learners</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground">
+                  Stay ahead in your career by turning tutorials into practical knowledge.
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Learn new frameworks and tools at your own pace</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Build a personal knowledge base for work projects</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Reference best practices from industry experts</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Organize training videos by skill or technology</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Researchers */}
+            <Card className="text-left hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <div className="mb-4">
+                  <div className="inline-flex p-3 rounded-full bg-primary/10">
+                    <Search className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <CardTitle className="text-xl">Researchers & Academics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground">
+                  Organize video sources and build comprehensive research libraries.
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Catalog interviews, lectures, and documentary content</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Create literature review notes with precise citations</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Build topic-based research collections</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <span>Export notes to markdown for papers and publications</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8 text-left">
+            <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-6 w-6 text-primary" />
                 <h3 className="font-semibold text-lg">Build Your Knowledge Library</h3>
@@ -121,7 +248,7 @@ export default async function LandingPage() {
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <PlayCircle className="h-6 w-6 text-primary" />
                 <h3 className="font-semibold text-lg">Never Lose a Breakthrough Moment</h3>
@@ -131,7 +258,7 @@ export default async function LandingPage() {
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <Share2 className="h-6 w-6 text-primary" />
                 <h3 className="font-semibold text-lg">Your Notes, Everywhere You Need Them</h3>
@@ -141,19 +268,103 @@ export default async function LandingPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Stats Section */}
-          <div className="mt-20">
+      {/* Stats Section */}
+      <section className="py-24 bg-muted/30">
+        <div className="max-w-6xl mx-auto px-4">
+          <div>
             <h3 className="text-2xl font-bold text-center mb-8">
               Join {userCount} avid learners
             </h3>
             <StatsWidgets />
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center space-y-4 mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Everything you need to know about YouNote
+            </p>
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>How does YouNote work?</AccordionTrigger>
+              <AccordionContent>
+                Simply paste a YouTube URL into YouNote, and we'll create a page with an embedded player and note-taking space. As you watch, click the timestamp button to capture the current moment. Your notes are automatically linked to that exact second in the video. Later, click any timestamp to jump right back to that moment.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Is YouNote free?</AccordionTrigger>
+              <AccordionContent>
+                Yes! YouNote is completely free to use, forever. We believe great learning tools should be accessible to everyone. There are no premium tiers, no feature paywalls, and no credit card required.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3">
+              <AccordionTrigger>What about my privacy and data?</AccordionTrigger>
+              <AccordionContent>
+                Your notes are private by default and stored securely. You control your data completely - you can share individual pages publicly if you choose, or keep everything private. We never sell your data or use it for advertising. You can export all your notes to markdown format anytime and own your knowledge forever.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-4">
+              <AccordionTrigger>Can I export my notes?</AccordionTrigger>
+              <AccordionContent>
+                Absolutely! Every page can be exported to markdown format, making your notes portable and future-proof. Use them in Obsidian, Notion, Roam Research, or any markdown editor. Your knowledge isn't locked into our platform - it's yours.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5">
+              <AccordionTrigger>Why not just use Notion or NotebookLM?</AccordionTrigger>
+              <AccordionContent>
+                <p className="mb-4">
+                  Great question! While Notion and NotebookLM are powerful tools, they're not built specifically for video learning:
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="font-medium">• Timestamps matter:</span>
+                    <span>YouNote creates clickable timestamps automatically. Click any timestamp to jump to that exact moment in the video - no more manual scrubbing.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-medium">• Purpose-built:</span>
+                    <span>We focus on one thing and do it really well - timestamped YouTube notes. No feature bloat, no complexity.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-medium">• Portable & simple:</span>
+                    <span>Export to markdown anytime. No vendor lock-in, no complicated setup.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="font-medium">• Free forever:</span>
+                    <span>No tiers, no paywalls, no feature restrictions.</span>
+                  </li>
+                </ul>
+                <p className="mt-4">
+                  YouNote complements your existing knowledge tools - use it for video learning, then export to your preferred system.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6">
+              <AccordionTrigger>Can I share my notes with others?</AccordionTrigger>
+              <AccordionContent>
+                Yes! Each page has a share button that creates a public link. Anyone with the link can view your notes and watch the video alongside them - perfect for study groups, team learning, or sharing insights with friends. You can disable sharing anytime.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="border-t border-t-foreground/10 py-8">
+      <footer className="border-t border-t-foreground/10 py-12">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© 2025 YouNote. Free forever.</p>
