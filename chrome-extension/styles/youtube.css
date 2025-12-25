@@ -5,6 +5,17 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Fallback positioning when inserted into body */
+body > #younote-extension-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  max-width: calc(100vw - 40px);
+  z-index: 9999;
+  margin: 0;
+}
+
 .younote-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
