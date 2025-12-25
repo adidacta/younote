@@ -135,8 +135,8 @@ export default async function LandingPage() {
             <Card className="text-left hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
                 <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-full bg-primary/10">
-                    <GraduationCap className="h-6 w-6 text-primary" />
+                  <div className="inline-flex p-4 rounded-full bg-blue-500/20">
+                    <GraduationCap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>
                 </div>
                 <CardTitle className="text-xl">Students & Academic Learners</CardTitle>
@@ -170,8 +170,8 @@ export default async function LandingPage() {
             <Card className="text-left hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
                 <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-full bg-primary/10">
-                    <Briefcase className="h-6 w-6 text-primary" />
+                  <div className="inline-flex p-4 rounded-full bg-purple-500/20">
+                    <Briefcase className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                   </div>
                 </div>
                 <CardTitle className="text-xl">Professionals & Career Learners</CardTitle>
@@ -205,8 +205,8 @@ export default async function LandingPage() {
             <Card className="text-left hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
                 <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-full bg-primary/10">
-                    <Search className="h-6 w-6 text-primary" />
+                  <div className="inline-flex p-4 rounded-full bg-green-500/20">
+                    <Search className="h-8 w-8 text-green-600 dark:text-green-400" />
                   </div>
                 </div>
                 <CardTitle className="text-xl">Researchers & Academics</CardTitle>
@@ -339,40 +339,70 @@ export default async function LandingPage() {
             </AccordionItem>
 
             <AccordionItem value="item-5">
+              <AccordionTrigger>Why not just use YouTube directly?</AccordionTrigger>
+              <AccordionContent>
+                <p className="mb-4">
+                  YouTube is amazing for learning, but it's designed for entertainment and discovery, not focused study:
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold mb-1">Zero distractions</p>
+                    <p className="text-sm text-muted-foreground">
+                      No algorithm pulling you toward cat videos. No recommended rabbit holes. No autoplay temptations. Just you, your chosen video, and your notes. Perfect for learners with ADHD or focus challenges.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Organized learning</p>
+                    <p className="text-sm text-muted-foreground">
+                      Build notebooks by topic, create study guides, and organize your learning journey. YouTube's history and playlists weren't built for serious learning.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Persistent notes</p>
+                    <p className="text-sm text-muted-foreground">
+                      Your insights are saved with timestamps, exportable to markdown, and never lost. YouTube comments disappear in the noise.
+                    </p>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6">
               <AccordionTrigger>Why not just use Notion or NotebookLM?</AccordionTrigger>
               <AccordionContent>
                 <p className="mb-4">
                   Great question! While Notion and NotebookLM are powerful tools, they're not built specifically for video learning:
                 </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <span className="font-medium">• Timestamps matter:</span>
-                    <span>YouNote creates clickable timestamps automatically. Click any timestamp to jump to that exact moment in the video - no more manual scrubbing.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="font-medium">• Zero distractions:</span>
-                    <span>No algorithm pulling you away. No recommended videos. No rabbit holes. Just you, your chosen video, and your notes. Perfect for learners with ADHD or focus challenges.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="font-medium">• Purpose-built:</span>
-                    <span>We focus on one thing and do it really well - timestamped YouTube notes. No feature bloat, no complexity.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="font-medium">• Portable & simple:</span>
-                    <span>Export to markdown anytime. No vendor lock-in, no complicated setup.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="font-medium">• Free forever:</span>
-                    <span>No tiers, no paywalls, no feature restrictions.</span>
-                  </li>
-                </ul>
-                <p className="mt-4">
-                  YouNote complements your existing knowledge tools - use it for video learning, then export to your preferred system.
-                </p>
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold mb-1">Timestamps matter</p>
+                    <p className="text-sm text-muted-foreground">
+                      YouNote creates clickable timestamps automatically. Click any timestamp to jump to that exact moment in the video - no more manual scrubbing.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Purpose-built</p>
+                    <p className="text-sm text-muted-foreground">
+                      We focus on one thing and do it really well - timestamped YouTube notes. No feature bloat, no complexity.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Portable & simple</p>
+                    <p className="text-sm text-muted-foreground">
+                      Export to markdown anytime. No vendor lock-in, no complicated setup. Use YouNote for video learning, then export to your preferred system.
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-1">Free forever</p>
+                    <p className="text-sm text-muted-foreground">
+                      No tiers, no paywalls, no feature restrictions. Great learning tools should be accessible to everyone.
+                    </p>
+                  </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-6">
+            <AccordionItem value="item-7">
               <AccordionTrigger>Can I share my notes with others?</AccordionTrigger>
               <AccordionContent>
                 Yes! Each page has a share button that creates a public link. Anyone with the link can view your notes and watch the video alongside them - perfect for study groups, team learning, or sharing insights with friends. You can disable sharing anytime.
