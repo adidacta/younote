@@ -83,5 +83,17 @@ export async function updateSession(request: NextRequest) {
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
+  // Add CORS headers for Chrome extension support
+  const origin = request.headers.get('origin');
+  if (origin?.startsWith('chrome-extension://') || origin?.startsWith('moz-extension://')) {
+    supabaseResponse.headers.set('Access-Control-Allow-Origin', origin);
+    supabaseResponse.headers.set('Access-Control-Allow-Credentials', 'true');
+  } else if (origin) {
+    supabaseResponse.headers.set('Access-Control-Allow-Origin', origin);
+  }
+
+  supabaseResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  supabaseResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   return supabaseResponse;
 }

@@ -1,20 +1,23 @@
 // YouNote Extension Popup Script
 
-const YOUNOTE_URL = 'http://localhost:3000'; // Change to production URL when deploying
+const YOUNOTE_URL = "https://younote-two.vercel.app"; // Change to production URL when deploying
 
 // DOM Elements
-const loadingDiv = document.getElementById('loading');
-const notLoggedInDiv = document.getElementById('not-logged-in');
-const loggedInDiv = document.getElementById('logged-in');
-const loginBtn = document.getElementById('login-btn');
-const openYouNoteBtn = document.getElementById('open-younote-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const userNicknameSpan = document.getElementById('user-nickname');
+const loadingDiv = document.getElementById("loading");
+const notLoggedInDiv = document.getElementById("not-logged-in");
+const loggedInDiv = document.getElementById("logged-in");
+const loginBtn = document.getElementById("login-btn");
+const openYouNoteBtn = document.getElementById("open-younote-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const userNicknameSpan = document.getElementById("user-nickname");
 
 // Check auth status on popup load
 async function checkAuthStatus() {
   try {
-    const result = await chrome.storage.local.get(['authToken', 'userNickname']);
+    const result = await chrome.storage.local.get([
+      "authToken",
+      "userNickname",
+    ]);
 
     if (result.authToken && result.userNickname) {
       // User is logged in
@@ -24,26 +27,26 @@ async function checkAuthStatus() {
       showNotLoggedInState();
     }
   } catch (error) {
-    console.error('Error checking auth status:', error);
+    console.error("Error checking auth status:", error);
     showNotLoggedInState();
   }
 }
 
 function showLoggedInState(nickname) {
-  loadingDiv.classList.add('hidden');
-  notLoggedInDiv.classList.add('hidden');
-  loggedInDiv.classList.remove('hidden');
+  loadingDiv.classList.add("hidden");
+  notLoggedInDiv.classList.add("hidden");
+  loggedInDiv.classList.remove("hidden");
   userNicknameSpan.textContent = nickname;
 }
 
 function showNotLoggedInState() {
-  loadingDiv.classList.add('hidden');
-  loggedInDiv.classList.add('hidden');
-  notLoggedInDiv.classList.remove('hidden');
+  loadingDiv.classList.add("hidden");
+  loggedInDiv.classList.add("hidden");
+  notLoggedInDiv.classList.remove("hidden");
 }
 
 // Login button click
-loginBtn.addEventListener('click', async () => {
+loginBtn.addEventListener("click", async () => {
   try {
     // Open YouNote in new tab
     await chrome.tabs.create({ url: YOUNOTE_URL });
@@ -51,33 +54,37 @@ loginBtn.addEventListener('click', async () => {
     // Close popup
     window.close();
   } catch (error) {
-    console.error('Error opening YouNote:', error);
+    console.error("Error opening YouNote:", error);
   }
 });
 
 // Open YouNote button click
-openYouNoteBtn.addEventListener('click', async () => {
+openYouNoteBtn.addEventListener("click", async () => {
   try {
     await chrome.tabs.create({ url: YOUNOTE_URL });
     window.close();
   } catch (error) {
-    console.error('Error opening YouNote:', error);
+    console.error("Error opening YouNote:", error);
   }
 });
 
 // Logout button click
-logoutBtn.addEventListener('click', async () => {
+logoutBtn.addEventListener("click", async () => {
   try {
     // Clear stored auth data
-    await chrome.storage.local.remove(['authToken', 'userNickname', 'notebookId']);
+    await chrome.storage.local.remove([
+      "authToken",
+      "userNickname",
+      "notebookId",
+    ]);
 
     // Send message to background script to clear auth
-    chrome.runtime.sendMessage({ type: 'LOGOUT' });
+    chrome.runtime.sendMessage({ type: "LOGOUT" });
 
     // Update UI
     showNotLoggedInState();
   } catch (error) {
-    console.error('Error logging out:', error);
+    console.error("Error logging out:", error);
   }
 });
 
@@ -86,7 +93,7 @@ checkAuthStatus();
 
 // Listen for auth status changes
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && (changes.authToken || changes.userNickname)) {
+  if (areaName === "local" && (changes.authToken || changes.userNickname)) {
     checkAuthStatus();
   }
 });
