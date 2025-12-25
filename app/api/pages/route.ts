@@ -5,6 +5,55 @@ import { createNote } from '@/lib/database/notes';
 import { extractYouTubeVideoId } from '@/lib/youtube/extract-video-id';
 import { fetchYouTubeVideoMetadata } from '@/lib/youtube/fetch-video-metadata';
 
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const youtubeVideoId = searchParams.get('youtube_video_id');
+    const notebookId = searchParams.get('notebook_id');
+
+    if (!youtubeVideoId) {
+      return NextResponse.json(
+        { error: 'youtube_video_id is required' },
+        { status: 400 }
+      );
+    }
+
+    // Query pages by youtube_video_id (and optionally notebook_id)
+    let query = supabase
+      .from('pages')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('youtube_video_id', youtubeVideoId);
+
+    if (notebookId) {
+      query = query.eq('notebook_id', notebookId);
+    }
+
+    const { data: pages, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json(pages || []);
+  } catch (error) {
+    console.error('Error fetching pages:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch pages' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();

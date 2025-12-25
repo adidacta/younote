@@ -5,71 +5,89 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* When dragging */
+#younote-extension-container.younote-dragging {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+#younote-extension-container.younote-draggable .younote-header {
+  cursor: grab;
+}
+
+#younote-extension-container.younote-draggable.younote-dragging .younote-header {
+  cursor: grabbing;
+}
+
 /* Fallback positioning when inserted into body */
 body > #younote-extension-container {
   position: fixed;
-  bottom: 20px;
+  top: 80px;
   right: 20px;
   width: 420px;
   max-width: calc(100vw - 40px);
-  z-index: 9999;
+  z-index: 2147483647; /* Maximum z-index */
   margin: 0;
-}
-
-/* Standout styling for floating widget */
-body > #younote-extension-container .younote-card {
-  background: #1a1a1a !important;
-  border: 2px solid #3b82f6 !important;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3), 0 0 0 1px rgba(59, 130, 246, 0.1) !important;
-}
-
-body > #younote-extension-container .younote-title {
-  color: #ffffff !important;
-}
-
-body > #younote-extension-container .younote-header {
-  border-bottom-color: #2a2a2a !important;
-  background: #1f1f1f;
-}
-
-body > #younote-extension-container .younote-message {
-  color: #d1d5db !important;
-}
-
-body > #younote-extension-container .younote-textarea {
-  background: #0a0a0a !important;
-  border-color: #3a3a3a !important;
-  color: #ffffff !important;
-}
-
-body > #younote-extension-container .younote-textarea::placeholder {
-  color: #6b7280 !important;
-}
-
-body > #younote-extension-container .younote-timestamp {
-  color: #9ca3af !important;
-}
-
-body > #younote-extension-container .younote-toggle-btn {
-  color: #9ca3af !important;
-}
-
-body > #younote-extension-container .younote-toggle-btn:hover {
-  background: #2a2a2a !important;
-  color: #ffffff !important;
+  pointer-events: auto; /* Ensure clicks work */
 }
 
 .younote-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #1a1a1a;
+  border: 2px solid #3b82f6;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* Dark card with light frame (for light YouTube) */
+  box-shadow:
+    0 8px 32px rgba(59, 130, 246, 0.3),
+    0 0 0 1px rgba(59, 130, 246, 0.1),
+    0 0 0 8px rgba(255, 255, 255, 0.95); /* Light frame */
   overflow: hidden;
   transition: all 0.3s ease;
+  display: flex;
+}
+
+/* Drag border on left edge (only when floating) */
+.younote-drag-border {
+  width: 24px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.younote-drag-border:active {
+  cursor: grabbing;
+}
+
+.younote-drag-grip {
+  font-size: 20px;
+  line-height: 1;
+  color: #4b5563;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+.younote-drag-border:hover .younote-drag-grip {
+  opacity: 0.9;
+}
+
+/* Main content wrapper (vertical layout) */
+.younote-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .younote-card.younote-not-auth {
   background: #f9fafb;
+  /* Same frame as authenticated card */
+  box-shadow:
+    0 8px 32px rgba(59, 130, 246, 0.2),
+    0 0 0 1px rgba(59, 130, 246, 0.1),
+    0 0 0 8px rgba(255, 255, 255, 0.95);
 }
 
 /* Collapsed state */
@@ -95,32 +113,108 @@ body > #younote-extension-container .younote-toggle-btn:hover {
 .younote-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #2a2a2a;
+  background: #1f1f1f;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+/* Center title when floating with Mac controls */
+.younote-draggable .younote-header {
+  justify-content: center;
+}
+
+.younote-draggable .younote-window-controls {
+  position: absolute;
+  left: 12px;
+}
+
+.younote-header:hover {
+  background: #252525;
+}
+
+.younote-drag-handle {
+  font-size: 18px;
+  line-height: 1;
+  color: #6b7280;
+  cursor: grab;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.younote-header:hover .younote-drag-handle {
+  opacity: 1;
+}
+
+.younote-dragging .younote-drag-handle {
+  cursor: grabbing;
+}
+
+/* Mac-style window controls */
+.younote-window-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.younote-control-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  padding: 0;
+}
+
+/* State button - changes color based on collapsed state */
+.younote-state-btn {
+  background: #febc2e; /* Yellow when expanded (click to minimize) */
+  transition: background 0.2s ease;
+}
+
+.younote-state-btn.younote-collapsed-state {
+  background: #28c840; /* Green when collapsed (click to expand) */
+}
+
+.younote-state-btn:hover {
+  opacity: 0.85;
+}
+
+/* Status dot for not-auth state */
+.younote-status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #6b7280;
+  display: block;
 }
 
 .younote-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 .younote-toggle-btn {
   background: none;
   border: none;
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 14px;
-  cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
   transition: all 0.2s ease;
+  pointer-events: none; /* Header is clickable, not just the button */
 }
 
-.younote-toggle-btn:hover {
-  background: #f3f4f6;
-  color: #374151;
+.younote-header:hover .younote-toggle-btn {
+  color: #ffffff;
 }
 
 /* Content */
@@ -131,7 +225,7 @@ body > #younote-extension-container .younote-toggle-btn:hover {
 .younote-message {
   margin: 0 0 16px 0;
   font-size: 14px;
-  color: #6b7280;
+  color: #d1d5db;
 }
 
 /* Textarea */
@@ -139,23 +233,25 @@ body > #younote-extension-container .younote-toggle-btn:hover {
   width: 100%;
   min-height: 100px;
   padding: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #3a3a3a;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
   resize: vertical;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
+  background: #0a0a0a;
+  color: #ffffff;
 }
 
 .younote-textarea:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .younote-textarea::placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 /* Info section */
@@ -165,7 +261,7 @@ body > #younote-extension-container .younote-toggle-btn:hover {
 
 .younote-timestamp {
   font-size: 12px;
-  color: #6b7280;
+  color: #9ca3af;
   font-weight: 500;
 }
 
@@ -180,6 +276,39 @@ body > #younote-extension-container .younote-toggle-btn:hover {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.younote-btn-spinner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.younote-spinner {
+  width: 16px;
+  height: 16px;
+  animation: younote-spin 0.8s linear infinite;
+}
+
+.younote-spinner-track {
+  opacity: 0.25;
+}
+
+.younote-spinner-path {
+  opacity: 0.75;
+}
+
+@keyframes younote-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .younote-btn:disabled {
@@ -226,52 +355,88 @@ body > #younote-extension-container .younote-toggle-btn:hover {
   color: #991b1b;
 }
 
-/* Dark mode support (YouTube dark theme) */
+/* Light theme on dark YouTube (for contrast) */
 html[dark] .younote-card,
 html[dark="true"] .younote-card {
-  background: #0f0f0f;
-  border-color: #272727;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  /* Light card with dark frame (for dark YouTube) */
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 0 0 8px rgba(15, 15, 15, 0.95); /* Dark frame */
 }
 
 html[dark] .younote-header,
 html[dark="true"] .younote-header {
-  border-bottom-color: #272727;
+  border-bottom-color: #e5e7eb;
+  background: #ffffff;
+}
+
+html[dark] .younote-header:hover,
+html[dark="true"] .younote-header:hover {
+  background: #f3f4f6;
 }
 
 html[dark] .younote-title,
 html[dark="true"] .younote-title {
-  color: #f1f1f1;
+  color: #1a1a1a;
 }
 
 html[dark] .younote-textarea,
 html[dark="true"] .younote-textarea {
-  background: #0f0f0f;
-  border-color: #272727;
-  color: #f1f1f1;
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #1a1a1a;
+}
+
+html[dark] .younote-textarea:focus,
+html[dark="true"] .younote-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 html[dark] .younote-textarea::placeholder,
 html[dark="true"] .younote-textarea::placeholder {
-  color: #717171;
+  color: #9ca3af;
 }
 
 html[dark] .younote-message,
 html[dark="true"] .younote-message {
-  color: #aaaaaa;
+  color: #6b7280;
 }
 
 html[dark] .younote-timestamp,
 html[dark="true"] .younote-timestamp {
-  color: #aaaaaa;
+  color: #6b7280;
 }
 
 html[dark] .younote-toggle-btn,
 html[dark="true"] .younote-toggle-btn {
-  color: #aaaaaa;
+  color: #6b7280;
 }
 
-html[dark] .younote-toggle-btn:hover,
-html[dark="true"] .younote-toggle-btn:hover {
-  background: #272727;
-  color: #f1f1f1;
+html[dark] .younote-header:hover .younote-toggle-btn,
+html[dark="true"] .younote-header:hover .younote-toggle-btn {
+  color: #374151;
+}
+
+html[dark] .younote-drag-handle,
+html[dark="true"] .younote-drag-handle {
+  color: #9ca3af;
+}
+
+html[dark] .younote-drag-border,
+html[dark="true"] .younote-drag-border {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.15), transparent);
+}
+
+html[dark] .younote-drag-grip,
+html[dark="true"] .younote-drag-grip {
+  color: #6b7280;
+  opacity: 0.7;
+}
+
+html[dark] .younote-drag-border:hover .younote-drag-grip,
+html[dark="true"] .younote-drag-border:hover .younote-drag-grip {
+  opacity: 1;
 }
