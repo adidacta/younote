@@ -18,32 +18,71 @@ async function checkForAuth() {
     const storageKeys = Object.keys(localStorage);
     console.log('[YouNote Extension] LocalStorage keys:', storageKeys);
 
-    const supabaseAuthKey = storageKeys.find(key =>
+    // Try to find Supabase auth key - be flexible with the format
+    let supabaseAuthKey = null;
+    let authData = null;
+
+    // First, try the standard format
+    supabaseAuthKey = storageKeys.find(key =>
       key.startsWith('sb-') && key.includes('-auth-token')
     );
 
+    // If not found, try to find any sb- key that contains auth data
     if (!supabaseAuthKey) {
-      console.log('[YouNote Extension] No auth token found in localStorage');
-      console.log('[YouNote Extension] Looking for keys starting with "sb-"...');
+      console.log('[YouNote Extension] Standard auth-token key not found, checking all sb- keys...');
       const sbKeys = storageKeys.filter(k => k.startsWith('sb-'));
       console.log('[YouNote Extension] Found sb- keys:', sbKeys);
+
+      for (const key of sbKeys) {
+        try {
+          const data = localStorage.getItem(key);
+          if (!data) continue;
+
+          const parsed = JSON.parse(data);
+          console.log(`[YouNote Extension] Checking key "${key}":`, {
+            hasAccessToken: !!parsed?.access_token,
+            hasUser: !!parsed?.user,
+            keys: Object.keys(parsed || {})
+          });
+
+          if (parsed?.access_token && parsed?.user) {
+            console.log(`[YouNote Extension] Found valid auth data in key: ${key}`);
+            supabaseAuthKey = key;
+            authData = parsed;
+            break;
+          }
+        } catch (e) {
+          console.log(`[YouNote Extension] Key "${key}" is not valid JSON`);
+        }
+      }
+    }
+
+    if (!supabaseAuthKey) {
+      console.log('[YouNote Extension] No auth token found in localStorage');
       return;
     }
 
     console.log('[YouNote Extension] Found auth key:', supabaseAuthKey);
 
-    const authDataStr = localStorage.getItem(supabaseAuthKey);
-    if (!authDataStr) {
-      console.log('[YouNote Extension] Auth key exists but no data');
-      return;
+    // If we haven't already parsed the auth data, do it now
+    if (!authData) {
+      const authDataStr = localStorage.getItem(supabaseAuthKey);
+      if (!authDataStr) {
+        console.log('[YouNote Extension] Auth key exists but no data');
+        return;
+      }
+      authData = JSON.parse(authDataStr);
     }
 
-    const authData = JSON.parse(authDataStr);
     const accessToken = authData?.access_token;
     const user = authData?.user;
 
     if (!accessToken || !user) {
-      console.log('[YouNote Extension] Incomplete auth data');
+      console.log('[YouNote Extension] Incomplete auth data:', {
+        hasAccessToken: !!accessToken,
+        hasUser: !!user,
+        authDataKeys: Object.keys(authData || {})
+      });
       return;
     }
 
@@ -72,25 +111,32 @@ async function checkForAuth() {
       lastAuthState = authStateStr;
 
       // Send to extension background script
-      chrome.runtime.sendMessage({
-        type: 'AUTH_DETECTED',
-        data: {
-          authToken: accessToken,
-          userId: user.id,
-          userEmail: user.email,
-          userNickname: nickname
-        }
-      }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.error('[YouNote Extension] Error sending auth to extension:',
-                       chrome.runtime.lastError);
-        } else {
-          console.log('[YouNote Extension] Auth sent successfully:', response);
+      console.log('[YouNote Extension] Sending AUTH_DETECTED message to background...');
 
-          // Show success message to user
-          showAuthSuccessMessage();
-        }
-      });
+      try {
+        chrome.runtime.sendMessage({
+          type: 'AUTH_DETECTED',
+          data: {
+            authToken: accessToken,
+            userId: user.id,
+            userEmail: user.email,
+            userNickname: nickname
+          }
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('[YouNote Extension] Error sending auth to extension:',
+                         chrome.runtime.lastError);
+            console.error('[YouNote Extension] This might mean the extension is not loaded or disabled');
+          } else {
+            console.log('[YouNote Extension] Auth sent successfully, response:', response);
+
+            // Show success message to user
+            showAuthSuccessMessage();
+          }
+        });
+      } catch (error) {
+        console.error('[YouNote Extension] Exception while sending message:', error);
+      }
     }
   } catch (error) {
     console.error('[YouNote Extension] Error checking auth:', error);

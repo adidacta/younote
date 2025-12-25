@@ -14,20 +14,32 @@ const userNicknameSpan = document.getElementById("user-nickname");
 // Check auth status on popup load
 async function checkAuthStatus() {
   try {
+    console.log('[YouNote Popup] Checking auth status...');
     const result = await chrome.storage.local.get([
       "authToken",
       "userNickname",
+      "userId",
+      "userEmail"
     ]);
+
+    console.log('[YouNote Popup] Storage contents:', {
+      hasToken: !!result.authToken,
+      hasNickname: !!result.userNickname,
+      userId: result.userId,
+      userEmail: result.userEmail
+    });
 
     if (result.authToken && result.userNickname) {
       // User is logged in
+      console.log('[YouNote Popup] User is logged in:', result.userNickname);
       showLoggedInState(result.userNickname);
     } else {
       // User is not logged in
+      console.log('[YouNote Popup] User is not logged in');
       showNotLoggedInState();
     }
   } catch (error) {
-    console.error("Error checking auth status:", error);
+    console.error('[YouNote Popup] Error checking auth status:', error);
     showNotLoggedInState();
   }
 }

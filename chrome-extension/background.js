@@ -3,8 +3,15 @@
 const YOUNOTE_API_URL = "https://younote-two.vercel.app/api"; // Change to production URL when deploying
 const NOTEBOOK_NAME = "Browser Extension Notes";
 
+console.log('[YouNote Background] Service worker starting...', {
+  apiUrl: YOUNOTE_API_URL,
+  timestamp: new Date().toISOString()
+});
+
 // Listen for messages from content script and popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('[YouNote Background] Received message:', request.type, 'from:', sender.tab?.url || sender.url);
+
   if (request.type === "CREATE_NOTE") {
     handleCreateNote(request.data).then(sendResponse);
     return true; // Keep message channel open for async response
@@ -21,6 +28,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.type === "AUTH_DETECTED") {
+    console.log('[YouNote Background] AUTH_DETECTED message received with data:', request.data);
     handleAuthDetected(request.data).then(sendResponse);
     return true;
   }
@@ -255,7 +263,12 @@ async function createNote(authToken, pageId, content, timestamp) {
 // Handle auth detected from YouNote website
 async function handleAuthDetected(data) {
   try {
-    console.log('Auth detected from website:', data);
+    console.log('[YouNote Background] Auth detected from website:', {
+      hasToken: !!data.authToken,
+      hasNickname: !!data.userNickname,
+      userId: data.userId,
+      userEmail: data.userEmail
+    });
 
     // Store auth data
     await chrome.storage.local.set({
@@ -265,14 +278,21 @@ async function handleAuthDetected(data) {
       userEmail: data.userEmail
     });
 
-    console.log('Auth data stored successfully');
+    console.log('[YouNote Background] Auth data stored successfully');
+
+    // Verify storage
+    const stored = await chrome.storage.local.get(['authToken', 'userNickname']);
+    console.log('[YouNote Background] Verification - stored data:', {
+      hasToken: !!stored.authToken,
+      hasNickname: !!stored.userNickname
+    });
 
     return {
       success: true,
       message: 'Extension connected to YouNote account'
     };
   } catch (error) {
-    console.error('Error handling auth detection:', error);
+    console.error('[YouNote Background] Error handling auth detection:', error);
     return {
       success: false,
       error: error.message
