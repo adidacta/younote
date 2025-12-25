@@ -121,9 +121,12 @@ async function handleCreateNote(data) {
 // Get or create the extension notebook
 async function getOrCreateNotebook(authToken) {
   try {
+    console.log('[YouNote Background] Getting/creating notebook...');
+
     // Check if we have stored notebook ID
     const result = await chrome.storage.local.get(["notebookId"]);
     if (result.notebookId) {
+      console.log('[YouNote Background] Checking stored notebook:', result.notebookId);
       // Verify it still exists
       const response = await fetch(
         `${YOUNOTE_API_URL}/notebooks/${result.notebookId}`,
@@ -133,6 +136,7 @@ async function getOrCreateNotebook(authToken) {
           },
         }
       );
+      console.log('[YouNote Background] Notebook check response:', response.status);
       if (response.ok) {
         return result.notebookId;
       }
@@ -141,19 +145,26 @@ async function getOrCreateNotebook(authToken) {
     }
 
     // Search for notebook by name
-    const notebooks = await fetch(`${YOUNOTE_API_URL}/notebooks`, {
+    console.log('[YouNote Background] Fetching all notebooks...');
+    const notebooksResponse = await fetch(`${YOUNOTE_API_URL}/notebooks`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
-    }).then((res) => res.json());
+    });
+    console.log('[YouNote Background] Notebooks response:', notebooksResponse.status);
+
+    const notebooks = await notebooksResponse.json();
+    console.log('[YouNote Background] Found notebooks:', notebooks.length);
 
     const existingNotebook = notebooks.find((nb) => nb.title === NOTEBOOK_NAME);
     if (existingNotebook) {
+      console.log('[YouNote Background] Found existing notebook:', existingNotebook.id);
       await chrome.storage.local.set({ notebookId: existingNotebook.id });
       return existingNotebook.id;
     }
 
     // Create new notebook
+    console.log('[YouNote Background] Creating new notebook:', NOTEBOOK_NAME);
     const response = await fetch(`${YOUNOTE_API_URL}/notebooks`, {
       method: "POST",
       headers: {
@@ -163,15 +174,20 @@ async function getOrCreateNotebook(authToken) {
       body: JSON.stringify({ title: NOTEBOOK_NAME }),
     });
 
+    console.log('[YouNote Background] Create notebook response:', response.status);
+
     if (!response.ok) {
-      throw new Error("Failed to create notebook");
+      const errorText = await response.text();
+      console.error('[YouNote Background] Create notebook error:', errorText);
+      throw new Error("Failed to create notebook: " + response.status);
     }
 
     const notebook = await response.json();
+    console.log('[YouNote Background] Created notebook:', notebook.id);
     await chrome.storage.local.set({ notebookId: notebook.id });
     return notebook.id;
   } catch (error) {
-    console.error("Error getting/creating notebook:", error);
+    console.error('[YouNote Background] Error getting/creating notebook:', error);
     return null;
   }
 }
