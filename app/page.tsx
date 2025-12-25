@@ -90,11 +90,10 @@ export default async function LandingPage() {
           {/* Headline */}
           <div className="space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Take better notes while watching YouTube
+              YouTube is amazing for learning. Timestamped notes make it unforgettable.
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Organize your learning with timestamped markdown notes. Create notebooks,
-              capture insights, and never lose track of important moments in your videos.
+              Turn hours of video into organized knowledge you can actually use. Capture insights at the perfect moment, build your own reference library, and never lose a breakthrough idea again.
             </p>
           </div>
 
@@ -113,33 +112,30 @@ export default async function LandingPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Organized Notebooks</h3>
+                <h3 className="font-semibold text-lg">Build Your Knowledge Library</h3>
               </div>
               <p className="text-muted-foreground">
-                Create notebooks for different topics. Each page links to a YouTube video
-                with your timestamped notes.
+                Organize videos by topic, course, or project. Every notebook becomes a curated collection of insights from your learning journey.
               </p>
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <PlayCircle className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Timestamped Notes</h3>
+                <h3 className="font-semibold text-lg">Never Lose a Breakthrough Moment</h3>
               </div>
               <p className="text-muted-foreground">
-                Capture the exact moment in the video. Click any timestamp to jump right
-                to that point in the video.
+                Capture insights at the perfect timestamp. Click to jump back to any moment—no more scrubbing through hours of video to find that one thing.
               </p>
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Share2 className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Share & Export</h3>
+                <h3 className="font-semibold text-lg">Your Notes, Everywhere You Need Them</h3>
               </div>
               <p className="text-muted-foreground">
-                Share your notes with anyone or export as markdown. Perfect for study groups
-                and course notes.
+                Share page links with classmates and teammates. Export to markdown for your personal knowledge system. Your insights work the way you do.
               </p>
             </div>
           </div>
