@@ -96,17 +96,24 @@ function createNoteUI() {
 function findInsertionPoint() {
   // Try multiple selectors for YouTube's changing DOM
   const selectors = [
-    '#secondary',                           // Classic YouTube
-    '#secondary-inner',                     // New YouTube layout
-    'ytd-watch-flexy #secondary',          // YouTube Polymer
-    '#columns #secondary',                  // Alternative layout
+    'ytd-watch-flexy #secondary #secondary-inner',  // Modern YouTube
+    'ytd-watch-flexy #secondary',                   // YouTube Polymer
+    '#secondary #secondary-inner',                   // Alternative
+    '#secondary-inner',                              // Standalone
+    '#secondary',                                    // Classic YouTube
+    '#columns #secondary',                           // Older layout
+    'ytd-watch-next-secondary-results-renderer',    // Direct sidebar renderer
   ];
+
+  console.log('[YouNote] Searching for insertion point...');
 
   for (const selector of selectors) {
     const element = document.querySelector(selector);
     if (element) {
-      console.log('[YouNote] Found insertion point:', selector);
+      console.log('[YouNote] Found insertion point:', selector, element);
       return element;
+    } else {
+      console.log('[YouNote] Selector not found:', selector);
     }
   }
 
