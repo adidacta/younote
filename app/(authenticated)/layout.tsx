@@ -1,4 +1,5 @@
 import { AuthButton } from "@/components/auth-button";
+import { AnnouncementsButton } from "@/components/announcements/announcements-button";
 import { CommandPalette } from "@/components/command-palette/command-palette";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -84,6 +85,13 @@ export default async function AuthenticatedLayout({
 
         {/* User info - absolute positioned on right with 32px padding */}
         <div className="absolute right-4 md:right-8 top-0 h-14 flex items-center gap-2 md:gap-4 z-10">
+          {/* Announcements - Desktop only */}
+          <div className="hidden md:block">
+            <Suspense>
+              <AnnouncementsButton />
+            </Suspense>
+          </div>
+
           <Suspense>
             <AuthButton />
           </Suspense>

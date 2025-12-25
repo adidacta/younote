@@ -16,10 +16,13 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { User, Settings, LogOut, Palette, Sun, Moon, Laptop } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { User, Settings, LogOut, Palette, Sun, Moon, Laptop, BellRing } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "@/types/database";
+import { getUnreadCount } from "@/lib/announcements/storage";
+import { ANNOUNCEMENTS } from "@/lib/announcements/announcements";
 
 interface UserMenuProps {
   profile: UserProfile | null;
@@ -29,9 +32,11 @@ export function UserMenu({ profile }: UserMenuProps) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     setMounted(true);
+    setUnreadCount(getUnreadCount(ANNOUNCEMENTS));
   }, []);
 
   const handleLogout = async () => {
@@ -42,6 +47,10 @@ export function UserMenu({ profile }: UserMenuProps) {
 
   const handleSettings = () => {
     router.push("/settings");
+  };
+
+  const handleAnnouncements = () => {
+    router.push("/announcements");
   };
 
   return (
@@ -60,6 +69,14 @@ export function UserMenu({ profile }: UserMenuProps) {
         <DropdownMenuItem onClick={handleSettings}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={handleAnnouncements}>
+          <BellRing className="mr-2 h-4 w-4" />
+          <span>What's New</span>
+          {mounted && unreadCount > 0 && (
+            <Badge className="ml-auto h-5 px-1.5 text-xs">{unreadCount}</Badge>
+          )}
         </DropdownMenuItem>
 
         {mounted && (
