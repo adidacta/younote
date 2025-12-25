@@ -3,6 +3,50 @@
 console.log('[YouNote Extension] Auth detector loaded on:', window.location.href);
 console.log('[YouNote Extension] Extension ID:', chrome.runtime.id);
 
+// Listen for messages from the YouNote web app
+window.addEventListener('message', (event) => {
+  // Only accept messages from the same origin
+  if (event.origin !== window.location.origin) {
+    return;
+  }
+
+  // Check if this is a message from YouNote webapp
+  if (event.data?.source === 'younote-webapp' && event.data?.type === 'AUTH_DETECTED') {
+    console.log('[YouNote Extension] Received auth from webpage via postMessage');
+    handleAuthFromWebpage(event.data.data);
+  }
+});
+
+async function handleAuthFromWebpage(authData) {
+  try {
+    console.log('[YouNote Extension] Processing auth from webpage:', {
+      hasToken: !!authData.authToken,
+      hasNickname: !!authData.userNickname,
+      userId: authData.userId
+    });
+
+    // Send to extension background script
+    console.log('[YouNote Extension] Sending AUTH_DETECTED message to background...');
+
+    chrome.runtime.sendMessage({
+      type: 'AUTH_DETECTED',
+      data: authData
+    }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('[YouNote Extension] Error sending auth to extension:',
+                     chrome.runtime.lastError);
+      } else {
+        console.log('[YouNote Extension] Auth sent successfully, response:', response);
+
+        // Show success message to user
+        showAuthSuccessMessage();
+      }
+    });
+  } catch (error) {
+    console.error('[YouNote Extension] Error handling auth from webpage:', error);
+  }
+}
+
 // Check for auth session periodically
 let checkInterval = null;
 let lastAuthState = null;
