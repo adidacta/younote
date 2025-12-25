@@ -244,40 +244,48 @@ export default async function LandingPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Build Your Knowledge Library</h3>
+              <div className="mb-4">
+                <div className="inline-flex p-4 rounded-full bg-orange-500/20">
+                  <BookOpen className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                </div>
               </div>
+              <h3 className="font-semibold text-lg">Build Your Knowledge Library</h3>
               <p className="text-muted-foreground">
                 Organize videos by topic, course, or project. Every notebook becomes a curated collection of insights from your learning journey.
               </p>
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <PlayCircle className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Never Lose a Breakthrough Moment</h3>
+              <div className="mb-4">
+                <div className="inline-flex p-4 rounded-full bg-cyan-500/20">
+                  <PlayCircle className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
+                </div>
               </div>
+              <h3 className="font-semibold text-lg">Never Lose a Breakthrough Moment</h3>
               <p className="text-muted-foreground">
                 Capture insights at the perfect timestamp. Click to jump back to any moment—no more scrubbing through hours of video to find that one thing.
               </p>
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Target className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Zero Distractions, Pure Focus</h3>
+              <div className="mb-4">
+                <div className="inline-flex p-4 rounded-full bg-red-500/20">
+                  <Target className="h-8 w-8 text-red-600 dark:text-red-400" />
+                </div>
               </div>
+              <h3 className="font-semibold text-lg">Zero Distractions, Pure Focus</h3>
               <p className="text-muted-foreground">
                 No algorithm pulling you toward cat videos. No recommended rabbit holes. Just you, the video you chose, and your notes. Perfect for learners with focus challenges.
               </p>
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Share2 className="h-6 w-6 text-primary" />
-                <h3 className="font-semibold text-lg">Your Notes, Everywhere You Need Them</h3>
+              <div className="mb-4">
+                <div className="inline-flex p-4 rounded-full bg-indigo-500/20">
+                  <Share2 className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+                </div>
               </div>
+              <h3 className="font-semibold text-lg">Your Notes, Everywhere You Need Them</h3>
               <p className="text-muted-foreground">
                 Share page links with classmates and teammates. Export to markdown for your personal knowledge system. Your insights work the way you do.
               </p>
@@ -289,12 +297,15 @@ export default async function LandingPage() {
       {/* Stats Section */}
       <section className="py-24 bg-muted/30">
         <div className="max-w-6xl mx-auto px-4">
-          <div>
-            <h3 className="text-2xl font-bold text-center mb-8">
+          <div className="text-center space-y-4 mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold">
               Join {userCount} avid learners
-            </h3>
-            <StatsWidgets />
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Building knowledge libraries, one timestamp at a time
+            </p>
           </div>
+          <StatsWidgets />
         </div>
       </section>
 
@@ -409,6 +420,28 @@ export default async function LandingPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+        </div>
+      </section>
+
+      {/* Secondary CTA Section */}
+      <section className="py-24 bg-muted/30">
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              Ready to transform your YouTube learning?
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Start taking timestamped notes today. It's free, forever.
+            </p>
+          </div>
+          <div className="flex gap-4 justify-center items-center flex-wrap">
+            <Button asChild size="lg" className="text-lg px-8">
+              <Link href="/auth/sign-up">Get started for free</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="text-lg px-8">
+              <Link href="/auth/login">Sign in</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
