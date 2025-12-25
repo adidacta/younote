@@ -107,7 +107,7 @@ export default async function LandingPage() {
               </p>
             </div>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto pt-2">
-              Turn hours of video into organized knowledge you can actually use. Capture insights at the perfect moment, build your own reference library, and never lose a breakthrough idea again.
+              Take notes on YouTube videos. Every note saves the timestamp. Click to jump back instantly. Organize by topic.
             </p>
           </div>
 
