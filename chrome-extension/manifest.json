@@ -35,6 +35,14 @@
       "js": ["content.js"],
       "css": ["styles/youtube.css"],
       "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*"
+      ],
+      "js": ["auth-detector.js"],
+      "run_at": "document_end"
     }
   ],
   "background": {

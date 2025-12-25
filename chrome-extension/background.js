@@ -19,6 +19,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     handleLogout().then(sendResponse);
     return true;
   }
+
+  if (request.type === "AUTH_DETECTED") {
+    handleAuthDetected(request.data).then(sendResponse);
+    return true;
+  }
 });
 
 // Check if user is authenticated
@@ -247,13 +252,35 @@ async function createNote(authToken, pageId, content, timestamp) {
   }
 }
 
+// Handle auth detected from YouNote website
+async function handleAuthDetected(data) {
+  try {
+    console.log('Auth detected from website:', data);
+
+    // Store auth data
+    await chrome.storage.local.set({
+      authToken: data.authToken,
+      userNickname: data.userNickname,
+      userId: data.userId,
+      userEmail: data.userEmail
+    });
+
+    console.log('Auth data stored successfully');
+
+    return {
+      success: true,
+      message: 'Extension connected to YouNote account'
+    };
+  } catch (error) {
+    console.error('Error handling auth detection:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
 // Listen for web app authentication (when user logs in via web app)
 chrome.runtime.onInstalled.addListener(() => {
   console.log("YouNote extension installed");
 });
-
-// Periodically check for auth changes in web app
-setInterval(async () => {
-  // TODO: Implement checking web app localStorage for Supabase session
-  // For now, we'll rely on the popup flow
-}, 5000);
