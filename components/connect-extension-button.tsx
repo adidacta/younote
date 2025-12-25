@@ -54,7 +54,10 @@ export function ConnectExtensionButton() {
 
       // Try to send to extension via window.postMessage
       // The content script will listen for this and forward to background
-      window.postMessage({ source: 'younote-webapp', ...message }, '*');
+      const postMessageData = { source: 'younote-webapp', ...message };
+      console.log('[YouNote Webapp] Sending postMessage:', postMessageData);
+      window.postMessage(postMessageData, '*');
+      console.log('[YouNote Webapp] postMessage sent');
 
       // Show success message
       setIsConnected(true);

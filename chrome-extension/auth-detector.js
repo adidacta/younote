@@ -5,8 +5,17 @@ console.log('[YouNote Extension] Extension ID:', chrome.runtime.id);
 
 // Listen for messages from the YouNote web app
 window.addEventListener('message', (event) => {
+  console.log('[YouNote Extension] Received postMessage:', {
+    origin: event.origin,
+    windowOrigin: window.location.origin,
+    hasSource: !!event.data?.source,
+    source: event.data?.source,
+    type: event.data?.type
+  });
+
   // Only accept messages from the same origin
   if (event.origin !== window.location.origin) {
+    console.log('[YouNote Extension] Ignoring message from different origin');
     return;
   }
 
@@ -14,6 +23,8 @@ window.addEventListener('message', (event) => {
   if (event.data?.source === 'younote-webapp' && event.data?.type === 'AUTH_DETECTED') {
     console.log('[YouNote Extension] Received auth from webpage via postMessage');
     handleAuthFromWebpage(event.data.data);
+  } else {
+    console.log('[YouNote Extension] Message does not match expected format');
   }
 });
 
