@@ -38,13 +38,18 @@ export const ANNOUNCEMENTS: Announcement[] = [
   {
     date: "2025-12-25",
     displayDate: "December 25, 2025",
-    title: "Viral Sharing",
+    title: "Share & Collaborate",
     badge: "new",
     features: [
       {
         icon: "Share2",
-        title: "Auto-Fork Shared Notes",
-        description: "Copy shared notes to your account with one click. Perfect for collecting study materials from classmates or saving tutorial notes from instructors."
+        title: "Share Notes & Pages",
+        description: "Share your notes and pages with anyone using a link. Friends can view your notes even without a YouNote account. Perfect for study groups and sharing tutorials."
+      },
+      {
+        icon: "Copy",
+        title: "Save Shared Content",
+        description: "Found someone's notes you love? Copy any shared note or page to your own account with one click. Build your personal knowledge library from shared content."
       }
     ]
   },
