@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const notebooks = await getNotebooks(user.id);
+    const notebooks = await getNotebooks();
     return NextResponse.json(notebooks);
   } catch (error) {
     console.error('Error fetching notebooks:', error);
