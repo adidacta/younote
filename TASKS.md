@@ -12,6 +12,40 @@ This file tracks open tasks, bugs, and feature requests for the YouNote project.
 
 ## Current Tasks
 
+### 26. Add "Buy Me a Coffee" Support Button 🔴
+**Priority**: Low
+**Type**: Feature - Monetization
+
+**Objective**:
+Add a "Buy Me a Coffee" button to allow users to support the project with optional donations.
+
+**Placement Options**:
+1. Footer - subtle link in footer alongside other links
+2. Settings page - dedicated "Support" section
+3. Navbar - small coffee icon (desktop only)
+4. About/FAQ section - "Love YouNote? Buy me a coffee"
+
+**Technical Implementation**:
+- Sign up for Buy Me a Coffee account (https://buymeacoffee.com)
+- Get embed widget or button code
+- Choose placement strategy
+- Style to match YouNote design system
+- Optional: Add supporter badge/thank you message
+
+**Questions Before Implementation**:
+1. Where should the button be placed? (Footer recommended for subtlety)
+2. Button style: Icon only, text + icon, or widget?
+3. Should it open in new tab or embedded widget?
+4. Show coffee icon persistently or only in certain sections?
+5. Add "Supporters" page to showcase donors? (optional)
+
+**Files to Create/Modify**:
+- Footer component (if adding to footer)
+- Settings page (if adding support section)
+- New "Support" page (optional)
+
+---
+
 ### 20. Chrome Extension for YouTube.com Note-Taking 🔴
 **Priority**: High
 **Type**: Feature - Browser Extension
