@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AnnouncementsList } from "@/components/announcements/announcements-list";
-import { BellRing } from "lucide-react";
+import { BackButton } from "@/components/back-button";
 import { markAllAsRead } from "@/lib/announcements/storage";
 import { ANNOUNCEMENTS } from "@/lib/announcements/announcements";
 
@@ -13,28 +13,17 @@ export default function AnnouncementsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      {/* Sticky Header - Mobile Friendly */}
-      <div className="sticky top-0 z-10 bg-background border-b">
-        <div className="container max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <BellRing className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold">What's New</h1>
-              <p className="text-sm text-muted-foreground">
-                Latest features and improvements
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="container max-w-3xl mx-auto px-4 py-6">
+      <div className="mb-3">
+        <BackButton />
       </div>
-
-      {/* Content */}
-      <div className="container max-w-3xl mx-auto px-4 py-6">
-        <AnnouncementsList variant="page" />
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">What's New</h1>
+        <p className="text-muted-foreground">
+          Latest features and improvements
+        </p>
       </div>
+      <AnnouncementsList variant="page" />
     </div>
   );
 }

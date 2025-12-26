@@ -75,7 +75,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-6">
+    <div className="container max-w-3xl mx-auto px-4 py-6">
       <div className="mb-3">
         <BackButton />
       </div>

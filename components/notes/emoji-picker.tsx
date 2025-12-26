@@ -24,7 +24,7 @@ export function EmojiPicker({ currentEmoji, onEmojiSelect, disabled }: EmojiPick
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 hover:bg-muted"
+          className="h-8 w-8 hover:bg-muted focus-visible:ring-0 focus-visible:ring-offset-0"
           disabled={disabled}
           title={currentEmoji ? `Current: ${currentEmoji} - Click to change` : "Add emoji"}
         >
