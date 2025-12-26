@@ -4,6 +4,12 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Edit2, Trash2, Play, Share2, Sparkles } from "lucide-react";
 import { MarkdownRenderer } from "./markdown/markdown-renderer";
 import { MarkdownToolbar } from "./notes/markdown-toolbar";
@@ -56,7 +62,8 @@ export function DemoNoteEditor() {
   };
 
   return (
-    <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20 self-start">
+    <TooltipProvider>
+      <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20 self-start">
       {/* "Try it" badge */}
       <div className="absolute -top-3 left-4 z-20">
         <div className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
@@ -167,18 +174,25 @@ export function DemoNoteEditor() {
             })}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground/70">Demo</span>
-            <button
-              onClick={handlePlay}
-              className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
-              title="This skips the video to the right time of the note."
-            >
-              <span className="text-muted-foreground/70">Timestamp:</span>
-              <span className="font-mono">2:45</span>
-            </button>
+            <Play className="h-3 w-3 fill-current text-muted-foreground/70" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handlePlay}
+                  className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                >
+                  <span className="text-muted-foreground/70">Timestamp:</span>
+                  <span className="font-mono">2:45</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>This skips the video to the right time of the note.</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 }
