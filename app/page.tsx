@@ -125,7 +125,7 @@ export default async function LandingPage() {
                   YouTube is amazing for avid learners
                 </h1>
                 <p className="text-xl md:text-2xl font-semibold text-primary">
-                  Add timestamped notes to make it unforgettable!
+                  Make it unforgettable with timestamped notes and zero distractions
                 </p>
               </div>
 
