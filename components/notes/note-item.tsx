@@ -13,6 +13,7 @@ import { useDebounce } from "@/lib/hooks/use-debounce";
 import { MarkdownToolbar } from "./markdown-toolbar";
 import { MarkdownRenderer } from "../markdown/markdown-renderer";
 import { toast } from "sonner";
+import { EmojiPicker } from "./emoji-picker";
 
 interface NoteItemProps {
   note: Note;
@@ -27,6 +28,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly = false }: NoteItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(note.content);
+  const [emoji, setEmoji] = useState(note.emoji);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showHighlight, setShowHighlight] = useState(isHighlighted);
@@ -173,6 +175,26 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
     }
   };
 
+  const handleEmojiSelect = async (selectedEmoji: string | null) => {
+    try {
+      const response = await fetch(`/api/notes/${note.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emoji: selectedEmoji }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update emoji');
+      }
+
+      setEmoji(selectedEmoji);
+      router.refresh();
+    } catch (error) {
+      console.error('Error updating emoji:', error);
+      toast.error('Failed to update emoji');
+    }
+  };
+
   const handleInsertMarkdown = (before: string, after: string = '') => {
     const textarea = textareaRef.current;
     if (!textarea) return;
@@ -251,6 +273,14 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
           >
             <Share2 className="h-4 w-4" />
           </Button>
+
+          {/* Emoji Picker - only show if not read-only */}
+          {!readOnly && (
+            <EmojiPicker
+              currentEmoji={emoji}
+              onEmojiSelect={handleEmojiSelect}
+            />
+          )}
 
           {/* Edit - only show if not read-only */}
           {!readOnly && (
@@ -396,13 +426,20 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
 
         {/* Metadata with improved styling */}
         <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
-          <span>{new Date(note.created_at).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })}</span>
+          <div className="flex items-center gap-2">
+            {emoji && (
+              <span className="text-base" title="Note status">
+                {emoji}
+              </span>
+            )}
+            <span>{new Date(note.created_at).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}</span>
+          </div>
           <div className="flex items-center gap-2">
             {note.updated_at !== note.created_at && (
               <span className="text-muted-foreground/70">Edited</span>

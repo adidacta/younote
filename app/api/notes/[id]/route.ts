@@ -20,16 +20,28 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const { content } = body;
+    const { content, emoji } = body;
 
-    if (content === undefined) {
+    // Build update object with only provided fields
+    const updates: { content?: string; emoji?: string | null } = {};
+
+    if (content !== undefined) {
+      updates.content = content;
+    }
+
+    if (emoji !== undefined) {
+      updates.emoji = emoji;
+    }
+
+    // Require at least one field to update
+    if (Object.keys(updates).length === 0) {
       return NextResponse.json(
-        { error: 'content is required' },
+        { error: 'No fields to update' },
         { status: 400 }
       );
     }
 
-    const note = await updateNote(id, { content });
+    const note = await updateNote(id, updates);
 
     return NextResponse.json(note);
   } catch (error) {

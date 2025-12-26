@@ -40,6 +40,7 @@ export interface Note {
   user_id: string;
   content: string;
   timestamp_seconds: number | null;
+  emoji?: string | null;
   source_note_id?: string | null;
   source_share_token?: string | null;
   created_at: string;
