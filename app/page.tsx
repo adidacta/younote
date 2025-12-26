@@ -524,6 +524,14 @@ export default async function LandingPage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© 2025 YouNote. Free forever.</p>
             <div className="flex items-center gap-6">
+              <a
+                href="https://github.com/adidacta/younote/issues/new/choose"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors"
+              >
+                Feedback
+              </a>
               <Link
                 href="/legal/terms-of-use"
                 className="hover:text-foreground transition-colors"
