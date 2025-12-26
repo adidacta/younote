@@ -170,10 +170,11 @@ export function DemoNoteEditor() {
             <span className="text-muted-foreground/70">Demo</span>
             <button
               onClick={handlePlay}
-              className="inline-flex items-center gap-1 font-mono text-primary hover:text-primary/80 transition-colors cursor-pointer"
-              title="Jump to timestamp"
+              className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              title="This skips the video to the right time of the note."
             >
-              2:45
+              <span className="text-muted-foreground/70">Timestamp:</span>
+              <span className="font-mono">2:45</span>
             </button>
           </div>
         </div>
