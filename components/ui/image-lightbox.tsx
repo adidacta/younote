@@ -55,18 +55,18 @@ export function ImageLightbox({
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-[calc(100vw-2rem)] lg:max-w-[calc(100vw-2rem)] max-h-[96vh] w-auto p-0 overflow-hidden">
           <VisuallyHidden>
             <DialogTitle>{alt}</DialogTitle>
             <DialogDescription>Expanded view of screenshot</DialogDescription>
           </VisuallyHidden>
-          <div className="relative w-full h-full flex items-center justify-center bg-black/5">
+          <div className="relative w-full h-full flex items-center justify-center bg-black/5 p-2">
             <Image
               src={src}
               alt={alt}
               width={width}
               height={height}
-              className="max-w-full max-h-[95vh] w-auto h-auto object-contain"
+              className="max-w-full max-h-[92vh] w-auto h-auto object-contain"
               unoptimized={unoptimized}
             />
           </div>
