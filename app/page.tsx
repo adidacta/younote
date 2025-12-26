@@ -78,48 +78,101 @@ export default async function LandingPage() {
 
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center space-y-10">
-          {/* Logo */}
-          <div className="flex justify-center">
-            <Image
-              src="/images/younote-logo-light.png"
-              alt="YouNote Logo"
-              width={300}
-              height={100}
-              className="dark:hidden"
-            />
-            <Image
-              src="/images/younote-logo-dark.png"
-              alt="YouNote Logo"
-              width={300}
-              height={100}
-              className="hidden dark:block"
-            />
-          </div>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: Content */}
+            <div className="space-y-8 text-center md:text-left">
+              {/* Logo - mobile only */}
+              <div className="flex justify-center md:hidden">
+                <Image
+                  src="/images/younote-logo-light.png"
+                  alt="YouNote Logo"
+                  width={240}
+                  height={80}
+                  className="dark:hidden"
+                />
+                <Image
+                  src="/images/younote-logo-dark.png"
+                  alt="YouNote Logo"
+                  width={240}
+                  height={80}
+                  className="hidden dark:block"
+                />
+              </div>
 
-          {/* Headline */}
-          <div className="space-y-4">
-            <div className="space-y-3">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                YouTube is amazing for avid learners
-              </h1>
-              <p className="text-2xl md:text-3xl font-semibold text-primary">
-                Add timestamped notes to make it unforgettable!
-              </p>
+              {/* Logo - desktop */}
+              <div className="hidden md:flex">
+                <Image
+                  src="/images/younote-logo-light.png"
+                  alt="YouNote Logo"
+                  width={200}
+                  height={67}
+                  className="dark:hidden"
+                />
+                <Image
+                  src="/images/younote-logo-dark.png"
+                  alt="YouNote Logo"
+                  width={200}
+                  height={67}
+                  className="hidden dark:block"
+                />
+              </div>
+
+              {/* Headline */}
+              <div className="space-y-3">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                  YouTube is amazing for avid learners
+                </h1>
+                <p className="text-xl md:text-2xl font-semibold text-primary">
+                  Add timestamped notes to make it unforgettable!
+                </p>
+              </div>
+
+              {/* Bullet Points */}
+              <ul className="space-y-3 text-left max-w-md mx-auto md:mx-0">
+                <li className="flex items-start gap-3">
+                  <Check className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+                  <span className="text-lg text-muted-foreground">Take notes on YouTube videos</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+                  <span className="text-lg text-muted-foreground">Every note saves the timestamp</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+                  <span className="text-lg text-muted-foreground">Click to jump back instantly</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+                  <span className="text-lg text-muted-foreground">Organize by topic</span>
+                </li>
+              </ul>
+
+              {/* CTA */}
+              <div className="flex gap-4 justify-center md:justify-start items-center flex-wrap">
+                <Button asChild size="lg" className="text-lg px-8">
+                  <Link href="/auth/sign-up">Get started</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="text-lg px-8">
+                  <Link href="/auth/login">Sign in</Link>
+                </Button>
+              </div>
             </div>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto pt-2">
-              Take notes on YouTube videos. Every note saves the timestamp. Click to jump back instantly. Organize by topic.
-            </p>
-          </div>
 
-          {/* CTA */}
-          <div className="flex gap-4 justify-center items-center flex-wrap">
-            <Button asChild size="lg" className="text-lg px-8">
-              <Link href="/auth/sign-up">Get started</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg px-8">
-              <Link href="/auth/login">Sign in</Link>
-            </Button>
+            {/* Right: Hero Image */}
+            <div className="relative">
+              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border">
+                <Image
+                  src="/images/younote-note.png"
+                  alt="YouNote app interface showing timestamped notes"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto"
+                  priority
+                  unoptimized
+                />
+              </div>
+            </div>
           </div>
         </div>
       </main>
