@@ -256,7 +256,7 @@ async function createNote(authToken, pageId, content, timestamp) {
       body: JSON.stringify({
         page_id: pageId,
         content,
-        timestamp,
+        timestamp_seconds: timestamp,
       }),
     });
 
