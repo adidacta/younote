@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/card";
 import type { UserProfile } from "@/types/database";
 import { toast } from "sonner";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Upload, User, X } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 interface SettingsFormProps {
   profile: UserProfile;
@@ -22,9 +24,12 @@ interface SettingsFormProps {
 
 export function SettingsForm({ profile }: SettingsFormProps) {
   const [nickname, setNickname] = useState(profile.nickname);
+  const [profileImageUrl, setProfileImageUrl] = useState(profile.profile_image_url);
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const handleExport = async () => {
@@ -58,6 +63,119 @@ export function SettingsForm({ profile }: SettingsFormProps) {
       toast.error("Failed to export data");
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be less than 2MB");
+      return;
+    }
+
+    setIsUploadingImage(true);
+    const supabase = createClient();
+
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Delete old image if exists
+      if (profileImageUrl) {
+        const oldPath = profileImageUrl.split("/").pop();
+        if (oldPath) {
+          await supabase.storage
+            .from("profile-images")
+            .remove([`${user.id}/${oldPath}`]);
+        }
+      }
+
+      // Upload new image
+      const fileExt = file.name.split(".").pop();
+      const filePath = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("profile-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data } = supabase.storage
+        .from("profile-images")
+        .getPublicUrl(filePath);
+
+      const newImageUrl = data.publicUrl;
+
+      // Update profile in database
+      const response = await fetch("/api/user-profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile_image_url: newImageUrl }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update profile");
+
+      setProfileImageUrl(newImageUrl);
+      toast.success("Profile image updated");
+      router.refresh();
+    } catch (error) {
+      console.error("Image upload error:", error);
+      toast.error("Failed to upload image");
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    setIsUploadingImage(true);
+    const supabase = createClient();
+
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Delete image from storage
+      if (profileImageUrl) {
+        const oldPath = profileImageUrl.split("/").pop();
+        if (oldPath) {
+          await supabase.storage
+            .from("profile-images")
+            .remove([`${user.id}/${oldPath}`]);
+        }
+      }
+
+      // Update profile in database
+      const response = await fetch("/api/user-profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile_image_url: null }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update profile");
+
+      setProfileImageUrl(null);
+      toast.success("Profile image removed");
+      router.refresh();
+    } catch (error) {
+      console.error("Image removal error:", error);
+      toast.error("Failed to remove image");
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
@@ -120,6 +238,71 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Profile Image Upload */}
+            <div className="space-y-2">
+              <Label>Profile Image</Label>
+              <div className="flex items-center gap-4">
+                <div className="relative h-20 w-20 rounded-full bg-muted flex items-center justify-center overflow-hidden border-2 border-border">
+                  {profileImageUrl ? (
+                    <Image
+                      src={profileImageUrl}
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <User className="h-10 w-10 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    disabled={isUploadingImage}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingImage}
+                    >
+                      {isUploadingImage ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="mr-2 h-4 w-4" />
+                          Upload Image
+                        </>
+                      )}
+                    </Button>
+                    {profileImageUrl && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleRemoveImage}
+                        disabled={isUploadingImage}
+                      >
+                        <X className="mr-2 h-4 w-4" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    JPG, PNG or GIF. Max 2MB.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="nickname">Display Name</Label>
               <Input

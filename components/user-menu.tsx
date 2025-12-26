@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import type { UserProfile } from "@/types/database";
 import { getUnreadCount } from "@/lib/announcements/storage";
 import { ANNOUNCEMENTS } from "@/lib/announcements/announcements";
+import Image from "next/image";
 
 interface UserMenuProps {
   profile: UserProfile | null;
@@ -56,8 +57,23 @@ export function UserMenu({ profile }: UserMenuProps) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-12 w-12 [&_svg]:!size-8 focus-visible:ring-0 focus-visible:ring-offset-0">
-          <User />
+        <Button
+          variant="ghost"
+          className="h-12 w-12 rounded-full p-0 focus-visible:ring-0 focus-visible:ring-offset-0 overflow-hidden"
+        >
+          {profile?.profile_image_url ? (
+            <Image
+              src={profile.profile_image_url}
+              alt={profile.nickname || "Profile"}
+              width={48}
+              height={48}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center">
+              <User className="h-8 w-8" />
+            </div>
+          )}
           <span className="sr-only">User menu</span>
         </Button>
       </DropdownMenuTrigger>

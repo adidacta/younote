@@ -54,31 +54,44 @@ export async function PATCH(request: Request) {
 
   try {
     const body = await request.json();
-    const { nickname } = body;
+    const { nickname, profile_image_url } = body;
 
-    if (!nickname) {
+    // Build update object based on provided fields
+    const updates: { nickname?: string; profile_image_url?: string | null } = {};
+
+    // Validate and add nickname if provided
+    if (nickname !== undefined) {
+      if (!nickname || nickname.length < 3 || nickname.length > 20) {
+        return NextResponse.json(
+          { error: "Nickname must be between 3 and 20 characters" },
+          { status: 400 }
+        );
+      }
+
+      if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
+        return NextResponse.json(
+          { error: "Nickname can only contain letters and numbers" },
+          { status: 400 }
+        );
+      }
+
+      updates.nickname = nickname;
+    }
+
+    // Add profile_image_url if provided
+    if (profile_image_url !== undefined) {
+      updates.profile_image_url = profile_image_url;
+    }
+
+    // Ensure at least one field is being updated
+    if (Object.keys(updates).length === 0) {
       return NextResponse.json(
-        { error: "Nickname is required" },
+        { error: "No fields to update" },
         { status: 400 }
       );
     }
 
-    // Validate nickname
-    if (nickname.length < 3 || nickname.length > 20) {
-      return NextResponse.json(
-        { error: "Nickname must be between 3 and 20 characters" },
-        { status: 400 }
-      );
-    }
-
-    if (!/^[a-zA-Z0-9]+$/.test(nickname)) {
-      return NextResponse.json(
-        { error: "Nickname can only contain letters and numbers" },
-        { status: 400 }
-      );
-    }
-
-    const updatedProfile = await updateUserProfile({ nickname });
+    const updatedProfile = await updateUserProfile(updates);
 
     return NextResponse.json({ profile: updatedProfile });
   } catch (error) {
