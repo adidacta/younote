@@ -6,11 +6,97 @@ import { NoteItem } from "@/components/notes/note-item";
 import { VideoSection } from "@/components/video/video-section";
 import Image from "next/image";
 import Link from "next/link";
+import { getYouTubeThumbnail } from "@/lib/metadata/extract-metadata";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 
 interface SharePageProps {
   params: Promise<{ token: string }>;
+}
+
+export async function generateMetadata({ params }: SharePageProps): Promise<Metadata> {
+  const { token } = await params;
+
+  // Get shared page
+  const sharedPage = await getSharedPageByToken(token);
+  if (!sharedPage) {
+    return {
+      title: "Page Not Found",
+      description: "This shared page could not be found.",
+    };
+  }
+
+  // Use service role client to fetch data for metadata
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  // Get page details
+  const { data: page } = await supabase
+    .from("pages")
+    .select("*")
+    .eq("id", sharedPage.page_id)
+    .single();
+
+  if (!page) {
+    return {
+      title: "Page Not Found",
+      description: "This shared page could not be found.",
+    };
+  }
+
+  // Get notes count
+  const { count: notesCount } = await supabase
+    .from("notes")
+    .select("*", { count: 'exact', head: true })
+    .eq("page_id", page.id);
+
+  // Get user's nickname
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("nickname")
+    .eq("user_id", page.user_id)
+    .single();
+
+  const sharedByNickname = profile?.nickname || "A user";
+
+  // Generate metadata
+  const title = `${page.video_title || page.title} - YouNote`;
+  const notesText = notesCount === 1 ? '1 note' : `${notesCount || 0} notes`;
+  const description = `${sharedByNickname} shared ${notesText} on "${page.video_title || page.title}"${page.channel_name ? ` by ${page.channel_name}` : ''}`;
+
+  const ogImage = page.youtube_video_id
+    ? getYouTubeThumbnail(page.youtube_video_id)
+    : undefined;
+
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://younote-two.vercel.app'}/share/${token}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      images: ogImage ? [
+        {
+          url: ogImage,
+          width: 1280,
+          height: 720,
+          alt: page.video_title || page.title,
+        }
+      ] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+    },
+  };
 }
 
 export default async function SharePage({ params }: SharePageProps) {
