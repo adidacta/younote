@@ -153,27 +153,31 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
   };
 
   const handleShare = async () => {
-    try {
-      // Generate share link for this individual note
-      const response = await fetch('/api/share/note', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ note_id: note.id })
-      });
+    toast.promise(
+      async () => {
+        // Generate share link for this individual note
+        const response = await fetch('/api/share/note', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note_id: note.id })
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate share link');
+        if (!response.ok) {
+          throw new Error('Failed to generate share link');
+        }
+
+        const { share_token } = await response.json();
+        const shareUrl = `${window.location.origin}/share/note/${share_token}`;
+
+        await navigator.clipboard.writeText(shareUrl);
+        return shareUrl;
+      },
+      {
+        loading: 'Copying link...',
+        success: 'Link copied to clipboard!',
+        error: 'Failed to copy link',
       }
-
-      const { share_token } = await response.json();
-      const shareUrl = `${window.location.origin}/share/note/${share_token}`;
-
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success('Note share link copied to clipboard!');
-    } catch (err) {
-      console.error('Failed to share note:', err);
-      toast.error('Failed to generate share link');
-    }
+    );
   };
 
   const handleEmojiSelect = async (selectedEmoji: string | null) => {
