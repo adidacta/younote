@@ -18,7 +18,7 @@ import { PageTransition } from "@/components/page-transition";
 import { AnnouncementsButton } from "@/components/announcements/announcements-button";
 import { DemoNoteEditor } from "@/components/demo-note-editor";
 import { Suspense } from "react";
-import { motion } from "framer-motion";
+import { AnimatedSection } from "@/components/animated-section";
 
 export default async function LandingPage() {
   // If user is already logged in, redirect to notebooks
@@ -172,23 +172,11 @@ export default async function LandingPage() {
       {/* Use Cases Section */}
       <section className="py-24 bg-muted/30">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-16"
-          >
+          <AnimatedSection className="text-center space-y-4 mb-16">
             <h2 className="text-3xl md:text-4xl font-bold">Who uses YouNote?</h2>
             <p className="text-xl text-muted-foreground">Built for learners of all kinds</p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid md:grid-cols-3 gap-8"
-          >
+          </AnimatedSection>
+          <div className="grid md:grid-cols-3 gap-8">
             {/* Students */}
             <Card className="text-left hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
@@ -293,20 +281,14 @@ export default async function LandingPage() {
                 </ul>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left"
-          >
+          <AnimatedSection className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
             <div className="space-y-6">
               <div className="mb-4">
                 <div className="inline-flex p-4 rounded-full bg-orange-500/20">
@@ -354,23 +336,17 @@ export default async function LandingPage() {
                 Share page links with classmates and teammates. Export to markdown for your personal knowledge system. Your insights work the way you do.
               </p>
             </div>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Screenshots Section */}
       <section className="py-24 bg-muted/30">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-16"
-          >
+          <AnimatedSection className="text-center space-y-4 mb-16">
             <h2 className="text-3xl md:text-4xl font-bold">See YouNote in action</h2>
             <p className="text-xl text-muted-foreground">Simple, powerful, and built for learning</p>
-          </motion.div>
+          </AnimatedSection>
 
           <div className="space-y-16">
             {/* Screenshot 1: Video player with notes */}
@@ -439,13 +415,7 @@ export default async function LandingPage() {
       {/* Stats Section */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-6 mb-12"
-          >
+          <AnimatedSection className="text-center space-y-6 mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">
               Join {userCount} avid learners
             </h2>
@@ -457,41 +427,25 @@ export default async function LandingPage() {
                 <Link href="/auth/sign-up">Start taking notes for free</Link>
               </Button>
             </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          </AnimatedSection>
+          <AnimatedSection delay={0.2}>
             <StatsWidgets />
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* FAQ Section */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-12"
-          >
+          <AnimatedSection className="text-center space-y-4 mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-muted-foreground">
               Everything you need to know about YouNote
             </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          </AnimatedSection>
+          <AnimatedSection delay={0.2}>
             <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>How does YouNote work?</AccordionTrigger>
@@ -592,7 +546,7 @@ export default async function LandingPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 
