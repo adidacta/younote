@@ -11,6 +11,7 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 import { BookOpen, PlayCircle, Share2, Target, GraduationCap, Briefcase, Search, Check } from "lucide-react";
 import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { PageTransition } from "@/components/page-transition";
@@ -312,12 +313,12 @@ export default async function LandingPage() {
                 </p>
               </div>
               <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
-                <Image
+                <ImageLightbox
                   src="/images/side-by-side.png"
                   alt="YouNote interface showing video player and notes side-by-side"
                   width={1200}
                   height={675}
-                  className="w-full h-auto"
+                  className="rounded-lg"
                   unoptimized
                 />
               </div>
@@ -332,12 +333,12 @@ export default async function LandingPage() {
                 </p>
               </div>
               <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
-                <Image
+                <ImageLightbox
                   src="/images/notebooks.png"
                   alt="Notebooks view showing organized video pages with thumbnails"
                   width={1200}
                   height={675}
-                  className="w-full h-auto"
+                  className="rounded-lg"
                   unoptimized
                 />
               </div>
@@ -352,12 +353,12 @@ export default async function LandingPage() {
                 </p>
               </div>
               <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
-                <Image
+                <ImageLightbox
                   src="/images/note.png"
                   alt="Note with timestamp showing clickable link to video moment"
                   width={1200}
                   height={675}
-                  className="w-full h-auto"
+                  className="rounded-lg"
                   unoptimized
                 />
               </div>
