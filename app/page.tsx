@@ -318,6 +318,7 @@ export default async function LandingPage() {
                   width={1200}
                   height={675}
                   className="w-full h-auto"
+                  unoptimized
                 />
               </div>
             </div>
@@ -337,6 +338,7 @@ export default async function LandingPage() {
                   width={1200}
                   height={675}
                   className="w-full h-auto"
+                  unoptimized
                 />
               </div>
             </div>
@@ -356,6 +358,7 @@ export default async function LandingPage() {
                   width={1200}
                   height={675}
                   className="w-full h-auto"
+                  unoptimized
                 />
               </div>
             </div>
