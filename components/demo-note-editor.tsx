@@ -1,94 +1,177 @@
 "use client";
 
 import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Sparkles } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Edit2, Trash2, Play, Share2, Smile, Sparkles } from "lucide-react";
+import { MarkdownRenderer } from "./markdown/markdown-renderer";
+import { MarkdownToolbar } from "./notes/markdown-toolbar";
+import { toast } from "sonner";
 
-const DEMO_CONTENT = `# Try taking a note!
+const DEMO_CONTENT = `# Welcome to YouNote!
 
-Click the timestamp button below to add the current video time.
+This is an **interactive demo** - try hovering over this card to see the action bar.
 
-**Key features:**
-- Take notes on YouTube videos
-- Every note saves the timestamp
-- Click to jump back instantly
-- Organize by topic
+## Key Features:
+- 📝 Take notes on YouTube videos
+- ⏰ Every note saves the timestamp
+- 🎯 Click to jump back instantly
+- 📂 Organize by topic
 
-Try editing this text or adding a timestamp! 👇`;
+Try clicking **Edit** to modify this note, or **Share** to see how sharing works!
+
+---
+
+*This demo runs entirely in your browser - no sign-up required.*`;
 
 export function DemoNoteEditor() {
+  const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(DEMO_CONTENT);
-  const [demoTime, setDemoTime] = useState(42); // Demo video time in seconds
+  const [emoji, setEmoji] = useState("✨");
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  const handleInsertMarkdown = (before: string, after: string = '') => {
+    // Simple markdown insertion for demo
+    const newContent = content + `\n${before}text${after}`;
+    setContent(newContent);
   };
 
-  const handleAddTimestamp = () => {
-    const timestamp = `[${formatTime(demoTime)}](javascript:void(0))`;
-    const cursorPos = content.length;
-    const newContent = content + `\n\n${timestamp} `;
-    setContent(newContent);
+  const handleShare = () => {
+    toast.success("In the real app, this would copy a share link to your clipboard!");
+  };
 
-    // Increment demo time to show it's "playing"
-    setDemoTime((prev) => prev + Math.floor(Math.random() * 30) + 10);
+  const handleDelete = () => {
+    toast.info("Demo notes can't be deleted - sign up to save real notes!");
+  };
+
+  const handlePlay = () => {
+    toast.info("This would jump to the timestamp in the video!");
   };
 
   return (
-    <Card className="relative overflow-hidden border-2 border-primary/20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20">
       {/* "Try it" badge */}
-      <div className="absolute top-4 right-4 z-10">
-        <div className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-pulse">
+      <div className="absolute -top-3 left-4 z-20">
+        <div className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
           <Sparkles className="h-4 w-4" />
-          Click to try!
+          Interactive Demo
         </div>
       </div>
 
-      <div className="p-6 space-y-4">
-        {/* Demo video player placeholder */}
-        <div className="relative aspect-video bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-border flex items-center justify-center">
-          <div className="text-center space-y-2">
-            <div className="text-4xl">▶️</div>
-            <div className="text-sm text-muted-foreground">
-              Demo Video Playing: {formatTime(demoTime)}
-            </div>
-          </div>
-        </div>
-
-        {/* Timestamp button */}
-        <div className="flex gap-2">
+      <CardContent className="pt-4 relative">
+        {/* Action Bar (shows on hover) */}
+        <div className="absolute -top-3 right-4 opacity-0 group-hover/card:opacity-100 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10">
+          {/* Play */}
           <Button
-            onClick={handleAddTimestamp}
-            size="sm"
-            variant="outline"
-            className="gap-2"
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+            onClick={handlePlay}
+            title="Jump to timestamp"
           >
-            <Clock className="h-4 w-4" />
-            Add Timestamp ({formatTime(demoTime)})
+            <Play className="h-4 w-4 fill-current" />
           </Button>
-          <div className="text-xs text-muted-foreground flex items-center">
-            Try clicking to add the current time to your note!
-          </div>
+
+          {/* Share */}
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-blue-500/10 hover:text-blue-500"
+            onClick={handleShare}
+            title="Copy link to clipboard"
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+
+          {/* Emoji */}
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-muted"
+            title="Add emoji"
+          >
+            <Smile className="h-4 w-4" />
+          </Button>
+
+          {/* Edit */}
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-amber-500/10 hover:text-amber-500"
+            onClick={() => setIsEditing(!isEditing)}
+            title="Edit note"
+          >
+            <Edit2 className="h-4 w-4" />
+          </Button>
+
+          {/* Delete */}
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+            onClick={handleDelete}
+            title="Delete note"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
 
-        {/* Note editor */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Your Note:</label>
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-[200px] font-mono text-sm resize-none"
-            placeholder="Click to start editing..."
-          />
-          <p className="text-xs text-muted-foreground">
-            This is a live demo - try editing the text or adding timestamps!
-          </p>
+        {/* Note Content */}
+        {isEditing ? (
+          <div className="space-y-3">
+            <MarkdownToolbar onInsert={handleInsertMarkdown} />
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Write your note in markdown..."
+              className="min-h-[200px] font-mono text-sm border-primary/20 focus:border-primary"
+              dir="auto"
+              autoFocus
+            />
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsEditing(false)}
+            >
+              Done Editing
+            </Button>
+          </div>
+        ) : (
+          <div className="relative" dir="auto">
+            <MarkdownRenderer
+              content={content}
+              editable={false}
+              onContentChange={() => {}}
+            />
+          </div>
+        )}
+
+        {/* Metadata Footer */}
+        <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span className="text-base" title="Note status">
+              {emoji}
+            </span>
+            <span>{new Date().toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground/70">Demo</span>
+            <button
+              onClick={handlePlay}
+              className="inline-flex items-center gap-1 font-mono text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              title="Jump to timestamp"
+            >
+              2:45
+            </button>
+          </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 }
