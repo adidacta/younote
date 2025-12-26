@@ -67,11 +67,17 @@
     scrollbar-gutter: stable;
     /* Ensure scrollbar is always visible to prevent shifts */
     overflow-y: scroll;
+    /* Prevent horizontal overflow that could cause width changes */
+    overflow-x: hidden;
   }
   body {
     @apply bg-background text-foreground;
+    /* Lock body width to prevent shifts when dropdowns open */
+    width: 100%;
     /* Prevent body from adding overflow when modals/dropdowns open */
     overflow-x: hidden;
+    /* Ensure consistent positioning */
+    position: relative;
   }
 }
 
@@ -79,12 +85,28 @@
 [data-radix-popper-content-wrapper] {
   /* Ensure portal content doesn't affect layout */
   z-index: 50;
+  /* Position absolutely to prevent affecting document flow */
+  position: absolute;
+}
+
+/* Prevent any Radix portal from affecting document height */
+[data-radix-portal] {
+  position: fixed;
+  z-index: 50;
 }
 
 /* Prevent body scroll lock from causing layout shift */
 body[style*="overflow: hidden"] {
   /* Maintain scrollbar space even when overflow is hidden */
   padding-right: 0 !important;
+  /* Ensure width doesn't change */
+  width: 100% !important;
+}
+
+/* Lock main containers to prevent width changes */
+main, header, footer {
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Smooth page transitions */

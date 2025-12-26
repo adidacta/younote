@@ -23,16 +23,12 @@ export function EmojiPicker({ currentEmoji, onEmojiSelect, disabled }: EmojiPick
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
-          className="h-7 w-7 p-0 hover:bg-muted"
+          size="icon"
+          className="h-8 w-8 hover:bg-muted"
           disabled={disabled}
-          title={currentEmoji ? "Change emoji" : "Add emoji"}
+          title={currentEmoji ? `Current: ${currentEmoji} - Click to change` : "Add emoji"}
         >
-          {currentEmoji ? (
-            <span className="text-base">{currentEmoji}</span>
-          ) : (
-            <Smile className="h-4 w-4 text-muted-foreground" />
-          )}
+          <Smile className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-auto min-w-0">
