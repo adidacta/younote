@@ -134,7 +134,7 @@ export function DemoNoteEditor() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Write your note in markdown..."
-              className="min-h-[200px] font-mono text-sm border-primary/20 focus:border-primary"
+              className="min-h-[200px] font-[family-name:var(--font-noto-sans-hebrew)] text-sm border-primary/20 focus:border-primary"
               dir="auto"
               autoFocus
             />

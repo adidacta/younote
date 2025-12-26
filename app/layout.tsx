@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Noto_Sans_Hebrew } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { TransitionProvider } from "@/components/transition-provider";
@@ -24,6 +24,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const notoSansHebrew = Noto_Sans_Hebrew({
+  variable: "--font-noto-sans-hebrew",
+  display: "swap",
+  subsets: ["hebrew"],
+  weight: ["400"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} ${notoSansHebrew.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

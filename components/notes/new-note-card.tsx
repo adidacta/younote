@@ -169,7 +169,7 @@ export function NewNoteCard({ pageId }: NewNoteCardProps) {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder="Start typing your note... (timestamp will be captured on first keystroke)"
-            className="min-h-[120px] font-mono text-sm border-primary/20 focus:border-primary focus:ring-primary/20 bg-background"
+            className="min-h-[120px] font-[family-name:var(--font-noto-sans-hebrew)] text-sm border-primary/20 focus:border-primary focus:ring-primary/20 bg-background"
             dir="auto"
             disabled={isCreating}
           />

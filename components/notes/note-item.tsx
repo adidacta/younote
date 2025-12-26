@@ -330,7 +330,7 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
 - bullet list
 1. numbered list
 - [ ] checkbox"
-                className="min-h-[150px] font-mono text-sm border-primary/20 focus:border-primary focus:ring-primary/20"
+                className="min-h-[150px] font-[family-name:var(--font-noto-sans-hebrew)] text-sm border-primary/20 focus:border-primary focus:ring-primary/20"
                 dir="auto"
                 autoFocus
               />
@@ -447,10 +447,11 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
             {note.timestamp_seconds != null && note.timestamp_seconds >= 0 && (
               <button
                 onClick={handleTimestampClick}
-                className="inline-flex items-center gap-1 font-mono text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 font-mono text-foreground hover:text-primary transition-colors cursor-pointer"
                 title={`Jump to ${formatTimestamp(note.timestamp_seconds)}`}
               >
                 {formatTimestamp(note.timestamp_seconds)}
+                <Play className="h-3 w-3 fill-current" />
               </button>
             )}
           </div>
