@@ -4,9 +4,10 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Edit2, Trash2, Play, Share2, Smile, Sparkles } from "lucide-react";
+import { Edit2, Trash2, Play, Share2, Sparkles } from "lucide-react";
 import { MarkdownRenderer } from "./markdown/markdown-renderer";
 import { MarkdownToolbar } from "./notes/markdown-toolbar";
+import { EmojiPicker } from "./notes/emoji-picker";
 import { toast } from "sonner";
 
 const DEMO_CONTENT = `# Welcome to YouNote!
@@ -19,11 +20,7 @@ This is an **interactive demo** - try hovering over this card to see the action 
 - 🎯 Click to jump back instantly
 - 📂 Organize by topic
 
-Try clicking **Edit** to modify this note, or **Share** to see how sharing works!
-
----
-
-*This demo runs entirely in your browser - no sign-up required.*`;
+Try clicking **Edit** to modify this note, or **Share** to see how sharing works!`;
 
 export function DemoNoteEditor() {
   const [isEditing, setIsEditing] = useState(false);
@@ -48,8 +45,13 @@ export function DemoNoteEditor() {
     toast.info("This would jump to the timestamp in the video!");
   };
 
+  const handleEmojiSelect = (selectedEmoji: string | null) => {
+    setEmoji(selectedEmoji || "✨");
+    toast.success("Emoji updated! In the real app, this saves automatically.");
+  };
+
   return (
-    <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20">
+    <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20 self-start">
       {/* "Try it" badge */}
       <div className="absolute -top-3 left-4 z-20">
         <div className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
@@ -83,15 +85,11 @@ export function DemoNoteEditor() {
             <Share2 className="h-4 w-4" />
           </Button>
 
-          {/* Emoji */}
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 hover:bg-muted"
-            title="Add emoji"
-          >
-            <Smile className="h-4 w-4" />
-          </Button>
+          {/* Emoji Picker */}
+          <EmojiPicker
+            currentEmoji={emoji}
+            onEmojiSelect={handleEmojiSelect}
+          />
 
           {/* Edit */}
           <Button
