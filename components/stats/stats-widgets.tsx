@@ -112,24 +112,24 @@ function StatCard({ title, total, recent, icon, iconColor }: StatCardProps) {
 }
 
 export function StatsWidgets() {
-  const [stats, setStats] = useState<StatsData | null>(() => {
-    // Try to load cached stats from sessionStorage
-    if (typeof window !== 'undefined') {
-      const cached = sessionStorage.getItem('stats-data');
-      if (cached) {
-        try {
-          return JSON.parse(cached);
-        } catch {
-          return null;
-        }
-      }
-    }
-    return null;
-  });
-  const [isLoading, setIsLoading] = useState(!stats);
+  const [stats, setStats] = useState<StatsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check sessionStorage after mount (client-side only)
+    const cached = sessionStorage.getItem('stats-data');
+    if (cached) {
+      try {
+        const parsedStats = JSON.parse(cached);
+        setStats(parsedStats);
+        setIsLoading(false);
+        return; // Skip fetch if we have cached data
+      } catch {
+        // If parsing fails, continue to fetch
+      }
+    }
+
     async function fetchStats() {
       try {
         const response = await fetch("/api/stats");
