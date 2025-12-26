@@ -114,7 +114,7 @@ export default async function LandingPage() {
           {/* CTA */}
           <div className="flex gap-4 justify-center items-center flex-wrap">
             <Button asChild size="lg" className="text-lg px-8">
-              <Link href="/auth/sign-up">Get started for free</Link>
+              <Link href="/auth/sign-up">Get started</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-8">
               <Link href="/auth/login">Sign in</Link>
@@ -145,7 +145,7 @@ export default async function LandingPage() {
                 <p className="text-muted-foreground">
                   Master your coursework and ace your exams with organized study materials.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="hidden md:flex md:flex-col space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <span>Take notes on lecture videos and course content</span>
@@ -180,7 +180,7 @@ export default async function LandingPage() {
                 <p className="text-muted-foreground">
                   Stay ahead in your career by turning tutorials into practical knowledge.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="hidden md:flex md:flex-col space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <span>Learn new frameworks and tools at your own pace</span>
@@ -215,7 +215,7 @@ export default async function LandingPage() {
                 <p className="text-muted-foreground">
                   Organize video sources and build comprehensive research libraries.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="hidden md:flex md:flex-col space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <span>Catalog interviews, lectures, and documentary content</span>
@@ -294,8 +294,59 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Screenshots Section */}
       <section className="py-24 bg-muted/30">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold">See YouNote in action</h2>
+            <p className="text-xl text-muted-foreground">Simple, powerful, and built for learning</p>
+          </div>
+
+          <div className="space-y-16">
+            {/* Screenshot 1: Video player with notes */}
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1 space-y-4">
+                <h3 className="text-2xl font-bold">Watch and take notes side-by-side</h3>
+                <p className="text-lg text-muted-foreground">
+                  YouTube player on the left, your notes on the right. Click the timestamp button while watching to capture the exact moment.
+                </p>
+              </div>
+              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
+                <p className="text-muted-foreground">[Screenshot: Video player + notes editor]</p>
+              </div>
+            </div>
+
+            {/* Screenshot 2: Notebooks view */}
+            <div className="flex flex-col md:flex-row-reverse gap-8 items-center">
+              <div className="flex-1 space-y-4">
+                <h3 className="text-2xl font-bold">Organize by topic or project</h3>
+                <p className="text-lg text-muted-foreground">
+                  Create notebooks for different subjects, courses, or interests. See all your pages at a glance with thumbnails and note counts.
+                </p>
+              </div>
+              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
+                <p className="text-muted-foreground">[Screenshot: Notebooks grid view]</p>
+              </div>
+            </div>
+
+            {/* Screenshot 3: Timestamped notes */}
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="flex-1 space-y-4">
+                <h3 className="text-2xl font-bold">Jump back to any moment instantly</h3>
+                <p className="text-lg text-muted-foreground">
+                  Every note shows its timestamp. Click to jump directly to that moment in the video. Perfect for review and study.
+                </p>
+              </div>
+              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
+                <p className="text-muted-foreground">[Screenshot: Notes with timestamps]</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-24">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center space-y-4 mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">
@@ -436,7 +487,7 @@ export default async function LandingPage() {
           </div>
           <div className="flex gap-4 justify-center items-center flex-wrap">
             <Button asChild size="lg" className="text-lg px-8">
-              <Link href="/auth/sign-up">Get started for free</Link>
+              <Link href="/auth/sign-up">Get started</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-8">
               <Link href="/auth/login">Sign in</Link>
