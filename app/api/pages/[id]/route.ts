@@ -20,24 +20,35 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const { title } = body;
+    const { title, notebook_id } = body;
 
-    if (title === undefined) {
+    // Build update object with only provided fields
+    const updates: { title?: string; notebook_id?: string } = {};
+
+    if (title !== undefined) {
+      const trimmedTitle = title.trim();
+      if (trimmedTitle.length > 120) {
+        return NextResponse.json(
+          { error: 'Title must be 120 characters or less' },
+          { status: 400 }
+        );
+      }
+      updates.title = trimmedTitle;
+    }
+
+    if (notebook_id !== undefined) {
+      updates.notebook_id = notebook_id;
+    }
+
+    // Require at least one field to update
+    if (Object.keys(updates).length === 0) {
       return NextResponse.json(
-        { error: 'title is required' },
+        { error: 'No fields to update' },
         { status: 400 }
       );
     }
 
-    const trimmedTitle = title.trim();
-    if (trimmedTitle.length > 120) {
-      return NextResponse.json(
-        { error: 'Title must be 120 characters or less' },
-        { status: 400 }
-      );
-    }
-
-    const page = await updatePage(id, { title: trimmedTitle });
+    const page = await updatePage(id, updates);
 
     return NextResponse.json(page);
   } catch (error) {

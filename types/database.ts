@@ -73,7 +73,7 @@ export type SharedNoteInsert = Omit<SharedNote, 'id' | 'created_at' | 'expires_a
 // Update types (all fields optional except id)
 export type UserProfileUpdate = Partial<Omit<UserProfile, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
 export type NotebookUpdate = Partial<Omit<Notebook, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
-export type PageUpdate = Partial<Omit<Page, 'id' | 'user_id' | 'notebook_id' | 'created_at' | 'updated_at'>>;
+export type PageUpdate = Partial<Omit<Page, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
 export type NoteUpdate = Partial<Omit<Note, 'id' | 'user_id' | 'page_id' | 'created_at' | 'updated_at'>>;
 
 // YouTube API response types

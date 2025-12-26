@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -22,8 +22,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { LayoutGrid, Table2, Play, StickyNote, Clock, MoreVertical, Pencil, Trash2 } from "lucide-react";
-import type { Page } from "@/types/database";
+import { LayoutGrid, Table2, Play, StickyNote, Clock, MoreVertical, Pencil, Trash2, FolderInput } from "lucide-react";
+import type { Page, Notebook } from "@/types/database";
 import { toast } from "sonner";
 
 interface PageWithStats extends Page {
@@ -50,12 +50,33 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
   const [view, setView] = useState<"grid" | "table">("grid");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [pageToDelete, setPageToDelete] = useState<PageWithStats | null>(null);
   const [pageToRename, setPageToRename] = useState<PageWithStats | null>(null);
+  const [pageToMove, setPageToMove] = useState<PageWithStats | null>(null);
   const [newName, setNewName] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
+  const [notebooks, setNotebooks] = useState<Notebook[]>([]);
+  const [selectedNotebookId, setSelectedNotebookId] = useState("");
   const router = useRouter();
+
+  // Fetch notebooks for move dialog
+  useEffect(() => {
+    async function fetchNotebooks() {
+      try {
+        const response = await fetch('/api/notebooks');
+        if (response.ok) {
+          const data = await response.json();
+          setNotebooks(data);
+        }
+      } catch (error) {
+        console.error('Error fetching notebooks:', error);
+      }
+    }
+    fetchNotebooks();
+  }, []);
 
   const handleRenameClick = (page: PageWithStats, e: React.MouseEvent) => {
     e.preventDefault();
@@ -90,6 +111,42 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
       setIsRenaming(false);
       setPageToRename(null);
       setNewName("");
+    }
+  };
+
+  const handleMoveClick = (page: PageWithStats, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPageToMove(page);
+    setSelectedNotebookId("");
+    setMoveDialogOpen(true);
+  };
+
+  const handleMoveConfirm = async () => {
+    if (!pageToMove || !selectedNotebookId) return;
+
+    setIsMoving(true);
+    try {
+      const response = await fetch(`/api/pages/${pageToMove.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notebook_id: selectedNotebookId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to move page');
+      }
+
+      toast.success('Page moved successfully');
+      router.refresh();
+      setMoveDialogOpen(false);
+    } catch (error) {
+      console.error('Error moving page:', error);
+      toast.error('Failed to move page');
+    } finally {
+      setIsMoving(false);
+      setPageToMove(null);
+      setSelectedNotebookId("");
     }
   };
 
@@ -209,6 +266,10 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                       <Pencil className="mr-2 h-4 w-4" />
                       Rename
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => handleMoveClick(page, e)}>
+                      <FolderInput className="mr-2 h-4 w-4" />
+                      Move to...
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => handleDeleteClick(page, e)}>
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
@@ -283,6 +344,7 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                         size="sm"
                         className="h-8 w-8 p-0"
                         onClick={(e) => handleRenameClick(page, e)}
+                        title="Rename"
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -290,7 +352,17 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0"
+                        onClick={(e) => handleMoveClick(page, e)}
+                        title="Move to..."
+                      >
+                        <FolderInput className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
                         onClick={(e) => handleDeleteClick(page, e)}
+                        title="Delete"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -363,6 +435,45 @@ export function PagesView({ pages, notebookId }: PagesViewProps) {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Move dialog */}
+      <AlertDialog open={moveDialogOpen} onOpenChange={setMoveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Move Page</AlertDialogTitle>
+            <AlertDialogDescription>
+              Move "{pageToMove?.title}" to another notebook
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <select
+              value={selectedNotebookId}
+              onChange={(e) => setSelectedNotebookId(e.target.value)}
+              className="w-full px-3 py-2 border border-input rounded-md bg-background"
+              disabled={isMoving}
+              autoFocus
+            >
+              <option value="">Select a notebook...</option>
+              {notebooks
+                .filter(nb => nb.id !== notebookId)
+                .map(notebook => (
+                  <option key={notebook.id} value={notebook.id}>
+                    {notebook.title}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isMoving}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleMoveConfirm}
+              disabled={isMoving || !selectedNotebookId}
+            >
+              {isMoving ? "Moving..." : "Move"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
