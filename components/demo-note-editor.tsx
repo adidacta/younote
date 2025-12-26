@@ -20,7 +20,12 @@ This is an **interactive demo** - try hovering over this card to see the action 
 - 🎯 Click to jump back instantly
 - 📂 Organize by topic
 
-Try clicking **Edit** to modify this note, or **Share** to see how sharing works!`;
+## Try it yourself:
+- [ ] Click to check this box
+- [ ] Click **Edit** to modify this note
+- [ ] Click **Share** to see how sharing works
+
+*Hover over the card to reveal the action bar!*`;
 
 export function DemoNoteEditor() {
   const [isEditing, setIsEditing] = useState(false);
@@ -138,8 +143,11 @@ export function DemoNoteEditor() {
           <div className="relative" dir="auto">
             <MarkdownRenderer
               content={content}
-              editable={false}
-              onContentChange={() => {}}
+              editable={true}
+              onContentChange={(newContent) => {
+                setContent(newContent);
+                toast.success("Checkbox toggled! In the real app, this saves automatically.");
+              }}
             />
           </div>
         )}
