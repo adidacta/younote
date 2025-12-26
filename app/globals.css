@@ -65,10 +65,26 @@
   html {
     /* Reserve space for scrollbar to prevent layout shift */
     scrollbar-gutter: stable;
+    /* Ensure scrollbar is always visible to prevent shifts */
+    overflow-y: scroll;
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent body from adding overflow when modals/dropdowns open */
+    overflow-x: hidden;
   }
+}
+
+/* Prevent layout shift when Radix UI portals open */
+[data-radix-popper-content-wrapper] {
+  /* Ensure portal content doesn't affect layout */
+  z-index: 50;
+}
+
+/* Prevent body scroll lock from causing layout shift */
+body[style*="overflow: hidden"] {
+  /* Maintain scrollbar space even when overflow is hidden */
+  padding-right: 0 !important;
 }
 
 /* Smooth page transitions */
