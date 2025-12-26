@@ -15,11 +15,12 @@ interface EmojiPickerProps {
   currentEmoji?: string | null;
   onEmojiSelect: (emoji: string | null) => void;
   disabled?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function EmojiPicker({ currentEmoji, onEmojiSelect, disabled }: EmojiPickerProps) {
+export function EmojiPicker({ currentEmoji, onEmojiSelect, disabled, onOpenChange }: EmojiPickerProps) {
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

@@ -37,6 +37,7 @@ export function DemoNoteEditor() {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(DEMO_CONTENT);
   const [emoji, setEmoji] = useState("✨");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
   const handleInsertMarkdown = (before: string, after: string = '') => {
     // Simple markdown insertion for demo
@@ -74,7 +75,9 @@ export function DemoNoteEditor() {
 
       <CardContent className="pt-4 relative">
         {/* Action Bar (shows on hover) */}
-        <div className="absolute -top-3 right-4 opacity-0 group-hover/card:opacity-100 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10">
+        <div className={`absolute -top-3 right-4 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10 ${
+          isEmojiPickerOpen ? 'opacity-100' : 'opacity-0 group-hover/card:opacity-100'
+        }`}>
           {/* Play */}
           <Button
             size="icon"
@@ -101,6 +104,7 @@ export function DemoNoteEditor() {
           <EmojiPicker
             currentEmoji={emoji}
             onEmojiSelect={handleEmojiSelect}
+            onOpenChange={setIsEmojiPickerOpen}
           />
 
           {/* Edit */}

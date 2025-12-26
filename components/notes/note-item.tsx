@@ -34,6 +34,7 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
   const [showHighlight, setShowHighlight] = useState(isHighlighted);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -250,7 +251,9 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
     >
       <CardContent className="pt-4 relative">
         {/* Hover Toolbar */}
-        <div className="absolute -top-3 right-4 opacity-0 group-hover/card:opacity-100 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10">
+        <div className={`absolute -top-3 right-4 transition-all duration-200 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1 z-10 ${
+          isEmojiPickerOpen ? 'opacity-100' : 'opacity-0 group-hover/card:opacity-100'
+        }`}>
           {/* Play - Skip to timestamp */}
           <Button
             size="icon"
@@ -279,6 +282,7 @@ export function NoteItem({ note, videoId, isHighlighted, searchQuery, readOnly =
             <EmojiPicker
               currentEmoji={emoji}
               onEmojiSelect={handleEmojiSelect}
+              onOpenChange={setIsEmojiPickerOpen}
             />
           )}
 
