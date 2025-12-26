@@ -506,6 +506,32 @@ Implemented Open Graph and Twitter Card metadata for beautiful social media link
 - Added `generateMetadata()` to both share page routes
 - Shared notes now display with rich previews on WhatsApp, Facebook, Twitter, LinkedIn, Slack, etc.
 
+### UI/UX Improvements (December 26, 2025) 🟢
+**Completed**: 2025-12-26
+**Type**: Enhancement - User Experience
+
+Multiple UI/UX improvements to notes and sharing:
+
+**Timestamp Play Icons**:
+- Added black play icon to the right of all note timestamps
+- Icon becomes primary color on hover for clear clickability
+- Applied to both demo and real notes
+
+**Hebrew Font Support**:
+- Integrated Noto Sans Hebrew Regular for better Hebrew text rendering
+- Applied to all note editing textareas (note-item, new-note-card, demo-note-editor)
+- Replaces thin, hard-to-read font-mono for Hebrew characters
+
+**Action Bar Visibility**:
+- Action bar now stays visible when emoji picker is open
+- Prevents confusing disappearance when selecting emojis
+- Added state tracking for dropdown open/closed state
+
+**Share Button Feedback**:
+- Instant "Copying link..." toast on share button click
+- Uses toast.promise() for smooth loading → success → error states
+- Eliminates delay concern - users get immediate feedback
+
 ### 1. Fix Breadcrumb Animation 🟢
 **Completed**: 2025-12-22
 **Type**: Bug Fix
