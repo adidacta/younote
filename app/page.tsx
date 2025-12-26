@@ -16,6 +16,7 @@ import { BookOpen, PlayCircle, Share2, Target, GraduationCap, Briefcase, Search,
 import { StatsWidgets } from "@/components/stats/stats-widgets";
 import { PageTransition } from "@/components/page-transition";
 import { AnnouncementsButton } from "@/components/announcements/announcements-button";
+import { DemoNoteEditor } from "@/components/demo-note-editor";
 import { Suspense } from "react";
 
 export default async function LandingPage() {
@@ -159,19 +160,9 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* Right: Hero Image */}
+            {/* Right: Interactive Demo */}
             <div className="relative">
-              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-border">
-                <Image
-                  src="/images/younote-note.png"
-                  alt="YouNote app interface showing timestamped notes"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto"
-                  priority
-                  unoptimized
-                />
-              </div>
+              <DemoNoteEditor />
             </div>
           </div>
         </div>
