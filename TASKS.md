@@ -279,61 +279,6 @@ Connect with a transactional email service to send automated emails (password re
 
 ---
 
-### 23. Social Media Sharing Metadata (Open Graph & Twitter Cards) 🔴
-**Priority**: Medium
-**Type**: Feature - SEO & Sharing
-
-**Objective**:
-Add proper Open Graph and Twitter Card metadata so shared notes look great on social media, WhatsApp, Slack, etc.
-
-**Current Issue**:
-- When users share note links, they display with generic/no preview
-- Missing thumbnail, title, description in link previews
-
-**Required Metadata**:
-- **Open Graph (Facebook, WhatsApp, LinkedIn)**:
-  - `og:title` - Note title or first line
-  - `og:description` - Note excerpt
-  - `og:image` - Note thumbnail (video thumbnail or custom image)
-  - `og:url` - Canonical share URL
-  - `og:type` - "article"
-
-- **Twitter Cards**:
-  - `twitter:card` - "summary_large_image"
-  - `twitter:title` - Note title
-  - `twitter:description` - Note excerpt
-  - `twitter:image` - Same as og:image
-
-**Dynamic Metadata Generation**:
-- Extract note title (first heading or first line of content)
-- Generate description (first 150 chars of note)
-- Use YouTube video thumbnail as preview image
-- Create custom OG image template with note preview (optional enhancement)
-
-**Technical Implementation**:
-- Update `app/share/note/[token]/page.tsx` with Next.js metadata API
-- Create `generateMetadata()` function to fetch note data
-- Add metadata to shared page routes
-- Test with Meta Debugger, Twitter Card Validator
-
-**Files to Modify**:
-- `app/share/note/[token]/page.tsx` - Add generateMetadata
-- `app/share/[token]/page.tsx` - Add generateMetadata for full pages
-- Create OG image generator (optional) using `@vercel/og`
-
-**Questions Before Implementation**:
-1. For OG images:
-   - Use YouTube thumbnail as-is?
-   - Or generate custom image with note preview overlaid?
-2. Note title extraction logic:
-   - First H1/H2 heading?
-   - Or first line of text?
-   - Fallback if empty?
-3. Description length - 150 or 200 characters?
-4. Should we add custom favicon for shared pages?
-
----
-
 ### 24. Publish Chrome Extension to Chrome Web Store 🔴
 **Priority**: High
 **Type**: Deployment - Chrome Extension
@@ -548,6 +493,18 @@ Get the app verified by Google for OAuth authentication to remove "unverified ap
 
 
 ## Completed Tasks
+
+### 23. Social Media Sharing Metadata (Open Graph & Twitter Cards) 🟢
+**Completed**: 2025-12-26
+**Type**: Feature - SEO & Sharing
+
+Implemented Open Graph and Twitter Card metadata for beautiful social media link previews:
+- Created metadata extraction utilities (`lib/metadata/extract-metadata.ts`)
+- Extracts note titles from markdown (first H1/H2 or first line)
+- Generates 160-character descriptions from note content
+- Uses YouTube video thumbnails as OG images
+- Added `generateMetadata()` to both share page routes
+- Shared notes now display with rich previews on WhatsApp, Facebook, Twitter, LinkedIn, Slack, etc.
 
 ### 1. Fix Breadcrumb Animation 🟢
 **Completed**: 2025-12-22
