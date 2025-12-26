@@ -181,7 +181,287 @@ Implement a system to collect feature requests and bug reports from users within
 
 ---
 
+### 21. Improve Chrome Extension Authentication 🔴
+**Priority**: High
+**Type**: Feature - Chrome Extension Enhancement
 
+**Objective**:
+Streamline the Chrome extension authentication flow to eliminate the need for users to manually click "connect extension" button.
+
+**Current Issue**:
+- Users must manually click "connect extension" after installing the extension
+- Extra friction in onboarding process
+- Not intuitive for non-technical users
+
+**Proposed Solution**:
+- Implement automatic authentication detection when extension is installed
+- Use Chrome's `chrome.identity` API for seamless OAuth flow
+- Store auth tokens securely in extension storage
+- Auto-sync with web app session when both are open
+
+**Technical Approaches**:
+1. **Chrome Identity API**: Use `chrome.identity.getAuthToken()` for Google OAuth
+2. **WebSocket Connection**: Establish persistent connection between extension and web app
+3. **Shared Session**: Use service worker to sync auth state automatically
+4. **Deep Link**: Open web app in new tab to complete OAuth, then close automatically
+
+**Files to Modify**:
+- `extension/background.js` - Auto-detect and handle authentication
+- `extension/manifest.json` - Add identity permissions
+- Web app OAuth callback to handle extension authentication
+- Extension popup UI to remove manual "connect" button
+
+**Questions Before Implementation**:
+1. Which authentication approach is most seamless?
+2. Should we keep manual connect as a fallback option?
+3. How to handle token refresh in the extension?
+4. Security considerations for storing tokens in extension?
+
+---
+
+### 22. Integrate Transactional Email Provider 🔴
+**Priority**: Medium
+**Type**: Feature - Email Integration
+
+**Objective**:
+Connect with a transactional email service to send automated emails (password reset, notifications, sharing, etc.).
+
+**Use Cases**:
+- Password reset emails
+- Email verification
+- Share notifications ("Someone shared a note with you")
+- Weekly digest emails (optional)
+- Account activity notifications
+- Welcome emails for new users
+
+**Email Provider Options**:
+1. **Resend** (Recommended)
+   - Pros: Developer-friendly, great API, affordable, React email templates
+   - Cons: Newer service
+   - Pricing: Free tier (3,000 emails/month)
+
+2. **SendGrid**
+   - Pros: Established, reliable, good free tier
+   - Cons: Complex API, older UI
+   - Pricing: Free tier (100 emails/day)
+
+3. **Postmark**
+   - Pros: Great deliverability, simple API
+   - Cons: More expensive
+   - Pricing: 100 free emails/month trial
+
+4. **AWS SES**
+   - Pros: Cheap, scalable
+   - Cons: More setup, requires AWS infrastructure
+   - Pricing: $0.10 per 1,000 emails
+
+**Technical Requirements**:
+- Set up email provider account
+- Configure DNS records (SPF, DKIM, DMARC)
+- Create email templates
+- Build email sending utility functions
+- Add email sending to relevant API endpoints
+- Handle bounces and complaints
+
+**Files to Create/Modify**:
+- `lib/email/client.ts` - Email provider client setup
+- `lib/email/templates/` - Email template components
+- `app/api/auth/reset-password/route.ts` - Send reset emails
+- Environment variables for email API keys
+
+**Questions Before Implementation**:
+1. Which email provider do you prefer?
+2. Which emails should we send immediately vs. later?
+3. Email template design - plain text, HTML, or React Email?
+4. Sender email address (e.g., noreply@younote.com)?
+5. Domain for sending emails - need to set up?
+6. Should we include unsubscribe options for non-critical emails?
+
+---
+
+### 23. Social Media Sharing Metadata (Open Graph & Twitter Cards) 🔴
+**Priority**: Medium
+**Type**: Feature - SEO & Sharing
+
+**Objective**:
+Add proper Open Graph and Twitter Card metadata so shared notes look great on social media, WhatsApp, Slack, etc.
+
+**Current Issue**:
+- When users share note links, they display with generic/no preview
+- Missing thumbnail, title, description in link previews
+
+**Required Metadata**:
+- **Open Graph (Facebook, WhatsApp, LinkedIn)**:
+  - `og:title` - Note title or first line
+  - `og:description` - Note excerpt
+  - `og:image` - Note thumbnail (video thumbnail or custom image)
+  - `og:url` - Canonical share URL
+  - `og:type` - "article"
+
+- **Twitter Cards**:
+  - `twitter:card` - "summary_large_image"
+  - `twitter:title` - Note title
+  - `twitter:description` - Note excerpt
+  - `twitter:image` - Same as og:image
+
+**Dynamic Metadata Generation**:
+- Extract note title (first heading or first line of content)
+- Generate description (first 150 chars of note)
+- Use YouTube video thumbnail as preview image
+- Create custom OG image template with note preview (optional enhancement)
+
+**Technical Implementation**:
+- Update `app/share/note/[token]/page.tsx` with Next.js metadata API
+- Create `generateMetadata()` function to fetch note data
+- Add metadata to shared page routes
+- Test with Meta Debugger, Twitter Card Validator
+
+**Files to Modify**:
+- `app/share/note/[token]/page.tsx` - Add generateMetadata
+- `app/share/[token]/page.tsx` - Add generateMetadata for full pages
+- Create OG image generator (optional) using `@vercel/og`
+
+**Questions Before Implementation**:
+1. For OG images:
+   - Use YouTube thumbnail as-is?
+   - Or generate custom image with note preview overlaid?
+2. Note title extraction logic:
+   - First H1/H2 heading?
+   - Or first line of text?
+   - Fallback if empty?
+3. Description length - 150 or 200 characters?
+4. Should we add custom favicon for shared pages?
+
+---
+
+### 24. Publish Chrome Extension to Chrome Web Store 🔴
+**Priority**: High
+**Type**: Deployment - Chrome Extension
+
+**Objective**:
+Publish the Chrome extension to the Chrome Web Store and add installation instructions in the web app.
+
+**Prerequisites**:
+- Complete Chrome extension development (Task #20)
+- Improve authentication flow (Task #21)
+- Test extension thoroughly across platforms
+- Create extension icons (16x16, 48x48, 128x128)
+- Write extension description and screenshots
+
+**Chrome Web Store Submission Requirements**:
+- Developer account ($5 one-time fee)
+- Extension icons in all required sizes
+- Promotional images:
+  - Small tile: 440x280
+  - Marquee: 1400x560
+  - Screenshots: 1280x800 or 640x400
+- Privacy policy URL (already have this)
+- Detailed description
+- Category selection
+- Version number and changelog
+
+**In-App Installation Instructions**:
+- Create dedicated page: `/extension` or section in `/settings`
+- Step-by-step installation guide with screenshots
+- Chrome Web Store link with "Add to Chrome" button
+- Video demo of extension in action (optional)
+- FAQ section for common issues
+- Link from navbar or settings menu
+
+**Promotional Materials Needed**:
+- 3-5 screenshots of extension in action
+- Short description (132 chars max for Web Store)
+- Detailed description (explaining features)
+- Extension demo video (optional but recommended)
+
+**Files to Create**:
+- `app/extension/page.tsx` - Installation guide page
+- Extension promotional images
+- Chrome Web Store listing copy
+- Update navbar/footer with extension link
+
+**Post-Publication**:
+- Monitor reviews and ratings
+- Respond to user feedback
+- Track installation analytics
+- Plan update schedule
+
+**Questions Before Implementation**:
+1. Extension name: "YouNote" or "YouNote - YouTube Notes"?
+2. Target categories for Web Store?
+3. Should we create a video demo? (YouTube video)
+4. Beta testing before public release?
+5. Versioning strategy (semantic versioning)?
+
+---
+
+### 25. Google OAuth App Verification 🔴
+**Priority**: High
+**Type**: Compliance - OAuth Verification
+
+**Objective**:
+Get the app verified by Google for OAuth authentication to remove "unverified app" warning and enable all users to sign in with Google.
+
+**Current Issue**:
+- App shows "Google hasn't verified this app" warning
+- Can scare users away from signing in
+- Limited to test users until verified
+- Affects trust and conversion rates
+
+**Google Verification Requirements**:
+1. **Domain Verification**:
+   - Verify ownership of younote.com (or deployed domain)
+   - Add DNS TXT record or upload verification file
+
+2. **OAuth Consent Screen**:
+   - Complete all required fields
+   - Add app logo (120x120 minimum)
+   - Privacy Policy URL ✅ (already have)
+   - Terms of Service URL ✅ (already have)
+   - Authorized domains list
+   - Support email address
+
+3. **Scopes Justification**:
+   - Explain why each OAuth scope is needed
+   - Current scopes: email, profile
+   - Prepare written explanation for each
+
+4. **App Homepage**:
+   - Must be publicly accessible
+   - Show clear description of app
+   - Link to privacy policy and terms
+
+5. **Demonstration Video**:
+   - YouTube video showing OAuth flow
+   - Demonstrate how user data is used
+   - Show consent screen in action
+
+**Verification Process**:
+1. Submit verification request in Google Cloud Console
+2. Wait for Google review (can take 3-6 weeks)
+3. Respond to any questions from Google reviewers
+4. Fix any issues and resubmit if needed
+
+**Files to Create/Modify**:
+- OAuth consent screen in Google Cloud Console
+- Verification documentation
+- Demo video for Google reviewers
+- App logo for OAuth screen
+
+**Questions Before Implementation**:
+1. Domain to use for verification (younote.com vs younote-two.vercel.app)?
+2. Support email address for OAuth screen?
+3. App logo ready? (120x120 px minimum)
+4. Should we start verification now or wait until extension is ready?
+5. Do we need additional OAuth scopes in the future?
+
+**Important Notes**:
+- Process can take 3-6 weeks
+- Must maintain compliance after verification
+- Need to update if scopes or app purpose changes
+- Worth doing early to avoid delays in user onboarding
+
+---
 
 ### 14. Remove Next.js FAB (Network Warning) 🔴
 **Priority**: Low
