@@ -174,13 +174,13 @@ export function DemoNoteEditor() {
             })}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Play className="h-3 w-3 fill-current text-muted-foreground/70" />
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={handlePlay}
-                  className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors cursor-pointer"
                 >
+                  <Play className="h-3 w-3 fill-current" />
                   <span className="text-muted-foreground/70">Timestamp:</span>
                   <span className="font-mono">2:45</span>
                 </button>
