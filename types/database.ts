@@ -4,6 +4,7 @@ export interface UserProfile {
   id: string;
   user_id: string;
   nickname: string;
+  profile_image_url?: string | null;
   created_at: string;
   updated_at: string;
 }

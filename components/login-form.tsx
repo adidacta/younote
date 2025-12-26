@@ -144,7 +144,7 @@ export function LoginForm({
             </div>
           </div>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} method="post" action="#">
             <div className="flex flex-col gap-6 mt-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -154,6 +154,7 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   autoComplete="email"
+                  autoFocus
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -165,6 +166,7 @@ export function LoginForm({
                   <Link
                     href="/auth/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    tabIndex={-1}
                   >
                     Forgot your password?
                   </Link>
