@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 
 interface AnimatedSectionProps {
   children: ReactNode;
@@ -10,6 +10,18 @@ interface AnimatedSectionProps {
 }
 
 export function AnimatedSection({ children, className, delay = 0 }: AnimatedSectionProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // On server and initial client render, show content without animation wrapper
+  if (!mounted) {
+    return <div className={className}>{children}</div>;
+  }
+
+  // After hydration, use motion.div for animations
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
