@@ -311,8 +311,14 @@ export default async function LandingPage() {
                   YouTube player on the left, your notes on the right. Click the timestamp button while watching to capture the exact moment.
                 </p>
               </div>
-              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
-                <p className="text-muted-foreground">[Screenshot: Video player + notes editor]</p>
+              <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
+                <Image
+                  src="/images/side-by-side.png"
+                  alt="YouNote interface showing video player and notes side-by-side"
+                  width={1200}
+                  height={675}
+                  className="w-full h-auto"
+                />
               </div>
             </div>
 
@@ -324,8 +330,14 @@ export default async function LandingPage() {
                   Create notebooks for different subjects, courses, or interests. See all your pages at a glance with thumbnails and note counts.
                 </p>
               </div>
-              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
-                <p className="text-muted-foreground">[Screenshot: Notebooks grid view]</p>
+              <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
+                <Image
+                  src="/images/notebooks.png"
+                  alt="Notebooks view showing organized video pages with thumbnails"
+                  width={1200}
+                  height={675}
+                  className="w-full h-auto"
+                />
               </div>
             </div>
 
@@ -337,8 +349,14 @@ export default async function LandingPage() {
                   Every note shows its timestamp. Click to jump directly to that moment in the video. Perfect for review and study.
                 </p>
               </div>
-              <div className="flex-1 rounded-lg border-2 border-border bg-muted/50 aspect-video flex items-center justify-center">
-                <p className="text-muted-foreground">[Screenshot: Notes with timestamps]</p>
+              <div className="flex-1 rounded-lg border border-border overflow-hidden shadow-lg">
+                <Image
+                  src="/images/note.png"
+                  alt="Note with timestamp showing clickable link to video moment"
+                  width={1200}
+                  height={675}
+                  className="w-full h-auto"
+                />
               </div>
             </div>
           </div>
