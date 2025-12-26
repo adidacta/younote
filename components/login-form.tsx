@@ -153,7 +153,7 @@ export function LoginForm({
                   name="email"
                   type="email"
                   placeholder="m@example.com"
-                  autoComplete="email"
+                  autoComplete="username email"
                   autoFocus
                   required
                   value={email}
