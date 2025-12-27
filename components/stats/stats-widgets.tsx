@@ -25,15 +25,6 @@ function useCountUp(end: number, duration: number = 2000) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    // Check if animation has already played this session
-    const hasAnimated = sessionStorage.getItem('stats-animated');
-
-    if (hasAnimated) {
-      // Skip animation and show final value immediately
-      setCount(end);
-      return;
-    }
-
     let startTime: number;
     let animationFrame: number;
 
@@ -47,9 +38,6 @@ function useCountUp(end: number, duration: number = 2000) {
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
-      } else {
-        // Mark as animated once complete
-        sessionStorage.setItem('stats-animated', 'true');
       }
     };
 
@@ -117,19 +105,6 @@ export function StatsWidgets() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check sessionStorage after mount (client-side only)
-    const cached = sessionStorage.getItem('stats-data');
-    if (cached) {
-      try {
-        const parsedStats = JSON.parse(cached);
-        setStats(parsedStats);
-        setIsLoading(false);
-        return; // Skip fetch if we have cached data
-      } catch {
-        // If parsing fails, continue to fetch
-      }
-    }
-
     async function fetchStats() {
       try {
         const response = await fetch("/api/stats");
@@ -138,8 +113,6 @@ export function StatsWidgets() {
         }
         const data = await response.json();
         setStats(data);
-        // Cache stats data in sessionStorage
-        sessionStorage.setItem('stats-data', JSON.stringify(data));
       } catch (err) {
         console.error("Error fetching stats:", err);
         setError(err instanceof Error ? err.message : "Failed to load stats");
