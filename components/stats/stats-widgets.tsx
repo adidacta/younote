@@ -158,11 +158,11 @@ export function StatsWidgets() {
   return (
     <div className="grid gap-6 md:grid-cols-3">
       <StatCard
-        title="Notebooks"
-        total={stats.totalNotebooks}
-        recent={stats.notebooks24h}
-        icon={<BookOpen className="h-8 w-8" />}
-        iconColor="text-blue-600 dark:text-blue-400"
+        title="Notes"
+        total={stats.totalNotes}
+        recent={stats.notes24h}
+        icon={<StickyNote className="h-8 w-8" />}
+        iconColor="text-green-600 dark:text-green-400"
       />
       <StatCard
         title="Pages"
@@ -172,11 +172,11 @@ export function StatsWidgets() {
         iconColor="text-purple-600 dark:text-purple-400"
       />
       <StatCard
-        title="Notes"
-        total={stats.totalNotes}
-        recent={stats.notes24h}
-        icon={<StickyNote className="h-8 w-8" />}
-        iconColor="text-green-600 dark:text-green-400"
+        title="Notebooks"
+        total={stats.totalNotebooks}
+        recent={stats.notebooks24h}
+        icon={<BookOpen className="h-8 w-8" />}
+        iconColor="text-blue-600 dark:text-blue-400"
       />
     </div>
   );
