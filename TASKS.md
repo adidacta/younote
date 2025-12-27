@@ -12,6 +12,70 @@ This file tracks open tasks, bugs, and feature requests for the YouNote project.
 
 ## Current Tasks
 
+### 27. Quick Add Page from /notebooks 🔵
+**Priority**: Medium
+**Type**: Feature - Needs Discussion
+
+**Objective**:
+Add a "Quick Add" feature that allows users to quickly add a new page directly from the /notebooks view without having to first select or create a notebook.
+
+**Current Flow**:
+1. User goes to /notebooks
+2. Clicks on a notebook
+3. Clicks "New Page" button
+4. Enters YouTube URL
+
+**Proposed Flow**:
+1. User goes to /notebooks
+2. Clicks "Quick Add" (UI/UX TBD)
+3. Enters YouTube URL
+4. Optionally selects which notebook to add to (or creates new notebook)
+5. Page is created
+
+**UI/UX Questions to Resolve**:
+1. **Placement**: Where should Quick Add button/feature appear?
+   - Floating action button (FAB)?
+   - Button in navbar/header?
+   - Keyboard shortcut (e.g., Cmd+K)?
+   - Command palette command?
+   - All of the above?
+
+2. **User Flow**: What should the quick add dialog/modal include?
+   - YouTube URL input (required)
+   - Notebook selector dropdown (with "Create new notebook" option)
+   - Should it default to most recently used notebook?
+   - Auto-create page immediately or show preview first?
+
+3. **Notebook Selection**:
+   - Required or optional?
+   - If optional, where does page go? (create default "Quick Notes" notebook?)
+   - Should we show notebook thumbnails/icons in selector?
+
+4. **Visual Design**:
+   - Modal dialog?
+   - Slide-over panel?
+   - Inline form?
+   - Full page?
+
+**Technical Considerations**:
+- Reuse existing page creation logic from `CreatePageDialog`
+- May need to extend CreatePageDialog to accept notebook preselection
+- Consider adding to command palette as well
+- Mobile vs desktop UX differences
+
+**Files to Create/Modify**:
+- New `QuickAddPageDialog` component (or extend existing CreatePageDialog)
+- `/app/(authenticated)/notebooks/page.tsx` - Add Quick Add trigger
+- Command palette integration (optional)
+
+**Next Steps**:
+- Decide on UI/UX approach
+- Design mockups
+- Determine if this should be desktop-only or mobile-friendly
+- Consider keyboard shortcut implementation
+
+---
+
 ### 26. Add "Buy Me a Coffee" Support Button 🔴
 **Priority**: Low
 **Type**: Feature - Monetization

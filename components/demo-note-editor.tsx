@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,11 +33,17 @@ This is an **interactive demo** - try hovering over this card to see the action 
 
 *Hover over the card to reveal the action bar!*`;
 
-export function DemoNoteEditor() {
+interface DemoNoteEditorProps {
+  useTypingEffect?: boolean;
+}
+
+export function DemoNoteEditor({ useTypingEffect = false }: DemoNoteEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [content, setContent] = useState(DEMO_CONTENT);
+  const [content, setContent] = useState(useTypingEffect ? "" : DEMO_CONTENT);
   const [emoji, setEmoji] = useState("✨");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [hasTyped, setHasTyped] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleInsertMarkdown = (before: string, after: string = '') => {
     // Simple markdown insertion for demo
@@ -62,14 +68,48 @@ export function DemoNoteEditor() {
     toast.success("Emoji updated! In the real app, this saves automatically.");
   };
 
+  // Typing effect when component comes into view
+  useEffect(() => {
+    if (!useTypingEffect || hasTyped) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHasTyped(true);
+          let currentIndex = 0;
+          const typingSpeed = 30; // milliseconds per character
+
+          const typeNextChar = () => {
+            if (currentIndex <= DEMO_CONTENT.length) {
+              setContent(DEMO_CONTENT.slice(0, currentIndex));
+              currentIndex++;
+              setTimeout(typeNextChar, typingSpeed);
+            }
+          };
+
+          // Start typing after a short delay
+          setTimeout(typeNextChar, 300);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [useTypingEffect, hasTyped]);
+
   return (
     <TooltipProvider>
-      <Card className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20 self-start">
+      <Card ref={cardRef} className="group/card hover:shadow-md transition-all duration-200 relative border-2 border-primary/20 self-start">
       {/* "Try it" badge */}
       <div className="absolute -top-3 left-4 z-20">
         <div className="flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
           <Sparkles className="h-4 w-4" />
-          Interactive Demo
+          Edit this note
         </div>
       </div>
 

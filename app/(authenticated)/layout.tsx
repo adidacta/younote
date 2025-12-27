@@ -51,7 +51,7 @@ export default async function AuthenticatedLayout({
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar */}
-      <header className="border-b border-b-foreground/10 relative">
+      <header className="border-b border-b-foreground/10 relative h-14">
         {/* Logo - absolute positioned on left with 32px padding */}
         <div className="absolute left-4 md:left-8 top-0 h-14 flex items-center z-10">
           <Link href="/notebooks" className="hover:opacity-80 transition-opacity">

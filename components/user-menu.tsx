@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Settings, LogOut, Palette, Sun, Moon, Laptop, BellRing } from "lucide-react";
+import { User, Settings, LogOut, Palette, Sun, Moon, Laptop, BellRing, Home } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import type { UserProfile } from "@/types/database";
@@ -54,6 +54,10 @@ export function UserMenu({ profile }: UserMenuProps) {
     router.push("/announcements");
   };
 
+  const handleHome = () => {
+    router.push("/");
+  };
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -82,6 +86,11 @@ export function UserMenu({ profile }: UserMenuProps) {
           {profile?.nickname || "My Account"}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleHome}>
+          <Home className="mr-2 h-4 w-4" />
+          <span>Home</span>
+        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={handleSettings}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
